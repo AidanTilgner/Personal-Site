@@ -40,9 +40,4 @@
 </main>
 
 <style lang="scss">
-  @use "./lib/styles/partials/mixins" as *;
-
-  .content-container {
-    @include default-padding;
-  }
 </style>
