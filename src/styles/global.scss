@@ -1,0 +1,68 @@
+@use "./variables" as *;
+@use "./mixins" as *;
+
+html {
+  font-family: "Quicksand", sans-serif;
+  background-color: #fff;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+code {
+  font-family: "Fira Code", monospace;
+}
+
+main {
+  margin: auto;
+  @include default-padding;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.text-gradient {
+  @include text-gradient;
+}
+
+.background-gradient {
+  @include background-gradient;
+}
+
+.instructions {
+  line-height: 1.6;
+  margin: 1rem 0;
+  border: 1px solid rgba($accent, 0.25);
+  background-color: white;
+  padding: 1rem;
+  border-radius: 0.4rem;
+}
+
+.instructions code {
+  font-size: 14px;
+  font-weight: bold;
+  background: rgba($accent, 12%);
+  color: $accent;
+  border-radius: 4px;
+  padding: 0.3em 0.45em;
+}
+
+.instructions strong {
+  color: $accent;
+}
+
+.link-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+  gap: 1rem;
+  padding: 0;
+}
+
+.bolder {
+  font-weight: 500;
+}

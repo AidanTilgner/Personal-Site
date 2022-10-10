@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card.astro";
 import Primary from "../components/Buttons/Primary.svelte";
+import Secondary from "../components/Buttons/Secondary.svelte";
 ---
 
 <Layout title="Aidan Tilgner">
@@ -9,19 +10,24 @@ import Primary from "../components/Buttons/Primary.svelte";
     <section class="hero">
       <div class="text">
         <h2>Hello there...</h2>
-        <h2>I'm Aidan</h2>
+        <h2>I'm <strong>Aidan</strong></h2>
         <p class="tagline">
-          Software <span class="text-gradient">Developer</span>
+          Software <span class="text-gradient bolder">Developer</span>
         </p>
       </div>
       <div class="buttons">
-        <Primary>Let's Talk</Primary>
+        <div class="button">
+          <Primary>Let's Talk</Primary>
+        </div>
+        <div class="button">
+          <Secondary>My Work</Secondary>
+        </div>
       </div>
     </section>
   </main>
 </Layout>
 
-<style>
+<style lang="scss">
   .hero {
     display: flex;
     flex-direction: column;
@@ -36,19 +42,19 @@ import Primary from "../components/Buttons/Primary.svelte";
     justify-content: center;
     align-items: center;
     margin-bottom: 56px;
-  }
 
-  .text h2 {
-    font-size: 36px;
-    font-weight: 400;
-    margin: 0;
-    margin-bottom: 24px;
+    h2 {
+      font-size: 36px;
+      font-weight: 300;
+      margin: 0;
+      margin-bottom: 24px;
+    }
   }
 
   .tagline {
     font-size: 28px;
-    font-weight: 400;
-    margin: 0;
+    font-weight: 300;
+    margin-top: 56px;
   }
 
   .buttons {
@@ -56,5 +62,9 @@ import Primary from "../components/Buttons/Primary.svelte";
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .button {
+      margin-bottom: 14px;
+    }
   }
 </style>
