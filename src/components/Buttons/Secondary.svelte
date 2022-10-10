@@ -10,11 +10,11 @@
             <slot />
         {/if}
     </span>
-    <i class="material-icons icon text-gradient">keyboard_arrow_right</i>
+    <i class="material-icons icon">keyboard_arrow_right</i>
 </button>
 
 <style lang="scss">
-    @use "../../styles/mixins" as *;
+    @use "../../styles/variables" as *;
 
     button {
         background-color: transparent;
@@ -42,13 +42,13 @@
             transform: translateX(8px);
         }
         span {
-            @include text-gradient;
+            color: $accent;
         }
     }
 
     .icon {
         font-size: 22px;
-        // color: #3D6EFF;
+        color: $accent;
         margin-left: 8px;
     }
 
@@ -62,7 +62,7 @@
 
         span {
             transition: all 0.1s ease-in-out;
-            transform: scale(0.95) translateX(8px);
+            transform: scale(0.95) translateX(8px)
         }
     }
 </style>

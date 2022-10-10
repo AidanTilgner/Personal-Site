@@ -11,10 +11,10 @@ import Secondary from "../components/Buttons/Secondary.svelte";
       <div class="text">
         <h2>Hello there...</h2>
         <h2>I'm <strong>Aidan</strong></h2>
-        <p class="tagline">
-          Software <span class="text-gradient bolder">Developer</span>
-        </p>
       </div>
+      <p class="tagline">
+        Software <span class="bolder accented">Developer</span>
+      </p>
       <div class="buttons">
         <div class="button">
           <Primary>Let's Talk</Primary>
@@ -24,16 +24,34 @@ import Secondary from "../components/Buttons/Secondary.svelte";
         </div>
       </div>
     </section>
+    <section class="services">dummy text</section>
   </main>
 </Layout>
 
 <style lang="scss">
+  @use "../styles/variables" as *;
+  @use "../styles/mixins" as *;
+
+  section {
+    height: 100vh;
+    background-color: #fff;
+    box-sizing: border-box;
+
+    &:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  }
+
   .hero {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    height: 100vh;
+    padding-block: 36px;
+
+    @include desktop {
+      padding-block: 82px;
+    }
   }
 
   .text {
@@ -41,20 +59,44 @@ import Secondary from "../components/Buttons/Secondary.svelte";
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 56px;
+
+    @include desktop {
+      flex-direction: row;
+      align-items: center;
+      & > :first-child {
+        margin: 0;
+        margin-right: 14px;
+      }
+    }
 
     h2 {
       font-size: 36px;
       font-weight: 300;
       margin: 0;
       margin-bottom: 24px;
+      text-align: center;
+
+      @include desktop {
+        font-size: 48px;
+        margin-bottom: 0;
+      }
+    }
+
+    h2:last-child {
+      margin-bottom: 0;
     }
   }
 
   .tagline {
     font-size: 28px;
     font-weight: 300;
-    margin-top: 56px;
+    // margin-top: 56px;
+    text-align: center;
+
+    @include desktop {
+      font-size: 36px;
+      margin-top: 0;
+    }
   }
 
   .buttons {
@@ -62,6 +104,11 @@ import Secondary from "../components/Buttons/Secondary.svelte";
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    @include desktop {
+      flex-direction: row;
+      align-items: center;
+    }
 
     .button {
       margin-bottom: 14px;

@@ -2,7 +2,7 @@
     export let text: string = "";
 </script>
 
-<button class="background-gradient">
+<button>
     {#if text}
         {text}
     {:else}
@@ -11,7 +11,10 @@
 </button>
 
 <style lang="scss">
+    @use "../../styles/variables" as *;
+
     button {
+        background-color: $accent;
         color: #fff;
         box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
         border-radius: 99px;

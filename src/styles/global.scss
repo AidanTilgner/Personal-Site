@@ -9,13 +9,14 @@ html {
 body {
   margin: 0;
   padding: 0;
+  text-align: center;
 }
 
 code {
   font-family: "Fira Code", monospace;
 }
 
-main {
+section {
   margin: auto;
   @include default-padding;
 }
@@ -65,4 +66,8 @@ h1 {
 
 .bolder {
   font-weight: 500;
+}
+
+.accented {
+  color: $accent;
 }
