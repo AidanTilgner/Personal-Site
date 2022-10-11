@@ -3,28 +3,69 @@ import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card.astro";
 import Primary from "../components/Buttons/Primary.svelte";
 import Secondary from "../components/Buttons/Secondary.svelte";
+import SkillCard from "../components/Cards/Skill.svelte";
+import ButtonGroup from "../components/Buttons/ButtonGroup.svelte";
 ---
 
 <Layout title="Aidan Tilgner">
   <main>
     <section class="hero">
       <div class="text">
-        <h2>Hello there...</h2>
-        <h2>I'm <strong>Aidan</strong></h2>
+        <h2 class="subtitle">Hello there...</h2>
+        <h2 class="subtitle">I'm <strong>Aidan</strong></h2>
       </div>
       <p class="tagline">
         Software <span class="bolder accented">Developer</span>
       </p>
-      <div class="buttons">
+      <ButtonGroup client:load>
         <div class="button">
           <Primary>Let's Talk</Primary>
         </div>
         <div class="button">
-          <Secondary>My Work</Secondary>
+          <Secondary
+            client:load
+            props={{
+              text: "My Work",
+              handleClick: () => {
+                window.location.href = "/projects";
+              },
+              size: "lg",
+              align: "center",
+              padded: false,
+            }}
+          />
         </div>
+      </ButtonGroup>
+    </section>
+    <section class="skills">
+      <div class="text">
+        <h2 class="subtitle bolder">
+          My <strong class="accented">Skills</strong>
+        </h2>
+      </div>
+      <div class="skills">
+        <SkillCard
+          props={{
+            title: "Svelte",
+            description: `
+              A <span class="accented bolder">lighting</span> fast framework for building
+              <span class="accented bolder">web apps</span> and <span class="accented bolder">websites</span>
+            `,
+            icon: {
+              name: "blue-svelte-icon",
+              type: "custom",
+              href: "https://svelte.dev/",
+            },
+            endpoint: "/projects?skill=svelte",
+            border: {
+              color: "#3d6eff",
+              caption: "Most Experience",
+            },
+          }}
+          client:load
+        />
       </div>
     </section>
-    <section class="services">dummy text</section>
   </main>
 </Layout>
 
@@ -36,9 +77,16 @@ import Secondary from "../components/Buttons/Secondary.svelte";
     height: 100vh;
     background-color: #fff;
     box-sizing: border-box;
+    // add a small inset box shadow to the top of the section
+    // to create a subtle shadow effect
+    box-shadow: inset 0 24px 36px -10px rgba(0, 0, 0, 0.1);
 
     &:nth-child(even) {
-      background-color: #f9f9f9;
+      // background-color: #f9f9f9;
+    }
+
+    &:first-child {
+      box-shadow: none;
     }
   }
 
@@ -52,66 +100,50 @@ import Secondary from "../components/Buttons/Secondary.svelte";
     @include desktop {
       padding-block: 82px;
     }
-  }
-
-  .text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    @include desktop {
-      flex-direction: row;
+    .text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      & > :first-child {
-        margin: 0;
-        margin-right: 14px;
-      }
-    }
-
-    h2 {
-      font-size: 36px;
-      font-weight: 300;
-      margin: 0;
-      margin-bottom: 24px;
-      text-align: center;
 
       @include desktop {
-        font-size: 48px;
+        flex-direction: row;
+        align-items: center;
+        & > :first-child {
+          margin: 0;
+          margin-right: 14px;
+        }
+      }
+
+      h2:last-child {
         margin-bottom: 0;
       }
     }
 
-    h2:last-child {
-      margin-bottom: 0;
-    }
-  }
+    .tagline {
+      font-size: 28px;
+      font-weight: 300;
+      // margin-top: 56px;
+      text-align: center;
 
-  .tagline {
-    font-size: 28px;
-    font-weight: 300;
-    // margin-top: 56px;
-    text-align: center;
-
-    @include desktop {
-      font-size: 36px;
-      margin-top: 0;
-    }
-  }
-
-  .buttons {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    @include desktop {
-      flex-direction: row;
-      align-items: center;
+      @include desktop {
+        font-size: 36px;
+        margin-top: 0;
+      }
     }
 
     .button {
       margin-bottom: 14px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .skills {
+    padding-block-start: 56px;
+    .text {
     }
   }
 </style>
