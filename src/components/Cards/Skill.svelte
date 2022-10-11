@@ -33,7 +33,7 @@
     style="border: {border ? `1px solid ${border.color}` : "none"}"
 >
     {#if border}
-        <span class="caption">{border.caption}</span>
+        <span class="caption" style="color: {border.color}">{border.caption}</span>
     {/if}
     <div class="top">
         <p class="title">{title}</p>

@@ -1,22 +1,26 @@
 <script lang="ts">
     import type { Size } from "@/types/main";
     interface SecondaryButtonProps {
-        // passes an event to handle the click
-        handleClick: (event: MouseEvent) => void
-        size: Size
+        size?: Size
+        handleClick?: (event: MouseEvent) => void
         text?: string;
         align?: "right" | "left" | "center";
         padded?: boolean;
     }
 
-    export let props: SecondaryButtonProps;
-    console.log("Props: ", props);
+    export let props: SecondaryButtonProps = {
+        size: "md",
+        handleClick: undefined,
+        text: "",
+        align: "center",
+        padded: true
+    };
     const {
         text,
         handleClick,
-        size = "lg",
-        align = "center",
-        padded = true
+        size,
+        align,
+        padded
     } = props; 
 
     const alignMappings = {
@@ -38,7 +42,7 @@
         if(!handleClick) return;
         handleClick(e);
     }}
-    style="justify-content: {alignMappings[align]};padding: {paddedMappings[padded.toString()]};"
+    style="justify-content: {alignMappings[align || "center"]};padding: {paddedMappings[padded?.toString() || "true"]};"
 >
     <span
         class="text-{size}"

@@ -17,13 +17,5 @@
         flex-direction: row;
         align-items: center;
       }
-
-      .button {
-        margin-bottom: 14px;
-      }
-
-      .button:last-child {
-        margin-bottom: 0;
-      }
     }
 </style>
