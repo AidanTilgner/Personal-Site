@@ -10,9 +10,68 @@
     };
 
     let showSuccessMessage = false;
+    let messageinfo: {
+        type: "success" | "error" | "info";
+        text: string;
+        timeout: number;
+        show: boolean;
+        onClose: () => void;
+    } = {
+        type: "success",
+        text: "Your message was sent successfully!",
+        timeout: 3000,
+        show: false,
+        onClose: () => {
+            messageinfo.show = false;
+        },
+    };
+
+    const validateFormState = () => {
+        if (formState.name === "") {
+            console.log("Validation failed");
+            messageinfo = {
+                type: "error",
+                text: "Please enter your name",
+                timeout: 3000,
+                show: true,
+                onClose: () => {
+                    messageinfo.show = false;
+                },
+            };
+            return false;
+        }
+        if (formState.email === "") {
+            messageinfo = {
+                type: "error",
+                text: "Please enter your email",
+                timeout: 3000,
+                show: true,
+                onClose: () => {
+                    messageinfo.show = false;
+                },
+            };
+            return false;
+        }
+        if (formState.message === "") {
+            messageinfo = {
+                type: "error",
+                text: "Please enter your message",
+                timeout: 3000,
+                show: true,
+                onClose: () => {
+                    messageinfo.show = false;
+                },
+            };
+            return false;
+        }
+        return true;
+    };
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
+        if (!validateFormState()) {
+          return;
+        }
         console.log(formState);
         const response = await fetch("/contact/message.json", {
             method: "POST",
@@ -25,19 +84,28 @@
         });
 
         console.log("Response", response);
-        showSuccessMessage = true;
+        messageinfo = {
+            type: "success",
+            text: "Your message was sent successfully!",
+            timeout: 3000,
+            show: true,
+            onClose: () => {
+                messageinfo.show = false;
+            },
+        };
+        // formState.name = "";
+        // formState.email = "";
+        // formState.message = "";
     };
 </script>
 
 <main>
     <Notify
-        type="success"
-        text="Your message has been sent successfully!"
-        timeout={3000}
-        onClose={() => {
-            showSuccessMessage = false;
-        }}
-        show={showSuccessMessage}
+        type={messageinfo.type}
+        text={messageinfo.text}
+        timeout={messageinfo.timeout}
+        show={messageinfo.show}
+        onClose={messageinfo.onClose}
     />
     <div class="header">
       <h2 class="title">Let's <span class="accented bolder">Get in Touch</span></h2>
