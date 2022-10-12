@@ -1,10 +1,20 @@
 <script lang="ts">
     import Skill from "@/components/Cards/Skill.svelte";
+    import Primary from "@/components/Buttons/Primary.svelte";
+    import Resume from "../../assets/files/aidan-tilgner-resume.pdf";
 </script>
 
 <main>
   <div class="header">
     <h2 class="title">My <span class="accented bolder">Skills</span></h2>
+  </div>
+  <hr />
+  <div class="header-stuff">
+    <a href={Resume} download>
+        <Primary>
+            My Resume
+        </Primary>
+    </a>
   </div>
   <hr />
   <div class="section frontend">
