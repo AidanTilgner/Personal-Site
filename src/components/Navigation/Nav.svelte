@@ -207,6 +207,12 @@
                 animation-duration: .6s;
                 animation-fill-mode: forwards;
                 animation-timing-function: ease-in;
+                transition: all .2s ease-in-out;
+
+                &:hover {
+                    padding: 4px 0;
+                    font-weight: 500;
+                }
             }
         }
     }
