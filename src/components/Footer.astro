@@ -1,0 +1,174 @@
+---
+import Icon from "./helpers/Icon.svelte";
+---
+
+<footer>
+  <div class="content">
+    <div class="footer-section">
+      <h4>Contact</h4>
+      <ul>
+        <li>
+          <a href="mailto:aidantilgner02@gmail.com" style="color: white;"
+            >aidantilgner02@gmail.com</a
+          >
+        </li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h4>Social</h4>
+      <ul>
+        <li>
+          <Icon name="white-github-icon" width="20" height="20" />
+          <a
+            href="https://github.com/AidanTilgner"
+            target="_blank"
+            class="with-icon">GitHub</a
+          >
+        </li>
+        <li>
+          <Icon name="white-linkedin" width="20" height="20" />
+          <a
+            href="https://www.linkedin.com/in/aidan-tilgner-2b1b3b1b3/"
+            target="_blank"
+            class="with-icon">LinkedIn</a
+          >
+        </li>
+        <li>
+          <Icon name="white-medium" width="20" height="20" />
+          <a
+            href="https://aidantilgner.medium.com/"
+            target="_blank"
+            class="with-icon">Medium</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="acknowledgment">
+    <p>Designed and developed by me.</p>
+    <p class="copyright">
+      <i class="material-icons">copyright</i>
+      2021 Aidan Tilgner. All rights reserved.
+    </p>
+  </div>
+</footer>
+
+<style lang="scss">
+  @use "../styles/mixins.scss" as *;
+
+  footer {
+    box-shadow: inset 0 10px 20px 0 rgba(0, 0, 0, 0.25);
+    background-color: #3d6eff;
+    color: #fff;
+    padding: 20px;
+  }
+
+  .content {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 24px;
+    margin-bottom: 56px;
+
+    @include desktop {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .footer-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    // border: 1px solid #fff;
+    box-sizing: border-box;
+    padding: 14px 14px;
+
+    h4 {
+      font-size: 22px;
+      font-weight: 500;
+      margin: 0;
+      padding: 0;
+      margin-bottom: 24px;
+    }
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        border-left: 2px solid #fff;
+        padding-inline-start: 14px;
+        transition: all 0.2s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-bottom: 14px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        &:hover {
+          padding-inline-start: 18px;
+        }
+
+        a {
+          color: #fff;
+          text-decoration: none;
+          transition: all 0.2s ease-in-out;
+          font-size: 18px;
+
+          &:hover {
+            // font-weight: 500;
+            text-decoration: underline;
+          }
+        }
+
+        .with-icon {
+          margin-left: 8px;
+        }
+      }
+    }
+  }
+
+  .acknowledgment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+
+    p {
+      margin: 0;
+      padding: 0;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    @include desktop {
+      flex-direction: row;
+      justify-content: center;
+
+      p {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .copyright {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+
+    span {
+      font-weight: 500;
+    }
+
+    i {
+      font-size: 14px;
+      margin-right: 4px;
+    }
+  }
+</style>

@@ -79,7 +79,8 @@
                 },
                 size:"sm",
                 align:"right",
-                padded: false
+                padded: false,
+                title: `View my projects that used ${title}`
             }}
         />
     </div>

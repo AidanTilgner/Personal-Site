@@ -7,8 +7,21 @@ import Resume from "../assets/files/aidan-tilgner-resume.pdf";
 import Shuffle from "../components/Text/Shuffle.svelte";
 ---
 
+<script>
+  const scrollarea = document.getElementById("scrollarea");
+  window.addEventListener("scroll", (e) => {
+    console.log("Scrolling");
+    e.preventDefault();
+    // scroll by 100vh smoothly either up or down
+    scrollarea?.scrollBy({
+      top: window.innerHeight,
+      behavior: "smooth",
+    });
+  });
+</script>
+
 <Layout title="Aidan Tilgner">
-  <main>
+  <main id="scrollarea">
     <section class="hero">
       <div class="text">
         <h2 class="subtitle">Hello there...</h2>
@@ -147,7 +160,7 @@ import Shuffle from "../components/Text/Shuffle.svelte";
         <a download href={Resume}>
           <Primary>My Resume</Primary>
         </a>
-        <a href="/projects">
+        <a href="/skills">
           <Secondary props={{ size: "lg" }}>See More</Secondary>
         </a>
       </div>
@@ -178,11 +191,12 @@ import Shuffle from "../components/Text/Shuffle.svelte";
   .hero {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
+    padding-block: 36px;
 
-    @include desktop {
-      padding-block: 82px;
+    @include tablet {
+      padding-block: 56px;
     }
     .text {
       display: flex;
@@ -190,17 +204,12 @@ import Shuffle from "../components/Text/Shuffle.svelte";
       justify-content: center;
       align-items: center;
 
-      @include desktop {
+      @include tablet {
         flex-direction: row;
-        align-items: center;
-        & > :first-child {
-          margin: 0;
-          margin-right: 14px;
-        }
-      }
 
-      h2:last-child {
-        margin-bottom: 0;
+        .subtitle {
+          margin-inline: 8px;
+        }
       }
     }
 
@@ -210,8 +219,13 @@ import Shuffle from "../components/Text/Shuffle.svelte";
       // margin-top: 56px;
       text-align: center;
 
-      @include desktop {
+      @include tablet {
         font-size: 36px;
+        text-align: left;
+      }
+
+      @include desktop {
+        font-size: 56px;
         margin-top: 0;
       }
     }
@@ -221,10 +235,10 @@ import Shuffle from "../components/Text/Shuffle.svelte";
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      margin-top: 56px;
+      // margin-top: 56px;
 
       @include tablet {
-        margin-top: 56px;
+        // margin-top: 56px;
         flex-direction: row;
         align-items: center;
       }
@@ -242,18 +256,6 @@ import Shuffle from "../components/Text/Shuffle.svelte";
         }
       }
     }
-
-    .button {
-      margin-bottom: 14px;
-
-      @include desktop {
-        margin-bottom: 0;
-      }
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
   }
 
   .skills {
@@ -262,6 +264,10 @@ import Shuffle from "../components/Text/Shuffle.svelte";
     justify-content: space-around;
     align-items: center;
     padding-block: 36px;
+
+    @include tablet {
+      padding-block: 56px;
+    }
 
     .text {
     }

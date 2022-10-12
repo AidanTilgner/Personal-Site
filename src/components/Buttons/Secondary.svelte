@@ -6,6 +6,7 @@
         text?: string;
         align?: "right" | "left" | "center";
         padded?: boolean;
+        title?: string;
     }
 
     export let props: SecondaryButtonProps = {
@@ -20,7 +21,8 @@
         handleClick,
         size,
         align,
-        padded
+        padded,
+        title
     } = props; 
 
     const alignMappings = {
@@ -43,6 +45,7 @@
         handleClick(e);
     }}
     style="justify-content: {alignMappings[align || "center"]};padding: {paddedMappings[padded?.toString() || "true"]};"
+    title={title}
 >
     <span
         class="text-{size}"

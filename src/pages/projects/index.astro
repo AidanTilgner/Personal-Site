@@ -2,6 +2,13 @@
 import Layout from "@/layouts/Layout.astro";
 ---
 
+<script>
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const params = Object.fromEntries(urlSearchParams.entries());
+
+  console.log("params", params);
+</script>
+
 <Layout title="Aidan Tilgner | Projects">
   <h1>Projects</h1>
 </Layout>
