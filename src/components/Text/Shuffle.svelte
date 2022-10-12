@@ -1,19 +1,44 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
+    import { onMount } from "svelte";
 
     interface ShuffleTextProps {
         options: {
             text: string;
         }[];
         delay: number;
+        animationType: "fade" | "text-retract";
     }
 
     export let options: ShuffleTextProps['options'];
     export let delay: ShuffleTextProps['delay'] = 5000;
+    export let animationType: ShuffleTextProps['animationType'] = "fade";
 
     let currentText: string = options[0].text;
     let element: HTMLElement | null = null;
+
+    const retractText = async () => {
+        // go through each letter and remove it from the text
+        for (let i = 0; i < currentText.length; i++) {
+            await new Promise<void>((resolve) => {
+                setTimeout(() => {
+                    currentText = currentText.slice(0, -1);
+                    resolve();
+                }, 100);
+            });
+        }
+    }
+
+    const placeText = async () => {
+        // go through each letter and add it to the text
+        for (let i = 0; i < options[0].text.length; i++) {
+            await new Promise<void>((resolve) => {
+                setTimeout(() => {
+                    currentText += options[0].text[i];
+                    resolve();
+                }, 100);
+            });
+        }
+    }
 
     const shuffle = () => {
         if(!(options.length > 1)) {
@@ -51,6 +76,21 @@
                 resolve();
             }
         });
+    }
+
+    const animation = async () => {
+        switch(animationType) {
+            case "fade":
+                await fadeoutAnimation(element!);
+                shuffle();
+                await fadeinAnimation(element!);
+                break;
+            case "text-retract":
+                await retractText();
+                shuffle();
+                await placeText();
+                break;
+        }
     }
     
     onMount(() => {

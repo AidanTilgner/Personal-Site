@@ -115,6 +115,11 @@
             color: $accent;
         }
 
+        .title {
+            margin: 0;
+            padding: 4px 0;
+        }
+
         .top {
             display: flex;
             align-items: center;

@@ -213,7 +213,7 @@
 
     .close {
         position: fixed;
-        top: calc(50%);
+        top: calc(40%);
         right: 14px;
         z-index: 1000;
         cursor: pointer;
@@ -237,7 +237,7 @@
     .menu {
         position: fixed;
         // halfway from the top
-        top: calc(50%);
+        top: calc(40%);
         right: 14px;
         z-index: 1000;
         cursor: pointer;

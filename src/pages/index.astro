@@ -7,19 +7,6 @@ import Resume from "../assets/files/aidan-tilgner-resume.pdf";
 import Shuffle from "../components/Text/Shuffle.svelte";
 ---
 
-<script>
-  const scrollarea = document.getElementById("scrollarea");
-  window.addEventListener("scroll", (e) => {
-    console.log("Scrolling");
-    e.preventDefault();
-    // scroll by 100vh smoothly either up or down
-    scrollarea?.scrollBy({
-      top: window.innerHeight,
-      behavior: "smooth",
-    });
-  });
-</script>
-
 <Layout title="Aidan Tilgner">
   <main id="scrollarea">
     <section class="hero">
@@ -220,7 +207,7 @@ import Shuffle from "../components/Text/Shuffle.svelte";
       text-align: center;
 
       @include tablet {
-        font-size: 36px;
+        font-size: 48px;
         text-align: left;
       }
 
