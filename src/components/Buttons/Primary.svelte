@@ -1,12 +1,33 @@
 <script lang="ts">
-    export let text: string = "";
+    export let text: string = "", download: boolean = false;
+    let buttonElement: HTMLButtonElement;
+
+    let downloading: boolean = false;
+
+    const handleClick = () => {
+        if (download) {
+            downloading = true;
+            setTimeout(() => {
+                downloading = false;
+            }, 1500);
+        }
+    };
 </script>
 
-<button>
+<button 
+    bind:this={buttonElement}
+    on:click={handleClick}
+>
+    {#if download}
+        <i class="material-icons">expand_more</i>
+    {/if}
     {#if text}
         {text}
     {:else}
         <slot />
+    {/if}
+    {#if downloading}
+        <div class="shadow"></div>
     {/if}
 </button>
 
@@ -26,6 +47,11 @@
         cursor: pointer;
         transition: all 0.2s ease-in-out;
         font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
     }
 
     button:hover {
@@ -38,5 +64,32 @@
         background-color: #1A3DA1;
         box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.35);
         transform: scale(0.98) translateY(2px);
+    }
+
+    .shadow {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, .25);
+        animation-name: shadow;
+        animation-duration: 1.5s;
+        animation-timing-function: ease-in-out;
+        animation-fill-mode: forwards;
+    }
+
+    @keyframes shadow {
+        0% {
+            width: 0;
+            background-color: rgba(0, 0, 0, .25);
+        }
+        97% {
+            width: 100%;
+            background-color: rgba(0, 0, 0, .05);
+        }
+        100% {
+            background-color: rgba(0, 0, 0, 0);
+        }
     }
 </style>

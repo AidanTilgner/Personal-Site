@@ -108,7 +108,7 @@
 
         span {
             transition: all 0.05s ease-in-out;
-            transform: scale(0.95) translateX(8px)
+            transform: scale(0.80) translateX(8px)
         }
     }
 </style>

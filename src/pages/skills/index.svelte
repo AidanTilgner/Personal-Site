@@ -11,7 +11,7 @@
   <hr />
   <div class="header-stuff">
     <a href={Resume} download>
-        <Primary>
+        <Primary download>
             My Resume
         </Primary>
     </a>
@@ -326,6 +326,12 @@
 
   .header {
     margin: 36px 0;
+  }
+
+  .header-stuff {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .section {
