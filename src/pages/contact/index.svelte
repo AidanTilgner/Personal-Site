@@ -9,7 +9,6 @@
         message: "",
     };
 
-    let showSuccessMessage = false;
     let messageinfo: {
         type: "success" | "error" | "info";
         text: string;
@@ -71,7 +70,7 @@
         if (!validateFormState()) {
           return;
         }
-        const response = await fetch("/contact/message.json", {
+        const response = await fetch("/.netlify/functions/send-contact-email", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
