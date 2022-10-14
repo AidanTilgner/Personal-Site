@@ -126,23 +126,49 @@
     </div>
     <hr />
     <div class="section contact-form">
+        <h3 class="subtitle">Or fill out this form</h3>
         <form on:submit={handleSubmit}>
             <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" name="name" id="name" bind:value={formState.name} />
+                <label for="name">
+                    Name 
+                    <span class="required">*</span>
+                </label>
+                <input 
+                    type="text"
+                    name="name"
+                    id="name"
+                    bind:value={formState.name}
+                    placeholder="Your name here..."
+                />
+            </div>
+            <span class="tip">
+                Your email will help us get back to you faster
+            </span>
+            <div class="form-group">
+                <label for="email">
+                    Email
+                    <span class="required">*</span>
+                </label>
+                <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    bind:value={formState.email}
+                    placeholder="Your email here..."
+                />
             </div>
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" bind:value={formState.email} />
-            </div>
-            <div class="form-group">
-                <label for="message">Message</label>
+                <label for="message">
+                    Message
+                    <span class="required">*</span>
+                </label>
                 <textarea 
                     name="message" 
                     id="message" 
                     cols="30" 
                     rows="10" 
                     bind:value={formState.message}
+                    placeholder="Your message here..."
                 ></textarea>
             </div>
             <div class="form-group buttons">
@@ -234,6 +260,20 @@
                 justify-content: flex-end;
             }
         }
+
+        .tip {
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            font-style: italic;
+            text-align: left;
+            color: rgba($color: #000000, $alpha: .6);
+        }
+    }
+
+    .required {
+        color: $accent;
     }
 </style>
   

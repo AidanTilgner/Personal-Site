@@ -1,4 +1,8 @@
 <script lang="ts">
+    import Primary from "../Buttons/Primary.svelte";
+    import Resume from "../../assets/files/aidan-tilgner-resume.pdf";
+  import Secondary from "../Buttons/Secondary.svelte";
+
     let open = false;
 
     let openButton: HTMLElement | null = null;
@@ -92,6 +96,22 @@
                 <a href="/projects">Projects</a>
                 <a href="/contact">Contact</a>
             </div>
+            <div class="buttons">
+                <a href={Resume} target="_blank" >
+                    <Primary 
+                        text="Resume"
+                        download
+                    />
+                </a>
+                <a href="https://calendly.com/vvibrant/client-call" target="_blank" >
+                    <Secondary
+                        props={{
+                            text: "Let's Call",
+                            size: "lg"
+                        }}
+                    />
+                </a>
+            </div>
         </div>
     </div>
 {:else}
@@ -151,6 +171,16 @@
         }
     }
 
+    @keyframes button-in {
+        0% {
+            opacity: 0;
+            // transform: translateY(10px);
+        }
+        100% {
+            opacity: 1;
+            // transform: translateY(0);
+        }
+    }
     @keyframes open-in {
         0% {
             opacity: 0;
@@ -212,6 +242,36 @@
                 &:hover {
                     padding: 4px 0;
                     font-weight: 500;
+                }
+            }
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 56px;
+
+            @include desktop {
+                flex-direction: row;
+                margin-top: 82px;
+            }
+
+            a {
+                // animation-name: button-in;
+                animation-duration: .6s;
+                animation-fill-mode: forwards;
+                animation-timing-function: ease-in;
+                animation-delay: .2s;
+
+                &:first-child {
+                    margin-bottom: 14px;
+
+                    @include desktop {
+                        margin-bottom: 0;
+                        margin-right: 20px;
+                    }
                 }
             }
         }

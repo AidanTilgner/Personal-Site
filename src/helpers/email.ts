@@ -1,13 +1,21 @@
-import Mailgun from "mailgun.js";
-import FormData from "form-data";
+import nodemailer from "nodemailer";
 
-const { MAILGUN_API_KEY, MAILGUN_DOMAIN, MAILGUN_USER } = import.meta.env;
+const { MAILGUN_USER, MAILGUN_PASSWORD, MAILGUN_FROM } = import.meta.env;
 
-const mailgun = new Mailgun(FormData);
+// create transporter with mailgun credentials
+const transporter = nodemailer.createTransport({
+  service: "Mailgun",
+  auth: {
+    user: MAILGUN_USER,
+    pass: MAILGUN_PASSWORD,
+  },
+});
 
-const mg = mailgun.client({ username: "api", key: MAILGUN_API_KEY });
+const mailOpts = {
+  from: MAILGUN_FROM,
+};
 
-export const sendEmail = async ({
+export async function sendEmail({
   to,
   subject,
   text,
@@ -17,20 +25,16 @@ export const sendEmail = async ({
   subject: string;
   text: string;
   html: string;
-}) => {
+}) {
   try {
-    const data = {
-      from: `Portfolio <${MAILGUN_USER}>`,
+    const info = await transporter.sendMail({
+      ...mailOpts,
       to,
       subject,
       text,
       html,
-    };
-
-    await mg.messages.create(MAILGUN_DOMAIN, data);
-
-    return true;
+    });
   } catch (err) {
-    console.error("Error sending email", err);
+    console.error(err);
   }
-};
+}
