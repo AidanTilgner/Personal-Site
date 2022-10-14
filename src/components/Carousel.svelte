@@ -71,8 +71,6 @@
         }
         await slideImageAnimation("right");
     };
-
-    $: console.log("Current item: ", currentItem);
 </script>
 
 <div class="carousel">

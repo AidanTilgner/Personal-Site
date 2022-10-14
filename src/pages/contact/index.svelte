@@ -28,7 +28,6 @@
 
     const validateFormState = () => {
         if (formState.name === "") {
-            console.log("Validation failed");
             messageinfo = {
                 type: "error",
                 text: "Please enter your name",
@@ -72,7 +71,6 @@
         if (!validateFormState()) {
           return;
         }
-        console.log(formState);
         const response = await fetch("/contact/message.json", {
             method: "POST",
             headers: {
@@ -83,7 +81,6 @@
             return res.json();
         });
 
-        console.log("Response", response);
         messageinfo = {
             type: "success",
             text: "Your message was sent successfully!",
@@ -93,9 +90,9 @@
                 messageinfo.show = false;
             },
         };
-        // formState.name = "";
-        // formState.email = "";
-        // formState.message = "";
+        formState.name = "";
+        formState.email = "";
+        formState.message = "";
     };
 </script>
 
