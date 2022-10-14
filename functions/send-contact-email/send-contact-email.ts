@@ -23,6 +23,24 @@ export const handler: Handler = async (event, context) => {
 
   const { MAIL_TO = "aidantilgner02@gmail.com" } = process.env;
 
+  console.log("Sending email to: ", MAIL_TO);
+  console.log("Content: ", {
+    to: MAIL_TO,
+    subject: `New message from "${name}"`,
+    text: message,
+    html: `
+        <i>This message is from <a href="https://aidantilgner.dev" target="_blank">aidantilgner.dev</a></i>
+        <hr style="border-coler" />
+        <br />
+        <p>
+          ${message}
+        </p>
+        <br />
+        <hr />
+        <p>Reply to ${name} at <a href="mailto:${email}">${email}</a></p>
+      `,
+  });
+
   sendEmail({
     to: MAIL_TO,
     subject: `New message from "${name}"`,
