@@ -19,7 +19,7 @@
     on:click={handleClick}
 >
     {#if download}
-        <i class="material-icons">expand_more</i>
+        <i class="material-icons downloadable">expand_more</i>
     {/if}
     {#if text}
         {text}
@@ -77,6 +77,11 @@
         animation-duration: 1.5s;
         animation-timing-function: ease-in-out;
         animation-fill-mode: forwards;
+    }
+
+    .downloadable {
+        font-size: 20px;
+        margin-right: 4px;
     }
 
     @keyframes shadow {

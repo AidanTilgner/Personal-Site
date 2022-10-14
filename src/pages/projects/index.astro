@@ -1,14 +1,77 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import Page from "./index.svelte";
+import ProjectCard from "@/components/Cards/Project.svelte";
+import Carousel from "@/components/Carousel.svelte";
+
+// const params = Astro.url.searchParams as URLSearchParams;
+
+// console.log("some params", params);
+// console.log("params", params);
+// let filters = new Set<string>([]);
+
+// params.forEach((value, key) => {
+//     if (key === "skill") {
+//         filters.add(value);
+//     }
+// });
+
+// console.log("Filters: ", filters);
 ---
 
-<script>
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  const params = Object.fromEntries(urlSearchParams.entries());
-
-  console.log("params", params);
-</script>
 
 <Layout title="Aidan Tilgner | Projects">
-  <h1>Projects</h1>
+  <main>
+    <div class="header">
+        <h2 class="title">My Projects</h2>
+    </div>
+    <hr />
+    <div class="section projects">
+        <div class="project">
+          <ProjectCard
+              title="Personal Site"
+              description="The site that I use to showcase my projects and skills."
+              tags={["Svelte", "Astro", "TypeScript"]}
+              link="https://github.com/AidanTilgner/Personal-Site"
+              client:load
+          >
+            <Carousel
+              items={[
+                {
+                  title: "Home",
+                  image: "/assets/images/projects/portfolio/portfolio-home.jpg",
+                  description: "The home screen",
+                  href: "https://aidantilgner.dev"
+                },
+                {
+                  title: "Skills",
+                  image: "/assets/images/projects/portfolio/portfolio-skills.jpg",
+                  description: "The skills screen",
+                  href: "https://aidantilgner.dev/skills"
+                }
+              ]}
+              client:load
+            />
+          </ProjectCard>
+        </div>
+    </div>
+</main>
+
 </Layout>
+
+<style lang="scss">
+    @use "../../styles/mixins.scss" as *;
+    @use "../../styles/variables.scss" as *;
+
+    main {
+        padding-block-end: 56px;
+    }
+
+    .header {
+        margin: 36px 0;
+    }
+
+    .section {
+        @include default-padding;
+    }
+</style>

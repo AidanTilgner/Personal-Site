@@ -31,6 +31,7 @@
 <div
     class="card" 
     style="border: {border ? `1px solid ${border.color}` : "none"}"
+    id={title}
 >
     {#if border}
         <span class="caption" style="color: {border.color}">{border.caption}</span>

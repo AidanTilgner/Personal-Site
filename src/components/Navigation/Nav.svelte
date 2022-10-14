@@ -174,13 +174,14 @@
     @keyframes button-in {
         0% {
             opacity: 0;
-            // transform: translateY(10px);
+            transform: translateY(10px);
         }
         100% {
             opacity: 1;
-            // transform: translateY(0);
+            transform: translateY(0);
         }
     }
+
     @keyframes open-in {
         0% {
             opacity: 0;
@@ -234,9 +235,9 @@
                 text-decoration: none;
                 margin: 10px 0;
                 animation-name: link-in;
-                animation-duration: .6s;
+                animation-duration: .5s;
                 animation-fill-mode: forwards;
-                animation-timing-function: ease-in;
+                animation-timing-function: ease-in-out;
                 transition: all .2s ease-in-out;
 
                 &:hover {
@@ -253,18 +254,18 @@
             align-items: center;
             margin-top: 56px;
 
+            animation-name: button-in;
+            animation-duration: .4s;
+            animation-fill-mode: forwards;
+            animation-timing-function: ease-in;
+
+
             @include desktop {
                 flex-direction: row;
                 margin-top: 82px;
             }
 
             a {
-                // animation-name: button-in;
-                animation-duration: .6s;
-                animation-fill-mode: forwards;
-                animation-timing-function: ease-in;
-                animation-delay: .2s;
-
                 &:first-child {
                     margin-bottom: 14px;
 
