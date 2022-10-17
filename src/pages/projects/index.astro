@@ -54,6 +54,69 @@ import Carousel from "@/components/Carousel.svelte";
             />
           </ProjectCard>
         </div>
+        <div class="project">
+          <ProjectCard
+              title="Onyx AI"
+              description="Onyx is a digital personal assistant I started working on as a side project. My goal is to advance its capabilities and make it a viable alternative to other digital assistants."
+              tags={["Svelte", "TypeScript", "Python", "Express", "SurrealDB"]}
+              link="https://github.com/AidanTilgner/Onyx-Systems"
+              client:load
+          >
+            <Carousel
+              items={[
+                {
+                  title: "Applications Server Login",
+                  description: "The login screen for the applications microservice. It utilizes the People microservice for authentication.",
+                  image: "/assets/images/projects/onyx/onyx-applications-login.jpg",
+                  href: "https://github.com/AidanTilgner/Onyx-Systems",
+                },
+                {
+                  title: "Applications Server | Dashboard",
+                  description: "The home screen for the Applications server microservice frontend",
+                  image: "/assets/images/projects/onyx/onyx-applications-dashboard.jpg",
+                  href: "https://github.com/AidanTilgner/Onyx-Systems",
+                },
+                {
+                  title: "Applications Server | Actions",
+                  description: "A view of all actions available from the Actions microservice. This section of the frontend is reactive to an API call to the Actions service.",
+                  image: "/assets/images/projects/onyx/onyx-applications-actions.jpg",
+                  href: "https://github.com/AidanTilgner/Onyx-Systems",
+                },
+                {
+                  title: "Applications Server | With Console",
+                  description: "A custom console for the Applications server. This console has commands and support for writing custom commands in javascript.",
+                  image: "/assets/images/projects/onyx/onyx-applications-server-with-console.jpg",
+                  href: "https://github.com/AidanTilgner/Onyx-Systems",
+                },
+                {
+                  title: "Interpretation Server | Home",
+                  description: "The Interpretation (NLU) Microservice frontend. This gives a brief explanation of this server.",
+                  image: "/assets/images/projects/onyx/onyx-interpretation-server-home.jpg",
+                  href: "https://github.com/AidanTilgner/Onyx-Systems",
+                },
+                {
+                  title: "Interpretation Server | Test NLU Response",
+                  description: "You can test the bot and train it with this interactive input. This modifies directly configuration and training files stored on the backend.",
+                  image: "/assets/images/projects/onyx/onyx-interpretation-server-with-response.jpg",
+                  href: "https://github.com/AidanTilgner/Onyx-Systems",
+                },
+                {
+                  title: "Interpretation Server | Example Training Data",
+                  description: "This is a searchable list of examples that the bot trains on. You provide a text input, and the intent that should be associated with it.",
+                  image: "/assets/images/projects/onyx/onyx-interpretation-server-examples.jpg",
+                  href: "https://github.com/AidanTilgner/Onyx-Systems",
+                },
+                {
+                  title: "Interpretation Server | Intent to Actions Mappings",
+                  description: "This searchable list shows the intents, mapping to the actions that they should produce. This mapping is used to map intents to actions that are available on the action server.",
+                  image: "/assets/images/projects/onyx/onyx-interpretation-server-actions.jpg",
+                  href: "https://github.com/AidanTilgner/Onyx-Systems",
+                }
+              ]}
+              client:load
+            />
+          </ProjectCard>
+        </div>
     </div>
 </main>
 
@@ -73,5 +136,11 @@ import Carousel from "@/components/Carousel.svelte";
 
     .section {
         @include default-padding;
+    }
+
+    .projects {
+      .project {
+        margin-bottom: 82px;
+      }
     }
 </style>
