@@ -89,6 +89,9 @@
             </a>
         </div>
     </div>
+    <div class="counter">
+        <p>{`${current + 1} / ${items.length}`}</p>
+    </div>
     <div class="buttons">
         <i 
             class="material-icons button left"
@@ -152,7 +155,7 @@
 
                 &-content {
                     position: absolute;
-                    top: 70%;
+                    top: 50%;
                     left: 50%;
                     transform: translate(-50%, -50%);
                     color: white;
@@ -209,5 +212,17 @@
                 }
             }
         }
+    }
+
+    .counter {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0, 0, 0, 0.45);
+        padding: 10px 0;
+        text-align: center;
+        color: #fff;
+        font-size: 14px;
     }
 </style>
