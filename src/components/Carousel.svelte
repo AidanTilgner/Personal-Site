@@ -155,11 +155,23 @@
 
                 &-content {
                     position: absolute;
-                    top: 50%;
+                    top: 40%;
                     left: 50%;
                     transform: translate(-50%, -50%);
                     color: white;
                     text-align: center;
+                    font-size: 12px;
+                    width: 60%;
+
+                    @include tablet {
+                        width: 70%;
+                        font-size: 15px;
+                    }
+
+                    @include desktop {
+                        width: 80%;
+                        font-size: 16px;
+                    }
                 }
             }
 
@@ -220,9 +232,19 @@
         left: 0;
         right: 0;
         background-color: rgba(0, 0, 0, 0.45);
-        padding: 10px 0;
+        padding: 5px 0;
         text-align: center;
         color: #fff;
-        font-size: 14px;
+        font-size: 11px;
+
+        @include tablet {
+            font-size: 13px;
+            padding: 8px 0;
+        }
+
+        @include desktop {
+            font-size: 15px;
+            padding: 10px 0;
+        }
     }
 </style>
