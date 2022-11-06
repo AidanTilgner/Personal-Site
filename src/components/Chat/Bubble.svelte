@@ -53,14 +53,8 @@
       }
 
       &__text {
-        font-size: 1rem;
-        font-weight: 400;
-      }
-
-      &__time {
-        font-size: 0.75rem;
-        font-weight: 300;
-        margin-top: 0.25rem;
+        font-size: 16px;
+        font-weight: 500;
       }
     }
   }
