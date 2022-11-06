@@ -34,8 +34,13 @@
       flex-direction: column;
       align-items: flex-start;
       max-width: 80%;
-      padding: 14px 14px;
-      border-radius: 10px;
+      padding: 14px 24px;
+      border-radius: 5px;
+      text-align: left;
+      animation-name: bubble-in;
+      animation-duration: 0.3s;
+      animation-fill-mode: forwards;
+      animation-timing-function: ease-out;
 
       &.to {
         background-color: $cool-blue;
@@ -57,6 +62,17 @@
         font-weight: 300;
         margin-top: 0.25rem;
       }
+    }
+  }
+
+  @keyframes bubble-in {
+    0% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 </style>

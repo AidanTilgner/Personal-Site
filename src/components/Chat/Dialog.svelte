@@ -1,6 +1,6 @@
 <script lang="ts">
   import Bubble from "./Bubble.svelte";
-  const messages: {
+  let messages: {
     type: "from" | "to";
     message: string;
   }[] = [
@@ -12,7 +12,21 @@
       type: "to",
       message: "I'm good, how are you?",
     },
+    {
+      type: "to",
+      message: "I was wondering if everything was alright?",
+    },
   ];
+
+  const addMessage = (text: string) => {
+    messages = [
+      ...messages,
+      {
+        type: "from",
+        message: text,
+      },
+    ];
+  };
 </script>
 
 <div class="overlay">
@@ -23,7 +37,20 @@
   </div>
   <div class="input">
     <span class="input__tooltip">Press enter to send</span>
-    <textarea type="text" placeholder="Type a message..." />
+    <textarea
+      type="text"
+      placeholder="Type a message..."
+      on:click={(e) => {
+        e.stopPropagation();
+      }}
+      on:keydown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          addMessage(e.currentTarget.value);
+          e.currentTarget.value = "";
+        }
+      }}
+    />
   </div>
 </div>
 
@@ -58,6 +85,10 @@
     bottom: 35%;
     padding: 24px;
     overflow-y: scroll;
+
+    @include tablet {
+      padding: 24px 56px;
+    }
   }
 
   .input {
@@ -70,6 +101,7 @@
     box-shadow: 0 -0.2px 24px 0 rgba($color: #000000, $alpha: 0.1);
     border-radius: 36px 36px 0 0;
     transition: all 0.2s ease-out;
+    background-color: rgba($color: #fff, $alpha: 0.25);
 
     // when the user inside the child input
     &:focus-within {
@@ -79,7 +111,7 @@
         opacity: 1;
       }
 
-      @include desktop {
+      @include tablet {
         top: 65%;
       }
     }
@@ -87,14 +119,17 @@
     &__tooltip {
       position: absolute;
       top: -36px;
-      right: 0;
-      left: 0;
+      left: 36px;
       display: flex;
       justify-content: center;
       align-items: center;
       font-size: 12px;
-      color: #a0a0a0;
+      color: #242424;
       opacity: 0;
+      background-color: rgba($color: #fff, $alpha: 0.65);
+      border: 1px solid #eaeaea;
+      border-radius: 99px;
+      padding: 4px 8px;
       transition: all 0.2s ease-out;
     }
 
@@ -108,6 +143,10 @@
       background-color: transparent;
       padding: 24px 36px;
       font-family: "Quicksand", sans-serif;
+
+      @include tablet {
+        padding: 24px 56px;
+      }
     }
   }
 
