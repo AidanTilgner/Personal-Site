@@ -4,20 +4,7 @@
   let messages: {
     type: "from" | "to";
     message: string;
-  }[] = [
-    {
-      type: "from",
-      message: "Hey, how are you?",
-    },
-    {
-      type: "to",
-      message: "I'm good, how are you?",
-    },
-    {
-      type: "to",
-      message: "I was wondering if everything was alright?",
-    },
-  ];
+  }[] = [];
 
   const addMessage = (text: string) => {
     if (!text) return;
@@ -30,12 +17,71 @@
     ];
   };
 
+  const addResponse = (text: string) => {
+    if (!text) return;
+    messages = [
+      ...messages,
+      {
+        type: "to",
+        message: text,
+      },
+    ];
+  };
+
+  const addChatHistoryToSession = () => {
+    sessionStorage.setItem("chatHistory", JSON.stringify(messages));
+  };
+
+  const getChatHistoryFromSession = () => {
+    const chatHistory = sessionStorage.getItem("chatHistory");
+    if (chatHistory) {
+      messages = JSON.parse(chatHistory);
+    }
+  };
+
+  const submitMessage = async (message: string) => {
+    addMessage(message);
+    const session_id = sessionStorage.getItem("session_id");
+    const response = await fetch("/contact/chat.json", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message,
+        session_id,
+      }),
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .catch((err) => {
+        console.error(err);
+        return {
+          answer:
+            "Sorry, I'm having trouble understanding you. Please try again later.",
+        };
+      });
+
+    addResponse(response.answer);
+  };
+
+  const generateRandomSessionID = () => {
+    return Math.random().toString(36).substring(2, 15);
+  };
+
   onMount(() => {
     document.body.style.overflow = "hidden";
+    getChatHistoryFromSession();
+    if (!sessionStorage.getItem("session_id")) {
+      const session_ID = generateRandomSessionID();
+      sessionStorage.setItem("session_id", session_ID);
+    }
   });
 
   onDestroy(() => {
     document.body.style.overflow = "auto";
+    addChatHistoryToSession();
   });
 
   let input: HTMLTextAreaElement;
@@ -60,19 +106,12 @@
       on:keydown={(e) => {
         if (e.key === "Enter") {
           e.preventDefault();
-          addMessage(e.currentTarget.value);
-          e.currentTarget.value = "";
+          submitMessage(input.value);
+          input.value = "";
         }
       }}
       bind:this={input}
       tabindex="0"
-      on:keydown={(e) => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          addMessage(e.currentTarget.value);
-          e.currentTarget.value = "";
-        }
-      }}
     />
     <i
       class="ph-arrow-right submit"
@@ -80,7 +119,7 @@
       on:click={(e) => {
         e.stopPropagation();
         if (input.value) {
-          addMessage(input.value);
+          submitMessage(input.value);
           input.value = "";
         }
       }}
@@ -89,7 +128,7 @@
         if (e.key === "Enter") {
           e.preventDefault();
           if (input.value) {
-            addMessage(input.value);
+            submitMessage(input.value);
             input.value = "";
           }
         }
