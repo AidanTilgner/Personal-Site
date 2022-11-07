@@ -215,15 +215,10 @@
 
     // when the user inside the child input
     &:focus-within {
-      top: 40%;
       background-color: rgba($color: #fff, $alpha: 0.9);
 
       .input__tooltip {
         opacity: 1;
-      }
-
-      @include tablet {
-        top: 65%;
       }
     }
 
