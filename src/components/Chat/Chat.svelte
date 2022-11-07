@@ -8,12 +8,27 @@
     class="chat"
     title="Chat with my digital assistant"
     on:click={() => (open = true)}
+    tabindex="0"
+    on:keydown={(e) => {
+      if (e.key === "Enter") {
+        open = true;
+      }
+    }}
   >
     <i class="ph-chat" />
   </div>
 {:else}
   <Dialog />
-  <div class="chat-open" on:click={() => (open = false)}>
+  <div
+    class="chat-open"
+    on:click={() => (open = false)}
+    tabindex="0"
+    on:keydown={(e) => {
+      if (e.key === "Enter") {
+        open = false;
+      }
+    }}
+  >
     <i class="ph-x" />
   </div>
 {/if}
