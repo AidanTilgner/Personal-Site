@@ -59,11 +59,15 @@
         console.error(err);
         return {
           answer:
-            "Sorry, I'm having trouble understanding you. Please try again later.",
+            "Sorry, I seem to be having technical difficulties. This has been reported. Please try again later.",
         };
       });
 
-    addResponse(response.answer);
+    const responseToAdd =
+      response.answer ||
+      "Sorry, I seem to be having technical difficulties. This has been reported. Please try again later.";
+
+    addResponse(responseToAdd);
   };
 
   const generateRandomSessionID = () => {
