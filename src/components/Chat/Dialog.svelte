@@ -8,8 +8,12 @@
   }[] = [];
   let buttons: {
     type: string;
-    metadata: { [key: string]: string };
-  }[] = [];
+    metadata?: { [key: string]: string };
+  }[] = [
+    {
+      type: "contact_me",
+    },
+  ];
 
   const addMessage = (text: string) => {
     if (!text) return;
@@ -124,7 +128,6 @@
         <button
           on:click={() => {
             ButtonTypeToAction[type](metadata);
-            buttons = [];
           }}
           class="dialog__button"
         >
@@ -212,7 +215,7 @@
     top: 0;
     right: 0;
     left: 0;
-    bottom: 35%;
+    bottom: 30%;
     padding: 24px;
     overflow-y: scroll;
     box-sizing: border-box;
@@ -223,38 +226,47 @@
 
     &__buttons {
       display: flex;
-      justify-content: center;
+      justify-content: flex-end;
       flex-wrap: wrap;
       gap: 8px;
-      position: absolute;
-      bottom: 0;
+      position: fixed;
+      bottom: 30%;
       left: 0;
       right: 0;
-      padding: 24px;
+      padding: 8px 24px;
       box-sizing: border-box;
     }
 
     &__button {
       padding: 8px 16px;
-      border-radius: 8px;
-      border: 1px solid $cool-blue;
-      background-color: transparent;
+      background-color: white;
+      border: 1px solid rgba($color: $cool-blue, $alpha: 0.6);
+      border-radius: 20px;
       color: $cool-blue;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.1s ease-in-out;
+      box-sizing: border-box;
+      transition: all 0.2s ease-in-out;
+      font-family: "Quicksand", sans-serif;
+      box-shadow: 0.2px 0.2px 10px 0 rgba($color: #000000, $alpha: 0.1);
 
       &:hover {
-        background-color: $cool-blue;
-        color: #fff;
+        border-radius: 0;
+        box-shadow: 0.2px 0.2px 10px 0 rgba($color: #000000, $alpha: 0.1);
+      }
+
+      &:active {
+        border-radius: 0;
+        box-shadow: 0.2px 0.2px 10px 0 rgba($color: #000000, $alpha: 0.1);
+        transform: translateY(2px);
       }
     }
   }
 
   .input {
     position: absolute;
-    top: 65%;
+    top: 70%;
     right: 0;
     left: 0;
     bottom: 0;
