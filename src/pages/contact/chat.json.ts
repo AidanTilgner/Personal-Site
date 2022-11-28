@@ -5,8 +5,6 @@ export const post: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();
     const { message, session_id } = body;
-    console.log("Message: ", message);
-    console.log("Session ID: ", session_id);
 
     const response = await chatInstance
       .post("/chat", {

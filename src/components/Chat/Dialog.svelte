@@ -1,9 +1,14 @@
 <script lang="ts">
   import Bubble from "./Bubble.svelte";
   import { onDestroy, onMount } from "svelte";
+  import { ButtonTypeToAction } from "./attachments";
   let messages: {
     type: "from" | "to";
     message: string;
+  }[] = [];
+  let buttons: {
+    type: string;
+    metadata: { [key: string]: string };
   }[] = [];
 
   const addMessage = (text: string) => {
@@ -64,6 +69,7 @@
       });
 
     addResponse(response.answer);
+    buttons = response.attachments.buttons ? response.attachments.buttons : [];
   };
 
   const generateRandomSessionID = () => {
@@ -94,6 +100,19 @@
     {#each messages as { message, type }}
       <Bubble {message} {type} />
     {/each}
+    <div class="dialog__buttons">
+      {#each buttons as { type, metadata }}
+        <button
+          on:click={() => {
+            ButtonTypeToAction[type](metadata);
+            buttons = [];
+          }}
+          class="dialog__button"
+        >
+          {type}
+        </button>
+      {/each}
+    </div>
   </div>
   <div class="input" bind:this={inputSection} on:click={() => input.focus()}>
     <span class="input__tooltip">Press enter to send</span>
@@ -181,6 +200,36 @@
 
     @include tablet {
       padding: 24px 56px;
+    }
+
+    &__buttons {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    &__button {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid $cool-blue;
+      background-color: transparent;
+      color: $cool-blue;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.1s ease-in-out;
+
+      &:hover {
+        background-color: $cool-blue;
+        color: #fff;
+      }
     }
   }
 

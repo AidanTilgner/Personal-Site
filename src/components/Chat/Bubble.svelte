@@ -1,12 +1,29 @@
 <script lang="ts">
   export let type: "from" | "to";
   export let message: string;
+
+  const parsedMessage = () => {
+    // find a tags, and insert a style attribute
+    const regex = /<a href="(.+?)">(.+?)<\/a>/g;
+    const matches = message.match(regex);
+    if (matches) {
+      matches.forEach((mtch) => {
+        const href = mtch.match(/href="(.+?)"/)?.[1];
+        const text = mtch?.match(/>(.+?)</)?.[1];
+        message = message.replace(
+          mtch,
+          `<a href="${href}" style="color: #fff; text-decoration: underline;" target="_blank">${text}</a>`
+        );
+      });
+    }
+    return message;
+  };
 </script>
 
 <div class="message {type}">
   <div class="message__content {type}">
     <div class="message__content__text">
-      {message}
+      {@html parsedMessage()}
     </div>
   </div>
 </div>
@@ -55,6 +72,10 @@
       &__text {
         font-size: 16px;
         font-weight: 500;
+        a {
+          color: white;
+          text-decoration: underline;
+        }
       }
     }
   }
