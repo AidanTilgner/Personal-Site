@@ -97,6 +97,21 @@
   let input: HTMLTextAreaElement;
   let inputSection: HTMLDivElement;
   let dialogSection: HTMLDivElement;
+
+  const formattedButtonName = (name: string) => {
+    // take a type like contact_me and turn it into Contact Me
+    const formatted = name
+      .split("_")
+      .map((word) => word[0].toUpperCase() + word.slice(1))
+      .join(" ");
+
+    return formatted;
+  };
+
+  // filter buttons based on whether or not they have an associated function
+  $: filteredButtons = buttons.filter((button) => {
+    return ButtonTypeToAction[button.type];
+  });
 </script>
 
 <div class="overlay">
@@ -105,7 +120,7 @@
       <Bubble {message} {type} />
     {/each}
     <div class="dialog__buttons">
-      {#each buttons as { type, metadata }}
+      {#each filteredButtons as { type, metadata }}
         <button
           on:click={() => {
             ButtonTypeToAction[type](metadata);
@@ -113,7 +128,7 @@
           }}
           class="dialog__button"
         >
-          {type}
+          {formattedButtonName(type)}
         </button>
       {/each}
     </div>
