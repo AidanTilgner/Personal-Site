@@ -1,7 +1,30 @@
 ---
+import { default as ArticleCard } from "@/components/Cards/Article.svelte";
 import Layout from "@/layouts/Layout.astro";
+import type { Article } from "@/types/main";
+const posts: Article[] = [
+  {
+    title: "My first blog post",
+    slug: "my-first-blog-post",
+    caption: "This is my first blog post",
+    author: "John Doe",
+    date: "2021-01-01",
+  },
+];
 ---
 
-<Layout title="Blog">
-    bloggy boy
+<Layout title="Aidan Tilgner | Blog">
+  <main>
+    <div class="header">
+      <h2 class="title">Blog</h2>
+    </div>
+    <hr />
+    <section class="articles">
+      {
+        posts.map((p) => {
+          return <ArticleCard article={p} client:load />;
+        })
+      }
+    </section>
+  </main>
 </Layout>
