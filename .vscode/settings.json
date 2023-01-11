@@ -58,5 +58,9 @@
   "typescript.updateImportsOnFileMove.enabled": "always",
   "window.zoomLevel": 1,
   "svelte.plugin.svelte.note-new-transformation": false,
-  "svelte.enable-ts-plugin": true
+  "svelte.enable-ts-plugin": true,
+  "[astro]": {
+    "editor.defaultFormatter": "astro-build.astro-vscode"
+  },
+  "prettier.documentSelectors": ["**/*.astro"],
 }

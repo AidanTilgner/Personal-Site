@@ -3,6 +3,8 @@
   import Resume from "../../assets/files/aidan-tilgner-resume.pdf";
   import Secondary from "../Buttons/Secondary.svelte";
 
+  export let position: "topright" | "bottomright" = "topright";
+
   let open = false;
 
   let openButton: HTMLElement | null = null;
@@ -76,7 +78,7 @@
   >
     <div class="nav">
       <div
-        class="close"
+        class="close {position}"
         on:click={() => {
           closeMenu();
         }}
@@ -113,7 +115,7 @@
   </div>
 {:else}
   <div
-    class="menu"
+    class="menu {position}"
     on:click={() => {
       openMenu();
     }}
@@ -274,8 +276,6 @@
 
   .close {
     position: fixed;
-    top: 36px;
-    right: 14px;
     z-index: 1000;
     cursor: pointer;
     display: flex;
@@ -288,12 +288,6 @@
     width: 56px;
     height: 56px;
     box-shadow: 0 2px 24px 0 rgba(0, 0, 0, 0.1);
-
-    @include desktop {
-      bottom: 36px;
-      right: 36px;
-    }
-
     &-button {
       font-size: 24px;
       color: $accent;
@@ -302,9 +296,6 @@
 
   .menu {
     position: fixed;
-    // halfway from the top
-    top: 36px;
-    right: 14px;
     z-index: 1000;
     cursor: pointer;
     display: flex;
@@ -323,11 +314,6 @@
     animation-timing-function: ease-out;
     transition: all 0.2s ease-in-out;
 
-    @include desktop {
-      bottom: 36px;
-      right: 36px;
-    }
-
     &:hover {
       scale: 1.1;
     }
@@ -335,6 +321,26 @@
     &-button {
       font-size: 24px;
       color: $accent;
+    }
+  }
+
+  .topright {
+    top: 36px;
+    right: 14px;
+
+    @include desktop {
+      bottom: 36px;
+      right: 36px;
+    }
+  }
+
+  .bottomright {
+    bottom: 120px;
+    right: 14px;
+
+    @include desktop {
+      bottom: 120px;
+      right: 36px;
     }
   }
 </style>

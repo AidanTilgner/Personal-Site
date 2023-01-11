@@ -4,11 +4,11 @@ import Layout from "@/layouts/Layout.astro";
 import type { Article } from "@/types/main";
 const posts: Article[] = [
   {
-    title: "My first blog post",
-    slug: "my-first-blog-post",
-    caption: "My first blog post",
-    author: "John Doe",
-    date: "2021-01-01",
+    title: "Greetings",
+    slug: "greetings",
+    caption: "Hey there, welcome to my blog!",
+    author: "Aidan Tilgner",
+    date: "January 11, 2023",
   },
 ];
 ---
@@ -28,3 +28,11 @@ const posts: Article[] = [
     </section>
   </main>
 </Layout>
+
+<style lang="scss">
+  .articles {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+</style>
