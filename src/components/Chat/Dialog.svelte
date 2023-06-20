@@ -73,7 +73,7 @@
       });
 
     const responseToAdd =
-      response.answer ||
+      response.data.answer ||
       "Sorry, I seem to be having technical difficulties. This has been reported. Please try again later.";
 
     addResponse(responseToAdd);
@@ -136,10 +136,18 @@
       {/each}
     </div>
   </div>
-  <div class="input" bind:this={inputSection} on:click={() => input.focus()}>
+  <div
+    class="input"
+    bind:this={inputSection}
+    on:click={() => input.focus()}
+    on:keydown={(e) => {
+      if (e.key === "Enter") {
+        input.focus();
+      }
+    }}
+  >
     <span class="input__tooltip">Press enter to send</span>
     <textarea
-      type="text"
       placeholder="Type a message..."
       on:click={(e) => {
         e.stopPropagation();
@@ -164,7 +172,6 @@
           input.value = "";
         }
       }}
-      tabindex="0"
       on:keydown={(e) => {
         if (e.key === "Enter") {
           e.preventDefault();

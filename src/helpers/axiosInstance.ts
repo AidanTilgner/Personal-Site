@@ -1,12 +1,12 @@
 import axios, { AxiosInstance } from "axios";
 
-const { ONYX_CHAT_URL, ONYX_CHAT_API_KEY } = import.meta.env;
+const { AIRTISAN_CHATBOT_URL, AIRTISAN_CHATBOT_API_KEY } = import.meta.env;
 
 export const chatInstance: AxiosInstance = axios.create({
-  baseURL: ONYX_CHAT_URL,
+  baseURL:  AIRTISAN_CHATBOT_URL,
   headers: {
     "Content-Type": "application/json",
-    "x-api-key": ONYX_CHAT_API_KEY,
-    "x-service": "portfolio",
+    "x-api-key": AIRTISAN_CHATBOT_API_KEY,
+    "x-service": "personal-site",
   },
 });

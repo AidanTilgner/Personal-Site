@@ -1,6 +1,5 @@
 <script lang="ts">
   import Primary from "../Buttons/Primary.svelte";
-  import Resume from "../../assets/files/aidan-tilgner-resume.pdf";
   import Secondary from "../Buttons/Secondary.svelte";
 
   export let position: "topright" | "bottomright" = "topright";
@@ -75,6 +74,9 @@
       closeMenu();
     }}
     bind:this={overlayElement}
+    on:keydown={(e) => {
+      if (e.key === "Enter") closeMenu();
+    }}
   >
     <div class="nav">
       <div
@@ -99,10 +101,10 @@
         <a href="/contact">Contact</a>
       </div>
       <div class="buttons">
-        <a href={Resume} target="_blank">
+        <a href="/assets/files/aidan-tilgner-resume.pdf" target="_blank">
           <Primary text="Resume" download />
         </a>
-        <a href="https://calendly.com/vvibrant/client-call" target="_blank">
+        <a href="https://calendly.com/aidan-t/client-call" target="_blank">
           <Secondary
             props={{
               text: "Let's Call",
