@@ -1,19 +1,4 @@
-import nodemailer from "nodemailer";
-
-const { MAILGUN_USER, MAILGUN_PASSWORD, MAILGUN_FROM } = import.meta.env;
-
-// create transporter with mailgun credentials
-const transporter = nodemailer.createTransport({
-  service: "Mailgun",
-  auth: {
-    user: MAILGUN_USER,
-    pass: MAILGUN_PASSWORD,
-  },
-});
-
-const mailOpts = {
-  from: MAILGUN_FROM,
-};
+import {onyxInstance} from "./axiosInstance"
 
 export async function sendEmail({
   to,
@@ -27,14 +12,18 @@ export async function sendEmail({
   html: string;
 }) {
   try {
-    const info = await transporter.sendMail({
-      ...mailOpts,
+    const res = await onyxInstance.post("/api/services/email-v1.0.0/send-email", {
       to,
       subject,
       text,
       html,
     });
+
+    console.log("Sent email: ", res.data);
+
+    return res;
   } catch (err) {
-    console.error(err);
+    console.error("Error sending email: ", err);
+    return err;
   }
 }

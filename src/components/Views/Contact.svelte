@@ -70,7 +70,7 @@
     if (!validateFormState()) {
       return;
     }
-    const response = await fetch("/.netlify/functions/send-contact-email", {
+    const response = await fetch("/contact/message.json", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
