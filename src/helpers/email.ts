@@ -19,8 +19,6 @@ export async function sendEmail({
       html,
     });
 
-    console.log("Sent email: ", res.data);
-
     return res;
   } catch (err) {
     console.error("Error sending email: ", err);

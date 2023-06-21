@@ -28,25 +28,88 @@ import Carousel from "@/components/Carousel.svelte";
     <div class="section projects">
         <div class="project">
           <ProjectCard
-              title="Personal Site"
-              description="The site that I use to showcase my projects and skills."
-              tags={["Svelte", "Astro", "TypeScript"]}
-              link="https://github.com/AidanTilgner/Personal-Site"
+              title="JobSeek"
+              description="Use AI to streamline the job application process."
+              tags={["React", "TypeScript", "Express"]}
+              link="https://jobseek.aidantilgner.dev"
               client:load
           >
             <Carousel
               items={[
                 {
-                  title: "Home",
-                  image: "/assets/images/projects/portfolio/portfolio-home.jpg",
-                  description: "The home screen",
-                  href: "https://aidantilgner.dev"
+                  title: "Define your Skills",
+                  image: "/assets/images/projects/jobseek/resume-page.png",
+                  description: "Fill out your resume, so that the AI knows how to market you best.",
+                  href: "https://jobseek.aidantilgner.dev/resume"
                 },
                 {
-                  title: "Skills",
-                  image: "/assets/images/projects/portfolio/portfolio-skills.jpg",
-                  description: "The skills screen",
-                  href: "https://aidantilgner.dev/skills"
+                  title: "Generate a Contextual Cover Letter",
+                  image: "/assets/images/projects/jobseek/apply-for-a-job.png",
+                  description: "Generate a cover letter with ease using your resume and the job description.",
+                  href: "https://jobseek.aidantilgner.dev/applications/new"
+                },
+                {
+                  title: "Suggest a Change",
+                  image: "/assets/images/projects/jobseek/apply-for-a-job.png",
+                  description: "Suggest a change to your cover letter, and the AI will rewrite it.",
+                  href: "https://jobseek.aidantilgner.dev/applications/new"
+                }
+              ]}
+              client:load
+            />
+          </ProjectCard>
+        </div>
+        <div class="project">
+          <ProjectCard
+              title="AIrtisan"
+              description="Hallucination-Free ChatGPT for your business. Interact with my AIrtisan chatbot by clicking the chat button!"
+              tags={["React", "TypeScript", "Express", "OpenAI"]}
+              link="https://airtisan.app"
+              client:load
+          >
+            <Carousel
+              items={[
+                {
+                  title: "AIrtisan Dashboard",
+                  image: "/assets/images/projects/airtisan/airtisan-dashboard.png",
+                  description: "The first thing you see after logging in.",
+                  href: "https://airtisan.app/"
+                },
+                {
+                  title: "User Profile",
+                  image: "/assets/images/projects/airtisan/airtisan-profile.png",
+                  description: "Build bots and put them on your profile.",
+                  href: "https://airtisan.app/profile/aidan.tilgner"
+                },
+                {
+                  title: "Bot Overview",
+                  image: "/assets/images/projects/airtisan/airtisan-bot-overview.png",
+                  description: "Get valuable insights and actions on the bot overview.",
+                  href: "https://airtisan.app/bots/create"
+                },
+                {
+                  title: "Bot Training",
+                  image: "/assets/images/projects/airtisan/airtisan-chat-training.png",
+                  description: "Train your bot with ease by chatting with it.",
+                  href: "https://airtisan.app/bots/create"
+                },
+                {
+                  title: "Track Conversations",
+                  image: "/assets/images/projects/airtisan/airtisan-view-conversations.png",
+                  description: "View conversations with your bot and see how it's doing.",
+                  href: "https://airtisan.app/bots/create"
+                },
+                {
+                  title: "Define Intents",
+                  image: "/assets/images/projects/airtisan/airtisan-define-intents.png",
+                  description: "Edit your bot's training data, and define user intents and how it should respond. Or let the 'enhancement' model reply for you.",
+                  href: "https://airtisan.app/bots/create"
+                },
+                {
+                  title: "AIrtisan Integrations",
+                  image: "/assets/images/projects/airtisan/airtisan-integrate-with-widget.png",
+                  description: "Integrate your bot with your website or app with ease using the widget or the API.",
+                  href: "https://airtisan.app/bots/create"
                 }
               ]}
               client:load
@@ -140,6 +203,7 @@ import Carousel from "@/components/Carousel.svelte";
     .projects {
       .project {
         margin-bottom: 82px;
+        height: 80vh;
       }
     }
 </style>

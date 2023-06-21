@@ -13,7 +13,6 @@ export const post: APIRoute = async ({ request }) => {
       })
       .then((res) => res.data)
       .catch((err) => err.response.data);
-    console.log("response", response);
 
     const toSend = {
       ...response,
