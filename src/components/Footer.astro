@@ -52,7 +52,7 @@ import Icon from "./helpers/Icon.svelte";
             target="_blank"
             class=""
           >
-            Professional Tutoring
+            Professional Mentoring
           </a>
         </li>
       </ul>
@@ -62,7 +62,7 @@ import Icon from "./helpers/Icon.svelte";
     <p>Designed and developed by me.</p>
     <p class="copyright">
       <i class="material-icons">copyright</i>
-      2021 Aidan Tilgner. All rights reserved.
+      {new Date().getFullYear()} Aidan Tilgner. All rights reserved.
     </p>
   </div>
 </footer>
@@ -74,7 +74,10 @@ import Icon from "./helpers/Icon.svelte";
     background-color: var(--background-color);
     color: #fff;
     padding: 2.4rem;
-    padding-top: 3.6rem;
+
+    @include desktop {
+      padding: 2.4rem 12.4rem;
+    }
   }
 
   .content {
@@ -95,7 +98,6 @@ import Icon from "./helpers/Icon.svelte";
     justify-content: flex-start;
     // border: 1px solid #fff;
     box-sizing: border-box;
-    padding: 1.4rem 1.4rem;
 
     h4 {
       font-size: 2.2rem;
@@ -111,8 +113,6 @@ import Icon from "./helpers/Icon.svelte";
       padding: 0;
 
       li {
-        border-left: 0.2rem solid #fff;
-        padding-inline-start: 1.4rem;
         transition: all 0.2s ease-in-out;
         display: flex;
         align-items: center;
@@ -124,7 +124,7 @@ import Icon from "./helpers/Icon.svelte";
         }
 
         &:hover {
-          padding-inline-start: 1.8rem;
+          padding-inline-start: 0.4rem;
         }
 
         a {

@@ -62,8 +62,7 @@ import Layout from "../layouts/Layout.astro";
   <main>
     <h1 class="catchy-line">Hey, I'm Aidan</h1>
     <h2 class="code job-title">
-      <span id="job-title"></span><span id="cursor" class="background-gradient"
-      ></span>
+      <span id="job-title"></span><span id="cursor"></span>
     </h2>
   </main>
 </Layout>
@@ -71,7 +70,7 @@ import Layout from "../layouts/Layout.astro";
 <style lang="scss">
   main {
     text-align: left;
-    padding: 2.4rem 2.4rem;
+    padding: 2.4rem 3.6rem;
 
     @media (min-width: 768px) {
       padding: 4.8rem 12.4rem;
@@ -93,8 +92,9 @@ import Layout from "../layouts/Layout.astro";
   #cursor {
     display: inline-block;
     width: 1.6rem;
-    height: 2.4rem;
+    height: 2.8rem;
     vertical-align: middle;
     opacity: 0.75;
+    background-color: rgba(var(--text-color), 1);
   }
 </style>
