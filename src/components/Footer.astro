@@ -47,9 +47,9 @@ import Icon from "./helpers/Icon.svelte";
       <h4>Other</h4>
       <ul>
         <li>
-          <a 
-            href="https://www.wyzant.com/Tutors/DevelopmentWithAidan" 
-            target="_blank" 
+          <a
+            href="https://www.wyzant.com/Tutors/DevelopmentWithAidan"
+            target="_blank"
             class=""
           >
             Professional Tutoring
@@ -71,18 +71,17 @@ import Icon from "./helpers/Icon.svelte";
   @use "../styles/mixins.scss" as *;
 
   footer {
-    box-shadow: inset 0 10px 20px 0 rgba(0, 0, 0, 0.25);
-    background-color: #3d6eff;
+    background-color: var(--background-color);
     color: #fff;
-    padding: 20px;
-    margin-top: 24px;
+    padding: 2.4rem;
+    padding-top: 3.6rem;
   }
 
   .content {
     display: grid;
     grid-template-columns: 1fr;
-    grid-gap: 24px;
-    margin-bottom: 56px;
+    grid-gap: 2.4rem;
+    margin-bottom: 5.6rem;
 
     @include desktop {
       grid-template-columns: 1fr 1fr;
@@ -96,14 +95,14 @@ import Icon from "./helpers/Icon.svelte";
     justify-content: flex-start;
     // border: 1px solid #fff;
     box-sizing: border-box;
-    padding: 14px 14px;
+    padding: 1.4rem 1.4rem;
 
     h4 {
-      font-size: 22px;
+      font-size: 2.2rem;
       font-weight: 500;
       margin: 0;
       padding: 0;
-      margin-bottom: 24px;
+      margin-bottom: 2.4rem;
     }
 
     ul {
@@ -112,44 +111,43 @@ import Icon from "./helpers/Icon.svelte";
       padding: 0;
 
       li {
-        border-left: 2px solid #fff;
-        padding-inline-start: 14px;
+        border-left: 0.2rem solid #fff;
+        padding-inline-start: 1.4rem;
         transition: all 0.2s ease-in-out;
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        margin-bottom: 14px;
+        margin-bottom: 1.4rem;
 
         &:last-child {
           margin-bottom: 0;
         }
 
         &:hover {
-          padding-inline-start: 18px;
-          padding-block: .5px;
+          padding-inline-start: 1.8rem;
         }
 
         a {
           color: #fff;
           text-decoration: none;
           transition: all 0.2s ease-in-out;
-          font-size: 16px;
+          font-size: 1.6rem;
 
           &:hover {
             // font-weight: 500;
             text-decoration: underline;
-            font-size: 16.5px;
           }
         }
 
         .with-icon {
-          margin-left: 8px;
+          margin-left: 0.8rem;
         }
       }
     }
   }
 
   .acknowledgment {
+    font-size: 1.4rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -159,7 +157,7 @@ import Icon from "./helpers/Icon.svelte";
     p {
       margin: 0;
       padding: 0;
-      margin-bottom: 10px;
+      margin-bottom: 1rem;
       font-weight: 500;
     }
 
@@ -168,7 +166,7 @@ import Icon from "./helpers/Icon.svelte";
       justify-content: center;
 
       p {
-        margin-right: 10px;
+        margin-right: 1rem;
       }
     }
   }
@@ -184,8 +182,8 @@ import Icon from "./helpers/Icon.svelte";
     }
 
     i {
-      font-size: 14px;
-      margin-right: 4px;
+      font-size: 1.4rem;
+      margin-right: 0.4rem;
     }
   }
 </style>

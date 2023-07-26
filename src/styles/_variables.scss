@@ -1,8 +1,13 @@
+// ! DEPRECATE THESE
 $accent: rgb(61, 110, 255);
-$accent-hex: #3d6eff;
-$cool-blue: rgb(34, 86, 242);
-$red: #E82015;
-$really-dark: #0f1b40;
-$pretty-purple: #7e4aff;
-$default-padding-mobile: 36px;
-$default-padding-desktop: 100px;
+$accentHex: #3d6eff;
+$coolBlue: rgb(34, 86, 242);
+$red: #e82015;
+$reallyDark: #0f1b40;
+$prettyPurple: #7e4aff;
+$defaultPaddingMobile: 36px;
+$defaultPaddingDesktop: 100px;
+
+// * NEW
+$primaryColor: rgb(8, 2, 245);
+$accentColor: rgb(135, 9, 232);

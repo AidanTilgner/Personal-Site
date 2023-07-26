@@ -28,8 +28,6 @@
   "devDependencies": {
     "@types/nodemailer": "^6.4.8",
     "@types/nodemailer-mailgun-transport": "^1.4.3",
-    "prettier": "^2.8.8",
-    "prettier-plugin-astro": "^0.7.2",
     "sass": "^1.63.4",
     "stylelint": "^14.16.1",
     "stylelint-config-recommended-scss": "^7.0.0",

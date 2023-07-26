@@ -247,9 +247,9 @@
     &__button {
       padding: 8px 16px;
       background-color: white;
-      border: 1px solid rgba($color: $cool-blue, $alpha: 0.6);
+      border: 1px solid rgba($color: $coolBlue, $alpha: 0.6);
       border-radius: 20px;
-      color: $cool-blue;
+      color: $coolBlue;
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
@@ -295,7 +295,7 @@
       font-size: 18px;
       padding: 8px;
       border-radius: 50%;
-      background-color: $cool-blue;
+      background-color: $coolBlue;
       color: white;
       box-shadow: 0 0.2px 24px 0 rgba($color: #000000, $alpha: 0.25);
     }

@@ -43,7 +43,7 @@
     right: 14px;
     height: 56px;
     width: 56px;
-    background-color: $cool-blue;
+    background-color: $coolBlue;
     border-radius: 50%;
     cursor: pointer;
     // border: 1px solid #eaeaea;
@@ -75,7 +75,7 @@
     right: 14px;
     height: 56px;
     width: 56px;
-    background-color: $cool-blue;
+    background-color: $coolBlue;
     border-radius: 50%;
     cursor: pointer;
     // border: 1px solid #eaeaea;

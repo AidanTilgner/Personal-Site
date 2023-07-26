@@ -1,66 +1,6 @@
 {
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
-  "workbench.editorAssociations": {
-    "*.ipynb": "jupyter.notebook.ipynb"
-  },
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "workbench.colorTheme": "SynthWave '84",
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.suggestSelection": "first",
-  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-  "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter",
-    "editor.formatOnSave": true
-  },
   "editor.formatOnSave": true,
-  "python.formatting.provider": "black",
-  "C_Cpp.autocompleteAddParentheses": true,
-  "C_Cpp.clang_format_path": "clang-format",
   "[svelte]": {
-    "editor.defaultFormatter": "svelte.svelte-vscode",
-    "editor.formatOnSave": true
-  },
-  "svelte.ask-to-enable-ts-plugin": false,
-  "editor.inlineSuggest.enabled": true,
-  "github.copilot.enable": {
-    "*": true,
-    "yaml": true,
-    "plaintext": true,
-    "markdown": true,
-    "javascript": true,
-    "python": true,
-    "cpp": true,
-    "html": true,
-    "css": true,
-    "go": true,
-    "typescript": true
-  },
-  "[restructuredtext]": {},
-  "[go]": {
-    "editor.defaultFormatter": "golang.go"
-  },
-  "go.toolsManagement.autoUpdate": true,
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "window.zoomLevel": 1,
-  "svelte.plugin.svelte.note-new-transformation": false,
-  "svelte.enable-ts-plugin": true,
-  "[astro]": {
-    "editor.defaultFormatter": "astro-build.astro-vscode"
-  },
-  "prettier.documentSelectors": ["**/*.astro"],
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  }
 }

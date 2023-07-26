@@ -13,19 +13,19 @@
 }
 
 @mixin default-padding {
-  padding: 0 36px;
+  padding: 2.4rem 3.6rem;
 
   @include tablet {
-    padding: 0 48px;
+    padding: 0 4.8rem;
   }
 
   @include desktop {
-    padding: 0 72px;
+    padding: 0 7.2rem;
   }
 }
 
 @mixin text-gradient {
-  background-image: linear-gradient($accent, $pretty-purple);
+  background-image: linear-gradient($accent, $prettyPurple);
   background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 400%;
@@ -43,17 +43,41 @@
 }
 
 @mixin background-gradient {
-  @keyframes shimmer {
+  background-image: linear-gradient(
+    135deg,
+    rgba($primaryColor, 0.75) 0%,
+    rgba($accentColor, 0.75) 100%
+  );
+}
+
+@mixin backgroundRadial {
+  @keyframes radialMovement {
     0% {
-      background-position: 0%;
+      background-position: 0% 0%;
+    }
+    25% {
+      background-position: 100% 0%;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+    75% {
+      background-position: 0% 100%;
     }
     100% {
-      background-position: 400%;
+      background-position: 0% 0%;
     }
   }
 
-  background-image: linear-gradient($accent, $pretty-purple);
-  animation: shimmer 3s ease infinite;
-  background-size: 400%;
-  background-position: 0%;
+  background-image: radial-gradient(
+    100% 100% at 50% 50%,
+    rgba($accentColor, 0.5) 0%,
+    rgba($primaryColor, 0.25) 45%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  animation: radialMovement 25s linear infinite;
+  background-size: 200% 200%;
+}
+
+@mixin backgroundLinear {
 }

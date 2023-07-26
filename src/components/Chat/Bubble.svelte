@@ -60,13 +60,13 @@
       animation-timing-function: ease-out;
 
       &.to {
-        background-color: $cool-blue;
+        background-color: $coolBlue;
         color: white;
       }
 
       &.from {
         background-color: white;
-        color: $cool-blue;
+        color: $coolBlue;
       }
 
       &__text {
