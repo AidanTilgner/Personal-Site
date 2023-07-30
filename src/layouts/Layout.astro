@@ -15,7 +15,7 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <meta
       name="description"
-      content="Software Developer, using the latest technologies to bring the world better services."
+      content="Software Engineer, using the latest technologies to bring the world better services."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,19 +23,37 @@ const { title } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@100;200;300;400;500;600;700;800&family=Quicksand:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
-    />
     <script src="https://unpkg.com/phosphor-icons"></script>
     <title>{title}</title>
   </head>
   <body>
     <slot />
-    <style lang="scss" is:global></style>
+    <style lang="scss" is:global>
+      html {
+        --background-color: 0, 0, 0;
+        --text-color: 255, 255, 255;
+        --primary-color: 8, 2, 245;
+        --accent-color: 135, 9, 232;
+        --font-family: "Inter", sans-serif;
+        font-size: 10px;
+      }
+
+      body {
+        background-color: rgb(var(--background-color));
+        color: rgb(var(--text-color));
+        font-family: var(--font-family);
+        margin: 0;
+        padding: 0;
+      }
+
+      .pill {
+        background-color: rgba(var(--primary-color), 0.1);
+        border-radius: 1rem;
+        display: inline-block;
+        font-size: 1.2rem;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+      }
+    </style>
   </body>
 </html>

@@ -1,0 +1,14 @@
+.intro {
+  .text {
+    font-size: 2.4rem;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 0.75rem;
+    height: 2.4rem;
+    background-color: rgb(var(--text-color));
+    position: relative;
+    top: 0.2rem;
+  }
+}

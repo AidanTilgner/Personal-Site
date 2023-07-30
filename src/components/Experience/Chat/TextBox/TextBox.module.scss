@@ -1,0 +1,40 @@
+.textbox {
+  width: 100%;
+  height: 100%;
+
+  input {
+    border: none;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: 1.4rem 1.8rem;
+    border-radius: 0.5rem;
+    background-color: rgba(var(--text-color), 0.25);
+    color: rgb(var(--text-color));
+    font-size: 1.8rem;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .suggestions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin: 1.8rem 0;
+  }
+
+  .suggestion {
+    color: rgb(var(--text-color));
+    border: none;
+    background-color: transparent;
+    font-size: 1.4rem;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
