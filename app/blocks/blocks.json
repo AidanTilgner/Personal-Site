@@ -1,15 +1,7 @@
 [
   {
-    "id": "3506b6e2aeb89b06",
-    "name": "test",
-    "content": {
-      "type": "raw",
-      "data": "<div><div class=\"test-{{id}}\">test</div><style>.test-{{id}}{outline: 1px solid red;}</style>/div>"
-    }
-  },
-  {
     "id": "3506b6e2aeb89b07",
-    "name": "test2",
+    "name": "test",
     "content": {
       "type": "url",
       "data": "[SERVER_URL]/content/blocks/block-file/test.html?block_id={{id}}"

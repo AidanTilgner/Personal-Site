@@ -12,15 +12,13 @@ interface LoadedBlock {
   content: JSX.Element;
 }
 
-console.log("SERVER URL: ", import.meta.env.PUBLIC_BACKEND_URL);
-
 const URLParser = (url: string) => {
   const fields: [[string, () => string]] = [
     ["[SERVER_URL]", () => import.meta.env.PUBLIC_BACKEND_URL || ""],
   ];
   let copy = url;
   fields.forEach((f) => {
-    copy = copy.replace(f[0], f[1]());
+    copy = copy.replaceAll(f[0], f[1]());
   });
   return copy;
 };
@@ -72,8 +70,40 @@ function Content({ blocks }: ContentProps) {
     })();
   }, [blocks]);
 
+  const scriptsRef = React.useRef<HTMLScriptElement[]>([]);
+
+  useEffect(() => {
+    loadedBlocks.forEach((block) => {
+      const el = document.querySelector(`#block-${block.id}`);
+      if (!el) {
+        return;
+      }
+      const scripts = el.getElementsByTagName("script");
+      for (let i = 0; i < scripts.length; i++) {
+        const script = document.createElement("script");
+        script.text = scripts[i].text;
+        document.body.appendChild(script);
+        scriptsRef.current.push(script);
+      }
+      return;
+    });
+
+    return () => {
+      scriptsRef.current.forEach((script) => {
+        if (!script || !document.body.contains(script)) return;
+        document.body.removeChild(script);
+      });
+    };
+  }, [loadedBlocks]);
+
   return (
-    <div className={styles.content}>{loadedBlocks.map((b) => b.content)}</div>
+    <div className={styles.content}>
+      {loadedBlocks.length ? (
+        loadedBlocks.map((b) => b.content)
+      ) : (
+        <p className={styles.disclaimer}>Type something in the box.</p>
+      )}
+    </div>
   );
 }
 

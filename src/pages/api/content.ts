@@ -11,8 +11,6 @@ export const get: APIRoute = async ({ request }) => {
       `/content/blocks?query=${query}`
     );
 
-    console.log("Got data from backend", data);
-
     return new Response(
       JSON.stringify({
         message: "Successfully retrieved blocks!",

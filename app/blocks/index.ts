@@ -44,7 +44,7 @@ export const parseBlockContent = (content: string, block: Block) => {
     ["{{id}}", (b: Block) => b.id],
   ];
   fields.forEach((field) => {
-    content = content.replace(field[0], field[1](block));
+    content = content.replaceAll(field[0], field[1](block));
   });
   return content;
 };

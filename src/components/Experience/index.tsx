@@ -17,17 +17,29 @@ function index() {
       if (!query) {
         return;
       }
-      console.log("Getting blocks with query: ", query);
       const response = await fetch(`/api/content?query="${query}"`);
       const data = await response.json();
 
-      console.log("Data: ", data);
-
       setBlocks(data.data);
     })();
+
+    if (query) {
+      const url = new URL(window.location.href);
+      const urlSearchParams = new URLSearchParams(url.search);
+      urlSearchParams.set("query", query);
+      url.search = urlSearchParams.toString();
+      window.history.pushState({}, "", url.toString());
+    }
   }, [query]);
 
-  console.log("Blocks: ", blocks);
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const q = urlSearchParams.get("query");
+
+    if (q) {
+      setQuery(q);
+    }
+  }, []);
 
   return (
     <div className={styles.experience}>
