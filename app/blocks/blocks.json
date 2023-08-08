@@ -12,7 +12,7 @@
     "name": "test2",
     "content": {
       "type": "url",
-      "data": "http://localhost:3006/blocks/test.html"
+      "data": "[SERVER_URL]/content/blocks/block-file/test.html?block_id={{id}}"
     }
   }
 ]

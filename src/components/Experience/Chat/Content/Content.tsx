@@ -12,10 +12,24 @@ interface LoadedBlock {
   content: JSX.Element;
 }
 
+console.log("SERVER URL: ", import.meta.env.PUBLIC_BACKEND_URL);
+
+const URLParser = (url: string) => {
+  const fields: [[string, () => string]] = [
+    ["[SERVER_URL]", () => import.meta.env.PUBLIC_BACKEND_URL || ""],
+  ];
+  let copy = url;
+  fields.forEach((f) => {
+    copy = copy.replace(f[0], f[1]());
+  });
+  return copy;
+};
+
 const contentTypeToHTMLMapper = {
   raw: (data: string) => <div>{data}</div>,
   url: async (data: string) => {
-    const response = await fetch(data);
+    const parsedUrl = URLParser(data);
+    const response = await fetch(parsedUrl);
     const text = await response.text();
     return <div>{text}</div>;
   },
