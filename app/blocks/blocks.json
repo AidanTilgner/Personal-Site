@@ -1,0 +1,10 @@
+[
+  {
+    "id": "3506b6e2aeb89b06",
+    "name": "test",
+    "content": {
+      "type": "raw",
+      "data": "<div><div class=\"test-{{id}}\">test</div><style>.test-{{id}}{outline: 1px solid red;}</style>/div>"
+    }
+  }
+]
