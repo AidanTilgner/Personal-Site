@@ -1,6 +1,12 @@
 .textbox {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (min-width: 768px) {
+    justify-content: flex-end;
+  }
 
   input {
     border: none;
@@ -8,10 +14,10 @@
     width: 100%;
     height: 100%;
     padding: 1.4rem 1.8rem;
-    border-radius: 0.5rem;
-    background-color: rgba(var(--text-color), 0.25);
+    background-color: transparent;
     color: rgb(var(--text-color));
     font-size: 1.8rem;
+    border: 2px solid rgba($color: var(--text-color), $alpha: 1);
 
     &:focus {
       outline: none;
@@ -27,14 +33,39 @@
   }
 
   .suggestion {
-    color: rgb(var(--text-color));
+    color: rgba(var(--text-color), 0.75);
     border: none;
     background-color: transparent;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     cursor: pointer;
 
     &:hover {
       text-decoration: underline;
+      color: rgba(var(--text-color), 1);
     }
+  }
+}
+
+.textboxcontainer {
+  position: relative;
+}
+
+.sendmessage {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  aspect-ratio: 1/1;
+  font-size: 2.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: rgba(var(--text-color), 0.75);
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    color: rgba(var(--text-color), 1);
   }
 }

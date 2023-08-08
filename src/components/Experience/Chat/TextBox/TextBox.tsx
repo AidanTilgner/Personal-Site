@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./TextBox.module.scss";
+import { ArrowCircleRight } from "@phosphor-icons/react";
 
 function TextBox({
   onSubmit,
@@ -10,6 +11,11 @@ function TextBox({
 }) {
   const [text, setText] = React.useState("");
 
+  const handleSubmit = (text: string) => {
+    setText("");
+    onSubmit(text);
+  };
+
   return (
     <div className={styles.textbox}>
       <div className={styles.suggestions}>
@@ -18,7 +24,7 @@ function TextBox({
             <button
               className={styles.suggestion}
               onClick={() => {
-                onSubmit(suggestion);
+                handleSubmit(suggestion);
               }}
               key={suggestion}
             >
@@ -27,14 +33,27 @@ function TextBox({
           );
         })}
       </div>
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => {
-          setText(e.target.value);
-        }}
-        placeholder="Ask me anything..."
-      />
+      <div className={styles.textboxcontainer}>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value);
+          }}
+          placeholder="Ask me anything..."
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSubmit(text);
+            }
+          }}
+        />
+        <button
+          className={styles.sendmessage}
+          onClick={() => handleSubmit(text)}
+        >
+          <ArrowCircleRight />
+        </button>
+      </div>
     </div>
   );
 }

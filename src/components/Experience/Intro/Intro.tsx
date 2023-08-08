@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import styles from "./Intro.module.scss";
+import { X } from "@phosphor-icons/react";
 
 function Intro({ onComplete }: { onComplete: () => void }) {
   const phases = [
@@ -15,6 +16,13 @@ function Intro({ onComplete }: { onComplete: () => void }) {
 
   const textRef = React.useRef<HTMLElement>(null);
   const cursorRef = React.useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (localStorage.getItem("seen_intro") === "true") {
+      onComplete();
+    }
+    localStorage.setItem("seen_intro", "true");
+  }, []);
 
   const playPhase = () => {
     for (let i = 0; i < currentPhase.length; i++) {
@@ -36,19 +44,25 @@ function Intro({ onComplete }: { onComplete: () => void }) {
       return;
     }
     setCPhase(cPhase + 1);
-    textRef.current!.innerHTML = "";
+    if (textRef.current) {
+      textRef.current!.innerHTML = "";
+    }
   };
 
-  const betweenTime = 5000;
+  const betweenTime = 3000;
   const delay = 1000;
 
   useEffect(() => {
     setTimeout(() => {
       playPhase();
     }, delay);
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       nextPhase();
     }, currentPhase.length * 50 + betweenTime + delay);
+
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [cPhase]);
 
   const cursorVisible = useRef(true);
@@ -71,6 +85,9 @@ function Intro({ onComplete }: { onComplete: () => void }) {
     <div className={styles.intro} id="experience-intro">
       <span className={styles.text} ref={textRef} />
       <span className={styles.cursor} ref={cursorRef} />
+      <button className={styles.close} onClick={onComplete} title="Too cheesy.">
+        <X weight="bold" />
+      </button>
     </div>
   );
 }

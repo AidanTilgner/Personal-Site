@@ -3,9 +3,10 @@ import Intro from "./Intro/Intro";
 import styles from "./index.module.scss";
 import TextBox from "./Chat/TextBox/TextBox";
 import type { Message } from "../../types/main";
+import Content from "./Chat/Content/Content";
 
 function index() {
-  const [playingIntro, setPlayingIntro] = React.useState(false);
+  const [playingIntro, setPlayingIntro] = React.useState(true);
   const [conversation, setConversation] = React.useState<Message[]>([]);
 
   return (
@@ -19,6 +20,9 @@ function index() {
       )}
       {!playingIntro && (
         <div className={styles.chat}>
+          <div className={styles.content}>
+            <Content />
+          </div>
           <div className={styles.textbox}>
             <TextBox
               onSubmit={(text) => {
@@ -30,10 +34,7 @@ function index() {
                   },
                 ]);
               }}
-              suggestions={[
-                "What is Aidan's experience?",
-                "Why should I hire Aidan?",
-              ]}
+              suggestions={["What is this?", "Aidan? Who?"]}
             />
           </div>
         </div>
