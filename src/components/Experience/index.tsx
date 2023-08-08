@@ -34,7 +34,7 @@ function index() {
                   },
                 ]);
               }}
-              suggestions={["What is this?", "Aidan? Who?"]}
+              suggestions={["What is this?", "Aidan? Who?", "Aidan's Projects"]}
             />
           </div>
         </div>
