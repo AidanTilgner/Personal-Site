@@ -73,6 +73,11 @@ function Content({ blocks }: ContentProps) {
   const scriptsRef = React.useRef<HTMLScriptElement[]>([]);
 
   useEffect(() => {
+    scriptsRef.current.forEach((script) => {
+      if (!script || !document.body.contains(script)) return;
+      document.body.removeChild(script);
+    });
+    scriptsRef.current = [];
     loadedBlocks.forEach((block) => {
       const el = document.querySelector(`#block-${block.id}`);
       if (!el) {
@@ -87,13 +92,6 @@ function Content({ blocks }: ContentProps) {
       }
       return;
     });
-
-    return () => {
-      scriptsRef.current.forEach((script) => {
-        if (!script || !document.body.contains(script)) return;
-        document.body.removeChild(script);
-      });
-    };
   }, [loadedBlocks]);
 
   return (
@@ -101,7 +99,7 @@ function Content({ blocks }: ContentProps) {
       {loadedBlocks.length ? (
         loadedBlocks.map((b) => b.content)
       ) : (
-        <p className={styles.disclaimer}>Type something in the box.</p>
+        <p className={styles.disclaimer}>Something should go here...</p>
       )}
     </div>
   );

@@ -4,7 +4,9 @@ import type { Block } from "../../../types/blocks";
 
 export const get: APIRoute = async ({ request }) => {
   try {
-    const searchParams = new URLSearchParams(request.url);
+    const url = new URL(request.url);
+    const searchParams = url.searchParams;
+    console.log("Search params", searchParams);
     const query = searchParams.get("query");
 
     const { data } = await backend.get<{ data: Block[] }>(

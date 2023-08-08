@@ -67,7 +67,12 @@ function index() {
                 ]);
                 setQuery(text);
               }}
-              suggestions={["What is this?", "Aidan? Who?", "Aidan's Projects"]}
+              suggestions={[
+                "What is this?",
+                "Aidan? Who?",
+                "Projects.",
+                "Skills.",
+              ]}
             />
           </div>
         </div>

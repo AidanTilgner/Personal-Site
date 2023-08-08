@@ -17,6 +17,9 @@ const app = Express();
 
 app.use(cors());
 
+app.use(Express.json());
+app.use(Express.urlencoded({ extended: true }));
+
 app.use("/content", contentRouter);
 app.use(Express.static(path.join(__dirname, "./public")));
 

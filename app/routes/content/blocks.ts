@@ -8,11 +8,11 @@ import {
 
 const router = Router();
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const query = req.query.query as string | undefined;
 
-    const blocks = getBlocks(query);
+    const blocks = await getBlocks(query);
 
     res.send({
       message: "Successfully retrieved blocks!",
@@ -27,7 +27,7 @@ router.get("/", (req, res) => {
   }
 });
 
-router.get("/block-file/:filename", (req, res) => {
+router.get("/block-file/:filename", async (req, res) => {
   try {
     const file = getBlockFile(req.params.filename);
     const block_id = req.query.block_id as string | undefined;
@@ -40,13 +40,13 @@ router.get("/block-file/:filename", (req, res) => {
       return res.status(404).send("File not found.");
     }
 
-    const block = getBlock(block_id);
+    const block = await getBlock(block_id);
 
     if (!block) {
       return res.status(404).send("Block not found.");
     }
 
-    const parsedContent = parseBlockContent(file, block);
+    const parsedContent = await parseBlockContent(file, block);
 
     res.send(parsedContent);
   } catch (error) {

@@ -3,6 +3,9 @@ import type { Block } from "../../types/blocks";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
+import { train, processQuery } from "./nlp";
+
+train();
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -10,19 +13,19 @@ const __dirname = path.dirname(__filename);
 
 const blocks = blocksJSON as Block[];
 
-export const getBlocks = (query?: string | undefined) => {
+export const getBlocks = async (query?: string | undefined) => {
   if (query) {
     return getQueriedBlocks(query);
   }
   return getParsedBlocks(blocks);
 };
 
-export const getBlock = (id: string) => {
+export const getBlock = async (id: string) => {
   const block = blocks.find((block) => block.id === id);
   if (!block) {
     return undefined;
   }
-  const content = parseBlockContent(block.content.data, block);
+  const content = await parseBlockContent(block.content.data, block);
   return {
     ...block,
     content: {
@@ -32,14 +35,15 @@ export const getBlock = (id: string) => {
   } satisfies Block;
 };
 
-export const getQueriedBlocks = (query: string) => {
+export const getQueriedBlocks = async (query: string) => {
   const parsedBlocks = getParsedBlocks(blocks);
+  console.log("Processing query", query);
+  const processed = await processQuery(query);
+  console.log("Processed", processed);
   return parsedBlocks;
 };
 
-export const parseContent = (content: string) => {};
-
-export const parseBlockContent = (content: string, block: Block) => {
+export const parseBlockContent = async (content: string, block: Block) => {
   const fields: [[string, (b: Block) => string]] = [
     ["{{id}}", (b: Block) => b.id],
   ];
@@ -49,16 +53,17 @@ export const parseBlockContent = (content: string, block: Block) => {
   return content;
 };
 
-export const getParsedBlocks = (blocks: Block[]) => {
-  return blocks.map((block) => {
+export const getParsedBlocks = async (blocks: Block[]) => {
+  const ps = blocks.map(async (block) => {
     return {
       ...block,
       content: {
         ...block.content,
-        data: parseBlockContent(block.content.data, block),
+        data: await parseBlockContent(block.content.data, block),
       },
     } satisfies Block;
   });
+  return Promise.all(ps);
 };
 
 export const getBlockFile = (filename: string) => {

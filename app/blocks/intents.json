@@ -1,0 +1,10 @@
+{
+  "name": "blocks",
+  "locale": "en-US",
+  "data": [
+    {
+      "intent": "testing",
+      "utterances": ["test", "testing", "test test"]
+    }
+  ]
+}
