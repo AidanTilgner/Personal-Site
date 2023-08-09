@@ -3,9 +3,11 @@ import type { Block } from "../../types/blocks";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
-import { train, processQuery } from "./nlp";
+import { train, processQuery, getIntentFilteredBlocks } from "./nlp";
+import { generateMetaData } from "./metadata";
 
 train();
+generateMetaData();
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -37,10 +39,9 @@ export const getBlock = async (id: string) => {
 
 export const getQueriedBlocks = async (query: string) => {
   const parsedBlocks = getParsedBlocks(blocks);
-  console.log("Processing query", query);
-  const processed = await processQuery(query);
-  console.log("Processed", processed);
-  return parsedBlocks;
+  const { intent } = await processQuery(query);
+  const filteredBlocks = getIntentFilteredBlocks(blocks, intent);
+  return filteredBlocks;
 };
 
 export const parseBlockContent = async (content: string, block: Block) => {
