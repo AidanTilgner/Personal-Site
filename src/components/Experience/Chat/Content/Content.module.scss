@@ -1,6 +1,7 @@
 .content {
   font-size: 2.4rem;
   height: 100%;
+  width: 100%;
   text-align: left;
   box-sizing: border-box;
   overflow-y: scroll;
@@ -10,9 +11,10 @@
 
 .block {
   border: 1px solid rgba($color: var(--text-color), $alpha: 1);
-  height: 20vh;
   margin-bottom: 2.4rem;
   padding: 1.4rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .disclaimer {

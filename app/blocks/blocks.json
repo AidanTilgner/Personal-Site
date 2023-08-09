@@ -15,6 +15,15 @@
       "type": "url",
       "data": "[SELF_BLOCK_FILE]"
     },
-    "when_intents": ["testing"]
+    "when_intents": ["greetings", "art"]
+  },
+  {
+    "id": "ab093d0387729d11",
+    "name": "donut",
+    "content": {
+      "type": "url",
+      "data": "[SELF_BLOCK_FILE]"
+    },
+    "when_intents": ["donut", "art"]
   }
 ]

@@ -6,8 +6,9 @@ import path from "path";
 import { train, processQuery, getIntentFilteredBlocks } from "./nlp";
 import { generateMetaData } from "./metadata";
 
-train();
-generateMetaData();
+await train().then(() => {
+  generateMetaData();
+});
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -70,6 +71,6 @@ export const getParsedBlocks = async (blocks: Block[]) => {
 export const getBlockFile = (filename: string) => {
   return readFileSync(
     path.join(__dirname, `../public/blocks/${filename}`),
-    "utf-8"
+    "utf-8",
   ).toString();
 };

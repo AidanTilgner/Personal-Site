@@ -5,6 +5,25 @@
     {
       "intent": "testing",
       "utterances": ["test", "testing", "test test"]
+    },
+    {
+      "intent": "greetings",
+      "utterances": ["hello", "hi", "hey", "yo", "sup"]
+    },
+    {
+      "intent": "donut",
+      "utterances": ["donut", "doughnut", "donuts", "doughnuts"]
+    },
+    {
+      "intent": "art",
+      "utterances": [
+        "art",
+        "arts",
+        "artwork",
+        "artworks",
+        "art work",
+        "art works"
+      ]
     }
   ]
 }
