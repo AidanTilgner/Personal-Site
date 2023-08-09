@@ -12,9 +12,16 @@ interface LoadedBlock {
   content: JSX.Element;
 }
 
-const URLParser = (url: string) => {
-  const fields: [[string, () => string]] = [
+const URLParser = (url: string, block: Block) => {
+  const fields: [string, () => string][] = [
     ["[SERVER_URL]", () => import.meta.env.PUBLIC_BACKEND_URL || ""],
+    [
+      "[SELF_BLOCK_FILE]",
+      () =>
+        `${import.meta.env.PUBLIC_BACKEND_URL}/content/blocks/block-file/${
+          block.name
+        }.html?block_id=${block.id}`,
+    ],
   ];
   let copy = url;
   fields.forEach((f) => {
@@ -25,8 +32,8 @@ const URLParser = (url: string) => {
 
 const contentTypeToHTMLMapper = {
   raw: (data: string) => <div>{data}</div>,
-  url: async (data: string) => {
-    const parsedUrl = URLParser(data);
+  url: async (data: string, block: Block) => {
+    const parsedUrl = URLParser(data, block);
     const response = await fetch(parsedUrl);
     const text = await response.text();
     return <div>{text}</div>;
@@ -38,7 +45,8 @@ const getLoadedBlocks = async (blocks: Block[]): Promise<LoadedBlock[]> => {
 
   for (const block of blocks) {
     const content = await contentTypeToHTMLMapper[block.content.type](
-      block.content.data
+      block.content.data,
+      block
     );
 
     loadedBlocks.push({

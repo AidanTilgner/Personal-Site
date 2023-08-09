@@ -7,5 +7,14 @@
       "data": "[SERVER_URL]/content/blocks/block-file/test.html?block_id={{id}}"
     },
     "when_intents": ["testing"]
+  },
+  {
+    "id": "8bb9e25bdeb8088f",
+    "name": "welcome",
+    "content": {
+      "type": "url",
+      "data": "[SELF_BLOCK_FILE]"
+    },
+    "when_intents": ["testing"]
   }
 ]

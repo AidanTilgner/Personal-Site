@@ -38,9 +38,9 @@ export const getBlock = async (id: string) => {
 };
 
 export const getQueriedBlocks = async (query: string) => {
-  const parsedBlocks = getParsedBlocks(blocks);
+  const parsedBlocks = await getParsedBlocks(blocks);
   const { intent } = await processQuery(query);
-  const filteredBlocks = getIntentFilteredBlocks(blocks, intent);
+  const filteredBlocks = getIntentFilteredBlocks(parsedBlocks, intent);
   return filteredBlocks;
 };
 
