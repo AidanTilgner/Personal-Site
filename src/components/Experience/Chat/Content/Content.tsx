@@ -95,12 +95,23 @@ function Content({ blocks }: ContentProps) {
       for (let i = 0; i < scripts.length; i++) {
         const script = document.createElement("script");
         script.text = scripts[i].text;
+        script.dataset.to_cleanup = "true";
         document.body.appendChild(script);
         scriptsRef.current.push(script);
       }
       return;
     });
   }, [loadedBlocks]);
+
+  useEffect(() => {
+    return () => {
+      const scripts = document.querySelectorAll("script[data-to_cleanup]");
+      scripts.forEach((script) => {
+        if (!script || !document.body.contains(script)) return;
+        document.body.removeChild(script);
+      });
+    };
+  });
 
   return (
     <div className={styles.content}>
