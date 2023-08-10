@@ -5,14 +5,36 @@ import {
   getBlocks,
   parseBlockContent,
 } from "../../blocks";
+import { startBlockResponseStream } from "../../blocks/gpt";
+import { getConnection } from "../socket-io";
 
 const router = Router();
 
 router.get("/", async (req, res) => {
   try {
     const query = req.query.query as string | undefined;
+    const socket_id = req.headers["x-socket-id"] as string | undefined;
+
+    console.log("Headers:", req.headers);
+    console.log("Socket ID:", socket_id);
 
     const blocks = await getBlocks(query);
+
+    if (!socket_id) {
+      return res.send({
+        message: "Successfully retrieved blocks!",
+        data: { blocks },
+      });
+    }
+
+    const socket = getConnection(socket_id);
+
+    startBlockResponseStream(socket, blocks, [
+      {
+        role: "user",
+        content: query,
+      },
+    ]);
 
     res.send({
       message: "Successfully retrieved blocks!",

@@ -2,6 +2,7 @@
   {
     "id": "3506b6e2aeb89b07",
     "name": "test",
+    "description": "Just a test block, used for testing",
     "content": {
       "type": "url",
       "data": "[SELF_BLOCK_FILE]"
@@ -11,6 +12,7 @@
   {
     "id": "8bb9e25bdeb8088f",
     "name": "welcome",
+    "description": "A welcome message",
     "content": {
       "type": "url",
       "data": "[SELF_BLOCK_FILE]"
@@ -20,6 +22,7 @@
   {
     "id": "ab093d0387729d11",
     "name": "donut",
+    "description": "A cool spinning ascii donut",
     "content": {
       "type": "url",
       "data": "[SELF_BLOCK_FILE]"

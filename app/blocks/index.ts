@@ -98,6 +98,7 @@ export const getFallbackBlock = () => {
   const fallback = {
     id: "fallback-block",
     name: "fallback",
+    description: "A fallback block when no other block is found.",
     content: {
       type: "url" as const,
       data: "[SELF_BLOCK_FILE]",
