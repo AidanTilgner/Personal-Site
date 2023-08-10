@@ -70,8 +70,10 @@ export const getAllWhenIntents = async () => {
 
 export const getAllCorpusIntents = async () => {
   const corpus = readFileSync(path.join(__dirname, "intents.json"), "utf-8");
-  const intents = JSON.parse(corpus).data.map((d: any) => d.intent);
-  return intents;
+  const intents = JSON.parse(corpus).data.map(
+    (d: { intent: string }) => d.intent,
+  );
+  return intents as string[];
 };
 
 export const getIntentFilteredBlocks = async (

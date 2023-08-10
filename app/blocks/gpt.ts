@@ -127,6 +127,8 @@ export const startBlockResponseStream = async (
         Your job is to answer questions, and overall respond to users in a helpful and witty manner.
         Context will be provided to you about what the user is currently looking at as well.
 
+        Aidan is a software engineer, and has fun using various technologies to build cool things.
+
         Here is some context as to what the user is looking at.
         Each "block" is a different section of the page that the user has in view, based on their message:
 

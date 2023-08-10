@@ -11,9 +11,6 @@ p {
 }
 
 .character {
-  position: absolute;
-  top: 0;
-  right: 0;
   text-decoration: none;
   color: var(--text-color);
   transition: all 0.2s ease-in-out;
@@ -31,8 +28,6 @@ p {
 
   &.with_message {
     top: initial;
-    bottom: 0;
-    right: 0;
     height: 20%;
 
     pre {
