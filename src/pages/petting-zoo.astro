@@ -1,0 +1,19 @@
+---
+import Layout from "../layouts/Layout.astro";
+import View from "../components/PettingZoo";
+---
+
+<Layout title="Petting Zoo">
+    <main>
+        <div class="animals">
+            <View client:load />
+        </div>
+    </main>
+</Layout>
+
+<style lang="scss">
+    main {
+        min-height: 100vh;
+    }
+</style>
+

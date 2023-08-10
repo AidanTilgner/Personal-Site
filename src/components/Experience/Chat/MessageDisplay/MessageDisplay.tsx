@@ -9,6 +9,8 @@ interface MessageDisplayProps {
 }
 
 function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
+  const [characterHover, setCharacterHover] = React.useState(false);
+
   const CharacterStates = [
     <pre key={"state-1"}>
       {`
@@ -60,6 +62,21 @@ function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
     </pre>,
   ];
 
+  const characterWinkState = (
+    <pre>
+      {`
+      //
+   _o-\\
+  (*_/ \\  _  _
+     \\  \\/ \\/ \\
+     (         )\\
+      \\_______/  \\
+       [[] [[]]
+       [[] [[]]
+      `}
+    </pre>
+  );
+
   const [currentCharacterState, setCurrentCharacterState] = React.useState(0);
 
   console.log(
@@ -86,11 +103,13 @@ function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
   return (
     <div className={styles.message_display}>
       <a
-        className={styles.character}
+        className={`${styles.character} ${message ? styles.with_message : ""}`}
         title="*camel noises*"
         href="/?query=ocaml"
+        onMouseEnter={() => setCharacterHover(true)}
+        onMouseLeave={() => setCharacterHover(false)}
       >
-        <CurrentCharacterState />
+        {characterHover ? characterWinkState : <CurrentCharacterState />}
       </a>
       <p className={styles.message}>{message}</p>
     </div>
