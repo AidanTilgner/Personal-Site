@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 
     res.send({
       message: "Successfully retrieved blocks!",
-      data: blocks,
+      data: { blocks },
     });
   } catch (error) {
     console.error(error);

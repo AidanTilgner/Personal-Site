@@ -20,7 +20,7 @@ function index() {
       const response = await fetch(`/api/content?query="${query}"`);
       const data = await response.json();
 
-      setBlocks(data.data);
+      setBlocks(data.data.blocks);
     })();
 
     if (query) {
