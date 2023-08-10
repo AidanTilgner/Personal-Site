@@ -20,7 +20,6 @@ function index() {
       if (!query || loading) {
         return;
       }
-      console.log("Socket ID", getSocket().id);
       const response = await fetch(`/api/content?query="${query}"`, {
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +56,6 @@ function index() {
         done: boolean;
         index: number;
       }) => {
-        console.log("Message received", message);
         setDisplayMessage((prev) => prev + message.message_fragment);
       },
     );

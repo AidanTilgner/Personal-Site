@@ -15,12 +15,9 @@ router.get("/", async (req, res) => {
     const query = req.query.query as string | undefined;
     const socket_id = req.headers["x-socket-id"] as string | undefined;
 
-    console.log("Headers:", req.headers);
-    console.log("Socket ID:", socket_id);
-
     const blocks = await getBlocks(query);
 
-    if (!socket_id) {
+    if (!socket_id || !query) {
       return res.send({
         message: "Successfully retrieved blocks!",
         data: { blocks },
@@ -29,12 +26,7 @@ router.get("/", async (req, res) => {
 
     const socket = getConnection(socket_id);
 
-    startBlockResponseStream(socket, blocks, [
-      {
-        role: "user",
-        content: query,
-      },
-    ]);
+    startBlockResponseStream(socket, blocks, query);
 
     res.send({
       message: "Successfully retrieved blocks!",
