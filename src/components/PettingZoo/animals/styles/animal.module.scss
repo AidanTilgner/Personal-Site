@@ -7,6 +7,7 @@
   position: absolute;
   left: 0;
   bottom: 0;
+  z-index: 3;
 
   pre {
     white-space: pre;
@@ -17,10 +18,17 @@
 .animal_itself {
   position: absolute;
   bottom: 0;
+  cursor: grab;
+  z-index: 4;
 
   pre {
     font-weight: 600;
   }
+}
+
+.total_pets {
+  opacity: 0.5;
+  font-size: 1.6rem;
 }
 
 .description {
@@ -30,4 +38,6 @@
   padding: 0;
   text-align: center;
   text-align: left;
+  position: relative;
+  z-index: 5;
 }

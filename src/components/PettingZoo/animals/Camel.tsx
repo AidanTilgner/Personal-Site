@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-escape */
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import type { AnimalProps } from "..";
 import styles from "./styles/animal.module.scss";
 
@@ -62,7 +62,7 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
       {`
           //
        _o-\\
-      (*_/ \\  _  _
+      (__/ \\  _  _
          \\  \\/ \\/ \\
          (         )\\
           \\_______/  \\
@@ -88,12 +88,25 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
     return CharacterStates[currentCharacterState];
   };
 
-  const [is_hovering, setIsHovering] = React.useState(false);
+  const [shouldWink, setShouldWink] = React.useState(false);
+  const pets = useRef(
+    localStorage.getItem("camel_total_pets")
+      ? parseInt(localStorage.getItem("camel_total_pets")!)
+      : 0,
+  );
+  const petsRef = useRef<HTMLParagraphElement>(null);
+
+  const handlePet = () => {
+    pets.current += 1;
+    petsRef.current!.innerHTML = `Total pets: ${pets.current}`;
+    localStorage.setItem("camel_total_pets", pets.current.toString());
+  };
 
   return (
     <div
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
+      onClick={() => {
+        setShouldWink((prev) => !prev);
+      }}
       title="*camel noises*"
       className={styles.animal}
       id="camel"
@@ -116,10 +129,18 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
         `}
         </pre>
       </div>
-      <div className={styles.animal_itself}>
-        {is_hovering ? characterWinkState : <CurrentCharacterState />}
+      <div
+        className={styles.animal_itself}
+        onMouseEnter={() => {
+          handlePet();
+        }}
+      >
+        {shouldWink ? characterWinkState : <CurrentCharacterState />}
       </div>
-      {is_hovering && (
+      <p className={styles.total_pets} ref={petsRef}>
+        Total pets: {Number(localStorage.getItem("camel_total_pets")) ?? 0}
+      </p>
+      {shouldWink && (
         <p className={styles.description}>
           Camels are mammals with long legs, a big-lipped snout and a humped
           back. They are most commonly found in the deserts of Africa and Asia.
