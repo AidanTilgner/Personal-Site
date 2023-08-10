@@ -32,7 +32,7 @@ router.get("/block-file/:filename", async (req, res) => {
     const file = getBlockFile(req.params.filename);
     const block_id = req.query.block_id as string | undefined;
 
-    if (!block_id) {
+    if (!block_id && block_id !== "fallback-block") {
       return res.status(400).send("No block ID.");
     }
 

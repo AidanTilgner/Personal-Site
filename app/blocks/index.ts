@@ -3,7 +3,12 @@ import type { Block } from "../../types/blocks";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
-import { train, processQuery, getIntentFilteredBlocks } from "./nlp";
+import {
+  train,
+  processQuery,
+  getIntentFilteredBlocks,
+  getClassificationFilteredBlocks,
+} from "./nlp";
 import { generateMetaData } from "./metadata";
 
 await train().then(() => {
@@ -18,12 +23,23 @@ const blocks = blocksJSON as Block[];
 
 export const getBlocks = async (query?: string | undefined) => {
   if (query) {
-    return getQueriedBlocks(query);
+    const blks = await getQueriedBlocks(query);
+    if (!blks.length) {
+      return [getFallbackBlock()];
+    }
+    return blks;
   }
-  return getParsedBlocks(blocks);
+  const blks = await getParsedBlocks(blocks);
+  if (!blks.length) {
+    return [getFallbackBlock()];
+  }
+  return blks;
 };
 
 export const getBlock = async (id: string) => {
+  if (id === "fallback-block") {
+    return getFallbackBlock();
+  }
   const block = blocks.find((block) => block.id === id);
   if (!block) {
     return undefined;
@@ -40,8 +56,11 @@ export const getBlock = async (id: string) => {
 
 export const getQueriedBlocks = async (query: string) => {
   const parsedBlocks = await getParsedBlocks(blocks);
-  const { intent } = await processQuery(query);
-  const filteredBlocks = getIntentFilteredBlocks(parsedBlocks, intent);
+  const { classifications } = await processQuery(query);
+  const filteredBlocks = await getClassificationFilteredBlocks(
+    parsedBlocks,
+    classifications,
+  );
   return filteredBlocks;
 };
 
@@ -73,4 +92,17 @@ export const getBlockFile = (filename: string) => {
     path.join(__dirname, `../public/blocks/${filename}`),
     "utf-8",
   ).toString();
+};
+
+export const getFallbackBlock = () => {
+  const fallback = {
+    id: "fallback-block",
+    name: "fallback",
+    content: {
+      type: "url" as const,
+      data: "[SELF_BLOCK_FILE]",
+    },
+    when_intents: ["None"],
+  };
+  return fallback satisfies Block;
 };

@@ -76,7 +76,31 @@ export const getAllCorpusIntents = async () => {
 
 export const getIntentFilteredBlocks = async (
   blocks: Block[],
-  intent: string
+  intent: string,
 ) => {
   return blocks.filter((b) => b.when_intents.includes(intent));
+};
+
+const CLASSIFICATION_THRESHOLD = 0.51;
+
+export const getClassificationFilteredBlocks = async (
+  blocks: Block[],
+  classifications: ProcessedResponse["classifications"],
+) => {
+  // get all the blocks which match one of the classifications
+  const intents = classifications
+    .filter((c) => c.score >= CLASSIFICATION_THRESHOLD)
+    .map((c) => c.intent);
+  const filteredBlocks = blocks.filter((b) => {
+    return b.when_intents.some((i) => intents.includes(i));
+  });
+  const sortedBlocks = filteredBlocks.sort((a, b) => {
+    const aScore = classifications.find((c) => c.intent === a.id)?.score;
+    const bScore = classifications.find((c) => c.intent === b.id)?.score;
+    if (!aScore || !bScore) {
+      return 0;
+    }
+    return bScore - aScore;
+  });
+  return sortedBlocks;
 };

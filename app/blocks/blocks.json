@@ -4,7 +4,7 @@
     "name": "test",
     "content": {
       "type": "url",
-      "data": "[SERVER_URL]/content/blocks/block-file/test.html?block_id={{id}}"
+      "data": "[SELF_BLOCK_FILE]"
     },
     "when_intents": ["testing"]
   },
