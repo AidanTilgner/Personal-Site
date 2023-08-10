@@ -1,11 +1,10 @@
 import type { Socket } from "socket.io";
 import type { Block } from "../../types/blocks";
 import { getChatCompletionStream } from "../utils/openai";
-import type { ChatCompletionRequestMessage } from "openai-edge";
 import { readFileSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
-import { Readable } from "stream";
+import { format } from "prettier";
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -16,7 +15,7 @@ export const checkCache = (prompt: string) => {
     path.join(__dirname, "./.cache/responses.json"),
     "utf-8",
   ).toString();
-  const parsedCache = JSON.parse(cache);
+  const parsedCache = cache.startsWith("{") ? JSON.parse(cache) : {};
   const cachedResponse = parsedCache[prompt];
   if (!cachedResponse) {
     return undefined;
@@ -24,16 +23,16 @@ export const checkCache = (prompt: string) => {
   return cachedResponse;
 };
 
-export const cacheResponse = (prompt: string, response: string) => {
+export const cacheResponse = async (prompt: string, response: string) => {
   const cache = readFileSync(
     path.join(__dirname, "./.cache/responses.json"),
     "utf-8",
   ).toString();
-  const parsedCache = JSON.parse(cache);
+  const parsedCache = cache.startsWith("{") ? JSON.parse(cache) : {};
   parsedCache[prompt] = response;
   writeFileSync(
     path.join(__dirname, "./.cache/responses.json"),
-    JSON.stringify(parsedCache),
+    await format(JSON.stringify(parsedCache), { parser: "json" }),
   );
 };
 
@@ -115,7 +114,7 @@ export const startBlockResponseStream = async (
     const cachedResponse = checkCache(prompt);
 
     if (cachedResponse) {
-      emitStreamToSocket(socket, createWordStream(cachedResponse, 100));
+      emitStreamToSocket(socket, createWordStream(cachedResponse, 50));
       return;
     }
 
