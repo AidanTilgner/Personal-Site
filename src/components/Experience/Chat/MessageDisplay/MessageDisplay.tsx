@@ -105,7 +105,7 @@ function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
       <a
         className={`${styles.character} ${message ? styles.with_message : ""}`}
         title="*camel noises*"
-        href="/?query=ocaml"
+        href="/petting-zoo#camel"
         onMouseEnter={() => setCharacterHover(true)}
         onMouseLeave={() => setCharacterHover(false)}
       >

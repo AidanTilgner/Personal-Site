@@ -1,12 +1,33 @@
 .animal {
   padding: 1.4rem;
+  position: relative;
+}
+
+.background {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+
+  pre {
+    white-space: pre;
+    opacity: 0.25;
+  }
+}
+
+.animal_itself {
+  position: absolute;
+  bottom: 0;
+
+  pre {
+    font-weight: 600;
+  }
 }
 
 .description {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 400;
   margin: 0;
   padding: 0;
   text-align: center;
-  text-transform: uppercase;
+  text-align: left;
 }

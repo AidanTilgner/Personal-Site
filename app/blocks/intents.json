@@ -24,6 +24,16 @@
         "art work",
         "art works"
       ]
+    },
+    {
+      "intent": "inquire_purpose",
+      "utterances": [
+        "what are you?",
+        "what is your purpose?",
+        "what do you do?",
+        "what can you do?",
+        "what are you for?"
+      ]
     }
   ]
 }

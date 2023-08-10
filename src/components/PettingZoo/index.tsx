@@ -12,7 +12,7 @@ function index() {
     <div className={styles.pettingZoo}>
       <div className={styles.land_animals}>
         {land_animals.map((Animal, index) => {
-          return <Animal key={index} is_talking={true} talk_speed={300} />;
+          return <Animal key={index} is_talking={false} talk_speed={300} />;
         })}
       </div>
     </div>

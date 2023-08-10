@@ -19,6 +19,10 @@ p {
   transition: all 0.2s ease-in-out;
   box-sizing: border-box;
 
+  &:hover {
+    text-decoration: underline;
+  }
+
   pre {
     font-size: 0.75rem;
     margin-bottom: 1.4rem;

@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import React, { useEffect } from "react";
 import type { AnimalProps } from "..";
 import styles from "./styles/animal.module.scss";
@@ -95,12 +96,42 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
       onMouseLeave={() => setIsHovering(false)}
       title="*camel noises*"
       className={styles.animal}
+      id="camel"
     >
-      {is_hovering ? characterWinkState : <CurrentCharacterState />}
+      <div className={styles.background}>
+        <pre>
+          {`
+                    ,,           .-.
+           .       || |     .     ) )
+                   || |   ,      '-'
+                   || |  | |   .
+                   || '--' |
+        .    ,,    || .----'
+            || |   || |   .
+            |  '---'| |
+            '------.| |        .
+            .      || |
+                   || | .        *
+         ____\\|/___||_|_________\\|/____
+        `}
+        </pre>
+      </div>
+      <div className={styles.animal_itself}>
+        {is_hovering ? characterWinkState : <CurrentCharacterState />}
+      </div>
       {is_hovering && (
         <p className={styles.description}>
           Camels are mammals with long legs, a big-lipped snout and a humped
           back. They are most commonly found in the deserts of Africa and Asia.
+          Also,{" "}
+          <a
+            href="https://ocaml.org/"
+            target="_blank"
+            rel="noopenner noreferrer"
+          >
+            OCaml
+          </a>{" "}
+          is a great programming language!
         </p>
       )}
     </div>
