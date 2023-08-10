@@ -24,9 +24,9 @@
     const asciiChars = ascii.innerText.split("");
     const asciiCharsWithSpans = asciiChars.map(
       (char) =>
-        `<span class="color-${
+        `<span style="color: ${
           colors[Math.floor(Math.random() * colors.length)]
-        }">${char}</span>`,
+        };">${char}</span>`,
     );
     ascii.innerHTML = asciiCharsWithSpans.join("");
   </script>

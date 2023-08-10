@@ -1,0 +1,28 @@
+.message_display {
+  padding: 0;
+  height: 100%;
+  overflow-y: scroll;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--text-color), 0.15) transparent;
+  text-align: left;
+}
+
+p {
+  padding: 0;
+  margin: 0;
+}
+
+.character {
+  text-decoration: none;
+
+  pre {
+    font-size: 0.75rem;
+    margin-bottom: 1.4rem;
+    white-space: pre;
+  }
+}
+
+.message {
+  font-size: 2.4rem;
+}

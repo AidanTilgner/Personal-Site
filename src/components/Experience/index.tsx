@@ -6,6 +6,7 @@ import type { Message } from "../../types/main";
 import Content from "./Chat/Content/Content";
 import type { Block } from "../../../types/blocks";
 import { getSocket, socket } from "../../utils/socket.io-client";
+import MessageDisplay from "./Chat/MessageDisplay/MessageDisplay";
 
 function index() {
   const [loading, setLoading] = useState(true);
@@ -14,6 +15,7 @@ function index() {
   const [query, setQuery] = useState<string>("");
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [displayMessage, setDisplayMessage] = useState<string>("");
+  const [messageLoading, setMessageLoading] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -55,8 +57,21 @@ function index() {
         message_fragment: string;
         done: boolean;
         index: number;
+        full_message: string;
       }) => {
-        setDisplayMessage((prev) => prev + message.message_fragment);
+        if (message.done) {
+          setMessageLoading(false);
+          setDisplayMessage(message.full_message);
+          return;
+        }
+        setDisplayMessage((prev) => {
+          // if it wasn't loading before, then it's a new message
+          if (message.index === 0) {
+            return message.message_fragment;
+          }
+          return prev + message.message_fragment;
+        });
+        setMessageLoading(true);
       },
     );
 
@@ -79,27 +94,33 @@ function index() {
           <div className={styles.content}>
             <Content blocks={blocks} />
           </div>
-          <div className={styles.textbox}>
-            <p>{displayMessage}</p>
-            <br />
-            <TextBox
-              onSubmit={(text) => {
-                setConversation([
-                  ...conversation,
-                  {
-                    role: "user" as const,
-                    content: text,
-                  },
-                ]);
-                setQuery(text);
-              }}
-              suggestions={[
-                "What is this?",
-                "Aidan? Who?",
-                "Projects.",
-                "Skills.",
-              ]}
-            />
+          <div className={styles.text}>
+            <div className={styles.display_message}>
+              <MessageDisplay
+                message={displayMessage}
+                is_streaming={messageLoading}
+              />
+            </div>
+            <div className={styles.textbox}>
+              <TextBox
+                onSubmit={(text) => {
+                  setConversation([
+                    ...conversation,
+                    {
+                      role: "user" as const,
+                      content: text,
+                    },
+                  ]);
+                  setQuery(text);
+                }}
+                suggestions={[
+                  "What is this?",
+                  "Aidan? Who?",
+                  "Projects.",
+                  "Skills.",
+                ]}
+              />
+            </div>
           </div>
         </div>
       )}

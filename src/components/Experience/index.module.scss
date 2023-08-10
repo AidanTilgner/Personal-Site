@@ -23,13 +23,23 @@
   }
 }
 
-.textbox {
+.text {
   box-sizing: border-box;
   height: 20%;
 
   @media screen and (min-width: 768px) {
     width: 25%;
     height: 100%;
+  }
+
+  .display_message {
+    height: 50%;
+    box-sizing: border-box;
+  }
+
+  .textbox {
+    height: 50%;
+    box-sizing: border-box;
   }
 }
 

@@ -96,6 +96,7 @@ export const emitStreamToSocket = (
         message_fragment: decodedValue,
         done: false,
         index: count++,
+        full_message,
       });
 
       readStream();
