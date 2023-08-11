@@ -79,11 +79,6 @@ function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
 
   const [currentCharacterState, setCurrentCharacterState] = React.useState(0);
 
-  console.log(
-    "Current character state: ",
-    CharacterStates[currentCharacterState],
-  );
-
   useEffect(() => {
     if (is_streaming) {
       const interval = setInterval(() => {
@@ -113,7 +108,7 @@ function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
       <a
         className={`${styles.character} ${message ? styles.with_message : ""}`}
         title="*camel noises*"
-        href="/petting-zoo#camel"
+        href="/petting-zoo"
         onMouseEnter={() => setCharacterHover(true)}
         onMouseLeave={() => setCharacterHover(false)}
       >

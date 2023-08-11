@@ -111,13 +111,13 @@ func addBlock() *cli.Command {
 			}
 
 			block := bl.IBlockConstructor{
-				Name:        strings.ToLower(blockName),
-				Description: description,
+				Name:        u.RemoveRune(strings.ToLower(blockName), '\n'),
+				Description: u.RemoveRune(description, '\n'),
 				Content: bl.IBlockContent{
 					Datatype: useDataType,
 					Data:     data,
 				},
-				When_intents: strings.Split(intents, ","),
+				When_intents: strings.Split(u.RemoveRune(intents, '\n'), ","),
 			}
 			bl.AddBlock(&block)
 			return nil

@@ -35,6 +35,22 @@ type IBlock struct {
 	When_intents []string      `json:"when_intents"`
 }
 
+func getBlockLocation() (string, error) {
+	root, err := u.GetRoot()
+	if err != nil {
+		return "", err
+	}
+	return root + "/app/blocks/blocks.json", nil
+}
+
+func getBlockFilesLocation() (string, error) {
+	root, err := u.GetRoot()
+	if err != nil {
+		return "", err
+	}
+	return root + "/app/public/blocks", nil
+}
+
 func AddBlock(block *IBlockConstructor) (IBlock, error) {
 	id, err := u.GenerateRandomBytes(16)
 	if err != nil {
@@ -64,31 +80,23 @@ func AddBlock(block *IBlockConstructor) (IBlock, error) {
 
 	blocks = append(blocks, newBlock)
 
-	newBlocksJSON, err := json.Marshal(blocks)
-	if err != nil {
-		return IBlock{}, err
-	}
-
-	fmt.Println(
-		"New blocks JSON:",
-		string(newBlocksJSON),
-	)
-
 	err = writeBlocks(blocks)
 
 	if err != nil {
 		return IBlock{}, err
 	}
 
+	createBlockFile(newBlock.Name)
+
 	return IBlock{}, nil
 }
 
 func getBlocks() ([]IBlock, error) {
-	root, err := u.GetRoot()
+	location, err := getBlockLocation()
 	if err != nil {
 		return []IBlock{}, err
 	}
-	blocksFile, err := os.Open(root + "/app/blocks/blocks-test.json")
+	blocksFile, err := os.Open(location)
 	if err != nil {
 		return []IBlock{}, err
 	}
@@ -105,11 +113,11 @@ func getBlocks() ([]IBlock, error) {
 }
 
 func writeBlocks(blocks []IBlock) error {
-	root, err := u.GetRoot()
+	location, err := getBlockLocation()
 	if err != nil {
 		return err
 	}
-	blocksFile, err := os.Create(root + "/app/blocks/blocks-test.json") // Use os.Create to create or truncate the file
+	blocksFile, err := os.Create(location)
 	if err != nil {
 		return err
 	}
@@ -120,6 +128,45 @@ func writeBlocks(blocks []IBlock) error {
 	if err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func createBlockFile(name string) error {
+	// check the blocks directory for the
+	folder, err := getBlockFilesLocation()
+	if err != nil {
+		return err
+	}
+
+	file := folder + "/" + name + ".html"
+
+	exists := u.FileExists(file)
+
+	if exists {
+		return nil
+	}
+
+	newFile, err := os.Create(file)
+	if err != nil {
+		return err
+	}
+	// add some boilerplate to the file, use the contents of
+	// the file: /app/config/block-boilerplate.html
+	root, err := u.GetRoot()
+	if err != nil {
+		return err
+	}
+	boilerplate, err := os.Open(root + "/app/config/block-boilerplate.html")
+	if err != nil {
+		return err
+	}
+
+	_, err = newFile.ReadFrom(boilerplate)
+
+	fmt.Println("Created file at", file)
+
+	u.FormatAll()
 
 	return nil
 }

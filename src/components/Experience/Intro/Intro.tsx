@@ -56,9 +56,12 @@ function Intro({ onComplete }: { onComplete: () => void }) {
     setTimeout(() => {
       playPhase();
     }, delay);
-    const timeout = setTimeout(() => {
-      nextPhase();
-    }, currentPhase.length * 50 + betweenTime + delay);
+    const timeout = setTimeout(
+      () => {
+        nextPhase();
+      },
+      currentPhase.length * 50 + betweenTime + delay,
+    );
 
     return () => {
       clearTimeout(timeout);

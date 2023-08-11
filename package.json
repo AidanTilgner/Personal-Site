@@ -9,7 +9,8 @@
     "preview:astro": "astro preview",
     "astro": "astro",
     "dev:server": "tsx watch ./app/index.ts",
-    "start:server": "tsx ./app/index.ts"
+    "start:server": "tsx ./app/index.ts",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@astrojs/node": "^5.3.2",

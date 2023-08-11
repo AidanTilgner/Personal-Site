@@ -46,7 +46,7 @@ const getLoadedBlocks = async (blocks: Block[]): Promise<LoadedBlock[]> => {
   for (const block of blocks) {
     const content = await contentTypeToHTMLMapper[block.content.type](
       block.content.data,
-      block
+      block,
     );
 
     loadedBlocks.push({
