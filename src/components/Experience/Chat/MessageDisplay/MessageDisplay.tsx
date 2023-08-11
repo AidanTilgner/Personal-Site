@@ -121,7 +121,7 @@ function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
       </a>
       <p className={styles.message}>
         <span>{message}</span>
-        <div ref={scrollRef} />
+        <span ref={scrollRef} />
       </p>
     </div>
   );

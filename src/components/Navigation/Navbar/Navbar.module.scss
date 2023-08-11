@@ -13,7 +13,14 @@
 }
 
 .navLogo {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.8rem;
   font-size: 2.4rem;
+
+  a {
+    color: rgba($color: var(--text-color), $alpha: 1);
+  }
 
   .disclaimer {
     font-size: 1rem;

@@ -3,6 +3,7 @@ package blocks
 import (
 	"encoding/json"
 	"fmt"
+	u "personal-site-cli/utils"
 )
 
 type IBlockContentType string
@@ -34,7 +35,13 @@ type IBlock struct {
 }
 
 func AddBlock(block *IBlockConstructor) (IBlock, error) {
+	id, err := u.GenerateRandomBytes(16)
+	if err != nil {
+		return IBlock{}, err
+	}
+
 	newBlock := IBlock{
+		Id:           id,
 		Name:         block.Name,
 		Description:  block.Description,
 		Content:      block.Content,
