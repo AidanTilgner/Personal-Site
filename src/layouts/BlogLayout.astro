@@ -2,6 +2,8 @@
 import Navbar from "../components/Navigation/Navbar/Navbar";
 import type { MarkdownLayoutProps } from "astro";
 import type { BlogPost } from "../types/main.d";
+import { getPrettyDate } from "../utils/formatting";
+import { ArrowLeft } from "@phosphor-icons/react";
 type Props = MarkdownLayoutProps<BlogPost>;
 
 const {
@@ -26,7 +28,7 @@ const {
     <meta name="generator" content={Astro.generator} />
     <meta
       name="description"
-      content="Software Engineer, using the latest technologies to bring the world better services."
+      content={description || "a blog post on Aidan's personal website"}
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -39,7 +41,31 @@ const {
   </head>
   <body>
     <Navbar client:load />
-    <slot />
+    <a class="back-button" href="/blog"><ArrowLeft /> All Posts</a>
+    <div class="metadata">
+      <h1 class="title">{title}</h1>
+      <p class="description">{description}</p>
+      <div class="metadata__info">
+        <div class="metadata__info__author">
+          <p>By {author}</p>
+        </div>
+        <div class="metadata__info__date">
+          <p>Posted on {getPrettyDate(postdate)}</p>
+        </div>
+        <div class="metadata__info__tags">
+          {
+            tags.map((t) => (
+              <a href={`/blog?filter=${t}`} class="metadata__info__tag">
+                {t}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+    <div class="post">
+      <slot />
+    </div>
     <style lang="scss" is:global>
       html {
         --background-color: 0, 0, 0;
@@ -56,6 +82,7 @@ const {
         color: rgb(var(--text-color));
         font-family: var(--font-family);
         padding: 0;
+        margin: 0;
         padding-block-start: 82px;
       }
 
@@ -72,13 +99,84 @@ const {
         }
       }
 
-      .pill {
-        background-color: rgba(var(--primary-color), 0.1);
-        border-radius: 1rem;
-        display: inline-block;
-        font-size: 1.2rem;
-        font-weight: 500;
-        padding: 0.5rem 1rem;
+      .back-button {
+        font-size: 1.8rem;
+        padding: 2.4rem 2.4rem 0 2.4rem;
+        color: rgba($color: var(--text-color), $alpha: 0.6);
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+
+        @media (min-width: 768px) {
+          padding: 2.4rem 12.4rem 0 12.4rem;
+          font-size: 1.6rem;
+        }
+
+        &:hover {
+          svg {
+            transform: translateX(-0.4rem);
+          }
+        }
+      }
+
+      .metadata {
+        padding: 2.4rem;
+        font-size: 1.8rem;
+
+        @media (min-width: 768px) {
+          padding: 2.4rem 12.4rem;
+          font-size: 2.4rem;
+        }
+
+        .title {
+          padding: 0;
+          margin: 0;
+          margin-bottom: 1.4rem;
+        }
+
+        .description {
+          font-size: 1.6rem;
+          margin-bottom: 1.8rem;
+        }
+
+        &__info {
+          display: flex;
+          gap: 1.4rem;
+          flex-wrap: wrap;
+          flex-direction: column;
+
+          p {
+            margin: 0;
+            padding: 0;
+            font-size: 1.4rem;
+            opacity: 0.6;
+          }
+
+          &__tags {
+            display: flex;
+            gap: 1.4rem;
+            flex-wrap: wrap;
+          }
+
+          &__tag {
+            font-size: 1.4rem;
+            color: rgba($color: var(--text-color), $alpha: 0.8);
+            background-color: rgba($color: var(--text-color), $alpha: 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: 1px solid rgba($color: var(--text-color), $alpha: 0.2);
+          }
+        }
+      }
+
+      .post {
+        padding: 2.4rem;
+        font-size: 1.8rem;
+
+        @media (min-width: 768px) {
+          padding: 2.4rem 12.4rem;
+          font-size: 2.4rem;
+        }
       }
     </style>
   </body>
