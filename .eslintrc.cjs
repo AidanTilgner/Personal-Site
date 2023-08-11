@@ -27,7 +27,12 @@ module.exports = {
   },
   plugins: ["@typescript-eslint", "react"],
   rules: {
-    // no explicit any
     "@typescript-eslint/no-explicit-any": "off",
+    "no-console": [
+      "warn",
+      {
+        allow: ["warn", "error"],
+      },
+    ],
   },
 };

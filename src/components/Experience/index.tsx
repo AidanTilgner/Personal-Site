@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Intro from "./Intro/Intro";
 import styles from "./index.module.scss";
 import TextBox from "./Chat/TextBox/TextBox";
-import type { Message } from "../../types/main";
+import type { Message } from "../../../types/conversation";
 import Content from "./Chat/Content/Content";
 import type { Block } from "../../../types/blocks";
 import { getSocket, socket } from "../../utils/socket.io-client";
@@ -11,8 +11,7 @@ import MessageDisplay from "./Chat/MessageDisplay/MessageDisplay";
 function index() {
   const [loading, setLoading] = useState(true);
   const [playingIntro, setPlayingIntro] = useState(false);
-  const [conversation, setConversation] = useState<Message[]>([]);
-  const [query, setQuery] = useState<string>("");
+  const conversation = useRef<Message[]>([]);
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [displayMessage, setDisplayMessage] = useState<string>("");
   const [messageLoading, setMessageLoading] = useState<boolean>(false);
@@ -23,37 +22,38 @@ function index() {
     }
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      if (!query || loading) {
-        return;
-      }
-      const response = await fetch(`/api/content?query="${query}"`, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-socket-id": getSocket().id,
-        },
-      });
-      const data = await response.json();
-
-      setBlocks(data.data.blocks);
-    })();
-
-    if (query) {
-      const url = new URL(window.location.href);
-      const urlSearchParams = new URLSearchParams(url.search);
-      urlSearchParams.set("query", query);
-      url.search = urlSearchParams.toString();
-      window.history.pushState({}, "", url.toString());
+  const submitMessage = async () => {
+    if (!conversation || loading) {
+      return;
     }
-  }, [query, loading]);
+    const response = await fetch(`/api/content`, {
+      method: "POST",
+      body: JSON.stringify({
+        conversation: conversation.current,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        "x-socket-id": getSocket().id,
+      },
+    });
+    const data = await response.json();
+
+    setBlocks(data.data.blocks);
+  };
+
+  const storeConversation = () => {
+    sessionStorage.setItem(
+      "conversation",
+      JSON.stringify(conversation.current),
+    );
+  };
 
   useEffect(() => {
-    const urlSearchParams = new URLSearchParams(window.location.search);
-    const q = urlSearchParams.get("query");
-
-    if (q) {
-      setQuery(q);
+    const storedConversation = sessionStorage.getItem("conversation");
+    if (storedConversation) {
+      conversation.current = storedConversation.startsWith("[")
+        ? JSON.parse(storedConversation)
+        : [];
     }
 
     socket.on(
@@ -68,6 +68,13 @@ function index() {
         if (message.done) {
           setMessageLoading(false);
           setDisplayMessage(message.full_message);
+          conversation.current = [
+            ...conversation.current,
+            {
+              role: "assistant",
+              content: message.full_message,
+            },
+          ];
           return;
         }
         setDisplayMessage((prev) => {
@@ -84,6 +91,12 @@ function index() {
     socket.on("connect", () => {
       setLoading(false);
     });
+
+    return () => {
+      storeConversation();
+      socket.off("block-response-stream");
+      socket.off("connect");
+    };
   }, []);
 
   return (
@@ -110,14 +123,14 @@ function index() {
             <div className={styles.textbox}>
               <TextBox
                 onSubmit={(text) => {
-                  setConversation([
-                    ...conversation,
+                  conversation.current = [
+                    ...conversation.current,
                     {
                       role: "user" as const,
                       content: text,
                     },
-                  ]);
-                  setQuery(text);
+                  ];
+                  submitMessage();
                 }}
                 suggestions={[
                   "What is this?",

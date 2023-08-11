@@ -5,6 +5,7 @@ import { readFileSync, writeFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
 import { format } from "prettier";
+import type { Message } from "../../types/conversation";
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -109,10 +110,11 @@ export const emitStreamToSocket = (
 export const startBlockResponseStream = async (
   socket: Socket,
   blocks: Block[],
-  prompt: string,
+  conversation: Message[],
 ) => {
   try {
-    const cachedResponse = checkCache(prompt);
+    const lastText = conversation[conversation.length - 1].content;
+    const cachedResponse = checkCache(lastText);
 
     if (cachedResponse) {
       emitStreamToSocket(socket, createWordStream(cachedResponse, 50));
@@ -140,10 +142,7 @@ export const startBlockResponseStream = async (
         })}
         `,
       },
-      {
-        role: "user",
-        content: prompt,
-      },
+      ...conversation,
     ]);
 
     if (!response.success || !response.stream) {
@@ -157,7 +156,7 @@ export const startBlockResponseStream = async (
     const stream = response.stream;
 
     emitStreamToSocket(socket, stream, (fm) => {
-      cacheResponse(prompt, fm);
+      cacheResponse(lastText, fm);
     });
   } catch (error) {
     console.error(error);

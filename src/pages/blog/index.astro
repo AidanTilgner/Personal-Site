@@ -3,7 +3,6 @@ import Layout from "../../layouts/Layout.astro";
 import Posts from "../../components/Blog/Posts/Posts";
 
 const posts = await Astro.glob("./posts/*.md");
-console.log("posts", posts);
 
 const mappedPosts = posts.map((post) => {
   const { title, author, description, postdate, updatedate, tags } =

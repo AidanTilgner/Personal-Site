@@ -2,15 +2,17 @@ import { backend } from "../../utils/axios";
 import type { APIRoute } from "astro";
 import type { Block } from "../../../types/blocks";
 
-export const get: APIRoute = async ({ request }) => {
+export const post: APIRoute = async ({ request }) => {
   try {
-    const url = new URL(request.url);
-    const searchParams = url.searchParams;
-    const query = searchParams.get("query");
+    const body = await request.json();
+    const conversation = body.conversation;
     const socket_id = request.headers.get("x-socket-id");
 
-    const { data } = await backend.get<{ data: Block[] }>(
-      `/content/blocks?query=${query}`,
+    const { data } = await backend.post<{ data: Block[] }>(
+      `/content/blocks`,
+      {
+        conversation,
+      },
       {
         headers: {
           "x-socket-id": socket_id,

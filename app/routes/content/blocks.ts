@@ -7,13 +7,16 @@ import {
 } from "../../blocks";
 import { startBlockResponseStream } from "../../blocks/gpt";
 import { getConnection } from "../socket-io";
+import type { Message } from "../../../types/conversation";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const query = req.query.query as string | undefined;
+    const conversation = req.body.conversation as Message[];
+
     const socket_id = req.headers["x-socket-id"] as string | undefined;
+    const query = conversation[conversation.length - 1].content;
 
     const blocks = await getBlocks(query);
 
@@ -26,7 +29,7 @@ router.get("/", async (req, res) => {
 
     const socket = getConnection(socket_id);
 
-    startBlockResponseStream(socket, blocks, query);
+    startBlockResponseStream(socket, blocks, conversation);
 
     res.send({
       message: "Successfully retrieved blocks!",

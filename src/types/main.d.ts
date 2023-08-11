@@ -1,8 +1,3 @@
-export interface Message {
-  role: "assistant" | "user" | "system";
-  content: string;
-}
-
 export interface BlogPost {
   title: string;
   author: string;
