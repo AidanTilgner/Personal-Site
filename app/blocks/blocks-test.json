@@ -1,0 +1,16 @@
+[
+  {
+    "id": "3506b6e2aeb89b07",
+    "name": "test",
+    "description": "Just a test block, used for testing",
+    "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
+    "when_intents": ["testing"]
+  },
+  {
+    "id": "cf86559c9c9311af",
+    "name": "testing\n",
+    "description": "test\n",
+    "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
+    "when_intents": ["testing\n"]
+  }
+]
