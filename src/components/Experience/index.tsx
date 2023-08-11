@@ -10,12 +10,18 @@ import MessageDisplay from "./Chat/MessageDisplay/MessageDisplay";
 
 function index() {
   const [loading, setLoading] = useState(true);
-  const [playingIntro, setPlayingIntro] = useState(true);
+  const [playingIntro, setPlayingIntro] = useState(false);
   const [conversation, setConversation] = useState<Message[]>([]);
   const [query, setQuery] = useState<string>("");
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [displayMessage, setDisplayMessage] = useState<string>("");
   const [messageLoading, setMessageLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("seen_intro") !== "true") {
+      setPlayingIntro(true);
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {

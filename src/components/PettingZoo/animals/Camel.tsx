@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import type { AnimalProps } from "..";
 import styles from "./styles/animal.module.scss";
+import { usePets } from "./animal";
 
 function Camel({ is_talking, talk_speed }: AnimalProps) {
   const [currentCharacterState, setCurrentCharacterState] = React.useState(0);
@@ -62,7 +63,7 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
       {`
           //
        _o-\\
-      (__/ \\  _  _
+      (v_/ \\  _  _
          \\  \\/ \\/ \\
          (         )\\
           \\_______/  \\
@@ -89,18 +90,11 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
   };
 
   const [shouldWink, setShouldWink] = React.useState(false);
-  const pets = useRef(
-    localStorage.getItem("camel_total_pets")
-      ? parseInt(localStorage.getItem("camel_total_pets")!)
-      : 0,
-  );
   const petsRef = useRef<HTMLParagraphElement>(null);
-
-  const handlePet = () => {
-    pets.current += 1;
-    petsRef.current!.innerHTML = `Total pets: ${pets.current}`;
-    localStorage.setItem("camel_total_pets", pets.current.toString());
-  };
+  const { triggerPet } = usePets({
+    name: "cosmo_the_camel",
+    petsRef,
+  });
 
   return (
     <div
@@ -132,27 +126,22 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
       <div
         className={styles.animal_itself}
         onMouseEnter={() => {
-          handlePet();
+          triggerPet();
         }}
       >
         {shouldWink ? characterWinkState : <CurrentCharacterState />}
       </div>
-      <p className={styles.total_pets} ref={petsRef}>
-        Total pets: {Number(localStorage.getItem("camel_total_pets")) ?? 0}
-      </p>
+      <div className={styles.metadata}>
+        <p className={styles.name}>Cosmo the Camel</p>
+        <p className={styles.total_pets} ref={petsRef} />
+      </div>
       {shouldWink && (
         <p className={styles.description}>
-          Camels are mammals with long legs, a big-lipped snout and a humped
-          back. They are most commonly found in the deserts of Africa and Asia.
-          Also,{" "}
-          <a
-            href="https://ocaml.org/"
-            target="_blank"
-            rel="noopenner noreferrer"
-          >
-            OCaml
-          </a>{" "}
-          is a great programming language!
+          <span>{`Cosmo's`} eyes gaze high</span>
+          <br />
+          <span>Earth-bound camel dreams of stars</span>
+          <br />
+          <span>Space calls, he {`can't`} fly</span>
         </p>
       )}
     </div>

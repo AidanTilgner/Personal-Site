@@ -11,13 +11,12 @@ p {
 }
 
 .character {
-  text-decoration: none;
-  color: var(--text-color);
-  transition: all 0.2s ease-in-out;
+  color: rgba(var(--text-color), 1);
   box-sizing: border-box;
 
   &:hover {
-    text-decoration: underline;
+    color: rgba(var(--text-color), 0.8);
+    text-decoration: none;
   }
 
   pre {

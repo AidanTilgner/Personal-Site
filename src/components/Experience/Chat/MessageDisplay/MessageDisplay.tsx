@@ -100,6 +100,14 @@ function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
     return CharacterStates[currentCharacterState];
   };
 
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [message]);
+
   return (
     <div className={styles.message_display}>
       <a
@@ -111,7 +119,10 @@ function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
       >
         {characterHover ? characterWinkState : <CurrentCharacterState />}
       </a>
-      <p className={styles.message}>{message}</p>
+      <p className={styles.message}>
+        <span>{message}</span>
+        <div ref={scrollRef} />
+      </p>
     </div>
   );
 }

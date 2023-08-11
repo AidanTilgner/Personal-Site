@@ -26,6 +26,16 @@
   }
 }
 
+.metadata {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.name {
+  font-size: 1.6rem;
+}
+
 .total_pets {
   opacity: 0.5;
   font-size: 1.6rem;
