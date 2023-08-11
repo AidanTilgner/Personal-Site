@@ -1,0 +1,47 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Posts from "../../components/Blog/Posts/Posts";
+
+const posts = await Astro.glob("./posts/*.md");
+console.log("posts", posts);
+
+const mappedPosts = posts.map((post) => {
+  const { title, author, description, postdate, updatedate, tags } =
+    post.frontmatter;
+  return {
+    title,
+    author,
+    description,
+    postdate,
+    updatedate,
+    tags,
+    url: post.url,
+  };
+});
+---
+
+<Layout title="Blog">
+  <main>
+    <section class="top">
+      <h1>Blog</h1>
+    </section>
+    <section class="posts">
+      <Posts posts={mappedPosts} client:load />
+    </section>
+  </main>
+</Layout>
+
+<style lang="scss">
+  main {
+    padding: 2.4rem;
+    min-height: 100vh;
+  }
+
+  .top {
+    h1 {
+      font-size: 4.8rem;
+      font-weight: 700;
+      margin-bottom: 2.4rem;
+    }
+  }
+</style>

@@ -1,10 +1,20 @@
 ---
 import Navbar from "../components/Navigation/Navbar/Navbar";
-export interface Props {
-  title: string;
-}
+import type { MarkdownLayoutProps } from "astro";
+import type { BlogPost } from "../types/main.d";
+type Props = MarkdownLayoutProps<BlogPost>;
 
-const { title } = Astro.props;
+const {
+  frontmatter: {
+    title,
+    author,
+    description,
+    postdate,
+    updatedate,
+    tags,
+    image,
+  },
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -45,7 +55,6 @@ const { title } = Astro.props;
         background-color: rgb(var(--background-color));
         color: rgb(var(--text-color));
         font-family: var(--font-family);
-        margin: 0;
         padding: 0;
         padding-block-start: 82px;
       }

@@ -26,6 +26,9 @@ function Navbar() {
     <li key="petting-zoo">
       <a href="/petting-zoo">Petting Zoo</a>
     </li>,
+    <li key="blog">
+      <a href="/blog">Blog</a>
+    </li>,
   ];
 
   return (

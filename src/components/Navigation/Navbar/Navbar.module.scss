@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: space-between;
   height: 82px;
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -69,11 +69,15 @@
 .mobileMenu {
   height: 100%;
   width: 100%;
-  font-size: 2.4rem;
+  font-size: 3.6rem;
   list-style-type: none;
   padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  a {
+    color: rgba($color: var(--text-color), $alpha: 1);
+  }
 }

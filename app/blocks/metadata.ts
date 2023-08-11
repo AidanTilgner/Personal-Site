@@ -65,5 +65,10 @@ export const generateIntentMetadata = async () => {
     );
   }
 
+  fs.writeFileSync(
+    path.join(__dirname, "metadata", "all-intents.txt"),
+    intents.join("\n"),
+  );
+
   return;
 };
