@@ -1,5 +1,5 @@
 ---
-layout: ../../../Layouts/BlogLayout.astro
+layout: ../../../layouts/BlogLayout.astro
 title: "Hello World"
 description: "testing...testing 1, 2, 3"
 author: "Aidan Tilgner"

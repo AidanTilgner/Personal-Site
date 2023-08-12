@@ -1,5 +1,5 @@
 ---
-layout: ../../../Layouts/BlogLayout.astro
+layout: ../../../layouts/BlogLayout.astro
 title: "How My Website Works"
 description: "A detailed explanation of the inner-workings of my website."
 author: "Aidan Tilgner"
