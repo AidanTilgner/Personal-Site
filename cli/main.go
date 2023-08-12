@@ -27,6 +27,7 @@ func main() {
 		Usage:                "pscli [global options] command [command options] [arguments...]",
 		Commands: []*cli.Command{
 			cmds.BlockCommand(),
+			cmds.BuildCommand(),
 		},
 	}
 
