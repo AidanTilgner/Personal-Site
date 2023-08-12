@@ -16,6 +16,10 @@ function index() {
   const [displayMessage, setDisplayMessage] = useState<string>("");
   const [messageLoading, setMessageLoading] = useState<boolean>(false);
 
+  const addMessage = (message: Message) => {
+    conversation.current = [...conversation.current, message];
+  };
+
   useEffect(() => {
     if (localStorage.getItem("seen_intro") !== "true") {
       setPlayingIntro(true);
@@ -68,13 +72,10 @@ function index() {
         if (message.done) {
           setMessageLoading(false);
           setDisplayMessage(message.full_message);
-          conversation.current = [
-            ...conversation.current,
-            {
-              role: "assistant",
-              content: message.full_message,
-            },
-          ];
+          addMessage({
+            role: "assistant",
+            content: message.full_message,
+          });
           return;
         }
         setDisplayMessage((prev) => {
@@ -123,13 +124,10 @@ function index() {
             <div className={styles.textbox}>
               <TextBox
                 onSubmit={(text) => {
-                  conversation.current = [
-                    ...conversation.current,
-                    {
-                      role: "user" as const,
-                      content: text,
-                    },
-                  ];
+                  addMessage({
+                    role: "user" as const,
+                    content: text,
+                  });
                   submitMessage();
                 }}
                 suggestions={[
