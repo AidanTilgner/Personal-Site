@@ -9,7 +9,7 @@
     "astro": "astro",
     "dev:server": "tsx watch ./app/index.ts",
     "start:server": "tsx ./app/index.ts",
-    "start:astro": "node ./dist/server/entry.mjs",
+    "start:astro": "PORT=3004 node ./dist/server/entry.mjs",
     "format": "prettier --write .",
     "start": "concurrently \"npm run start:astro\" \"npm run start:server\""
   },
