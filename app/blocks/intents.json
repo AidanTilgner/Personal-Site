@@ -71,6 +71,10 @@
         "Who are you?",
         "Who is this?"
       ]
+    },
+    {
+      "intent": "inquire_resume",
+      "utterances": ["resume", "cv", "curriculum vitae", "resume?", "cv?"]
     }
   ]
 }

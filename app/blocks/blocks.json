@@ -54,5 +54,17 @@
     "description": "my social media and important links",
     "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
     "when_intents": ["inquire_me"]
+  },
+  {
+    "id": "8208ae3c9f95814d",
+    "name": "resume",
+    "description": "a block that contains my resume",
+    "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
+    "when_intents": [
+      "inquire_expertise",
+      "inquire_projects",
+      "inquire_skills",
+      "inquire_resume"
+    ]
   }
 ]

@@ -37,7 +37,7 @@ function Navbar() {
   return (
     <div className={`${styles.navbar}`}>
       <div className={styles.navLogo}>
-        <a href="/">My Cool Site</a>
+        <a href="/">{`Aidan's`} Site</a>
         <span className={styles.disclaimer}>* work in progress</span>
       </div>
       {isMobile && (
