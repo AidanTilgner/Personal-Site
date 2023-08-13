@@ -20,7 +20,7 @@ function index() {
           {`
         __________________________________
         |                                |
-        | under water beyond this point  |
+        |       sudden drop off!         |
         |________________________________|
         |                                |
         |                                |
