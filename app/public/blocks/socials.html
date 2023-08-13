@@ -1,0 +1,28 @@
+<div>
+  <div class="socials">
+    <ul>
+      <li>
+        <a href="https://github.com/AidanTilgner" target="_blank">GitHub</a>
+      </li>
+      <li>
+        <a href="https://twitter.com/aidantilgner" target="_blank">Twitter</a>
+      </li>
+      <li><span id="socials-email-open">Email me</span></li>
+    </ul>
+  </div>
+  <style>
+    #socials-email-open {
+      cursor: pointer;
+    }
+  </style>
+  <script>
+    const emailCopy = document.querySelector("#socials-email-open");
+    emailCopy.addEventListener("click", () => {
+      const yr = "02";
+      const email = "aidan" + "tilgner" + yr + "@gmail.com";
+      const subject = "Hello";
+      const body = "I'm interested in working with you.";
+      window.open(`mailto:${email}?subject=${subject}&body=${body}`);
+    });
+  </script>
+</div>

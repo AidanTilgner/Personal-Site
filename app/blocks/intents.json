@@ -34,6 +34,43 @@
         "what can you do?",
         "what are you for?"
       ]
+    },
+    {
+      "intent": "inquire_projects",
+      "utterances": [
+        "projects",
+        "what projects have you worked on?",
+        "any noteable projects?"
+      ]
+    },
+    {
+      "intent": "inquire_skills",
+      "utterances": [
+        "skills",
+        "what are your skills?",
+        "what can you do?",
+        "what are you good at?"
+      ]
+    },
+    {
+      "intent": "inquire_expertise",
+      "utterances": [
+        "expertise",
+        "what are you an expert at?",
+        "what are you an expert in?",
+        "what are you an expert of?",
+        "would you consider yourself an expert?"
+      ]
+    },
+    {
+      "intent": "inquire_me",
+      "utterances": [
+        "Aidan Who?",
+        "Who is Aidan?",
+        "Aidan?",
+        "Who are you?",
+        "Who is this?"
+      ]
     }
   ]
 }

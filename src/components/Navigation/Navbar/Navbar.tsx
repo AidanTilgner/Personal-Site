@@ -29,6 +29,9 @@ function Navbar() {
     <li key="blog">
       <a href="/blog">Blog</a>
     </li>,
+    <li key="projects">
+      <a href="/projects">Projects</a>
+    </li>,
   ];
 
   return (

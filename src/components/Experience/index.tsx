@@ -132,7 +132,7 @@ function index() {
                 }}
                 suggestions={[
                   "What is this?",
-                  "Aidan? Who?",
+                  "Aidan Who?",
                   "Projects.",
                   "Skills.",
                 ]}
