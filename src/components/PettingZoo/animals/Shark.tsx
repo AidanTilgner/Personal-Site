@@ -1,75 +1,81 @@
 /* eslint-disable no-useless-escape */
+/* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useRef } from "react";
 import type { AnimalProps } from "..";
-import styles from "./styles/animal.module.scss";
 import { usePets } from "./animal";
+import styles from "./styles/animal.module.scss";
 
-function Camel({ is_talking, talk_speed }: AnimalProps) {
+function Shark({ is_talking, talk_speed }: AnimalProps) {
   const [currentCharacterState, setCurrentCharacterState] = React.useState(0);
 
   const CharacterStates = [
     <pre key={"state-1"}>
       {`
-          //
-       _oo\\
-      (__/ \\  _  _
-         \\  \\/ \\/ \\
-         (         )\\
-          \\_______/  \\
-           [[] [[]]
-           [[] [[]]
-          `}
+      .            
+     \\_____)\_____
+      /--v____ __\`<         
+              )/           
+              '
+
+`}
     </pre>,
     <pre key={"state-2"}>
       {`
-          |/
-       _oo\\
-      (o_/ \\  _  _
-         \\  \\/ \\/ \\
-         (         )\\
-          \\_______/  \\
-           [[] [[]]
-           [[] [[]]
-          `}
+      .            
+     \\_____)\_____
+      /--v____ __\`<         
+              )/           
+              '
+
+
+`}
     </pre>,
     <pre key={"state-3"}>
       {`
-          \\/
-       _oo\\
-      (O_/ \\  _  _
-         \\  \\/ \\/ \\
-         (         )\\
-          \\_______/  \\
-           [[] [[]]
-           [[] [[]]
-          `}
+      .            
+     \\_____)\_____
+      /--v____ __\`-         
+              )/           
+              '
+
+
+
+`}
     </pre>,
     <pre key={"state-4"}>
       {`
-          |/
-       _oo\\
-      (o_/ \\  _  _
-         \\  \\/ \\/ \\
-         (         )\\
-          \\_______/  \\
-           [[] [[]]
-           [[] [[]]
-          `}
+      .            
+     \\_____)\_____
+      /--v____ __\`-         
+              )/           
+              '
+
+
+`}
+    </pre>,
+    <pre key={"state-5"}>
+      {`
+      .            
+     \\_____)\_____
+      /--v____ __\`<         
+              )/           
+              '
+
+`}
     </pre>,
   ];
 
   const characterWinkState = (
     <pre>
       {`
-          //
-       _o-\\
-      (v_/ \\  _  _
-         \\  \\/ \\/ \\
-         (         )\\
-          \\_______/  \\
-           [[] [[]]
-           [[] [[]]
-          `}
+    .            
+     \\_____)\_____
+      /--v____ __\^<         
+              )/           
+              '
+
+
+`}
     </pre>
   );
 
@@ -92,7 +98,7 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
   const [shouldWink, setShouldWink] = React.useState(false);
   const petsRef = useRef<HTMLParagraphElement>(null);
   const { triggerPet } = usePets({
-    name: "cosmo_the_camel",
+    name: "sharkira_the_shark",
     petsRef,
   });
 
@@ -101,26 +107,23 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
       onClick={() => {
         setShouldWink((prev) => !prev);
       }}
-      title="*camel noises*"
+      title="🎶sharkira sharkira🎶"
       className={styles.animal}
       id="camel"
     >
       <div className={styles.background}>
         <pre>
           {`
-                    ,,           .-.
-           .       || |     .     ) )
-                   || |   ,      '-'
-                   || |  | |   .
-                   || '--' |
-        .    ,,    || .----'
-            || |   || |   .
-            |  '---'| |
-            '------.| |        .
-            .      || |
-                   || | .        *
-         ____\\|/___||_|_________\\|/____
-        `}
+       c<
+     c<  
+       c<
+                              
+
+                             
+
+                                
+     ____\\|/__________\\|/__\\|/____
+    `}
         </pre>
       </div>
       <div
@@ -132,20 +135,23 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
         {shouldWink ? characterWinkState : <CurrentCharacterState />}
       </div>
       <div className={styles.metadata}>
-        <p className={styles.name}>Cosmo the Camel</p>
+        <p className={styles.name}>Sharkira</p>
         <p className={styles.total_pets} ref={petsRef} />
       </div>
       {shouldWink && (
         <p className={styles.description}>
-          <span>{`Cosmo's`} eyes gaze high</span>
+          <span>Oh human, when you swim like that.</span>
           <br />
-          <span>Earth-bound camel dreams of stars</span>
+          <span>You make a shark go on the attack</span>
           <br />
-          <span>Space calls, he {`can't`} fly</span>
+          <span>So be wise and keep on</span>
+          <br />
+          <span>Reading the fins of my body</span>
+          <br />
         </p>
       )}
     </div>
   );
 }
 
-export default Camel;
+export default Shark;
