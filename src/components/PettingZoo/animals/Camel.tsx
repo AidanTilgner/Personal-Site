@@ -6,6 +6,7 @@ import { usePets } from "./animal";
 
 function Camel({ is_talking, talk_speed }: AnimalProps) {
   const [currentCharacterState, setCurrentCharacterState] = React.useState(0);
+  const [shouldTalk, setShouldTalk] = React.useState(is_talking);
 
   const CharacterStates = [
     <pre key={"state-1"}>
@@ -74,16 +75,16 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
   );
 
   useEffect(() => {
-    if (is_talking) {
+    if (shouldTalk) {
       const interval = setInterval(() => {
         setCurrentCharacterState((prev) => (prev + 1) % CharacterStates.length);
       }, talk_speed);
       return () => clearInterval(interval);
     }
-    if (!is_talking) {
+    if (!shouldTalk) {
       setCurrentCharacterState(0);
     }
-  }, [is_talking]);
+  }, [shouldTalk]);
 
   const CurrentCharacterState = () => {
     return CharacterStates[currentCharacterState];
@@ -91,9 +92,12 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
 
   const [shouldWink, setShouldWink] = React.useState(false);
   const petsRef = useRef<HTMLParagraphElement>(null);
-  const { triggerPet } = usePets({
+  const animalRef = useRef<HTMLDivElement>(null);
+  usePets({
     name: "cosmo_the_camel",
     petsRef,
+    animalRef,
+    setTalking: setShouldTalk,
   });
 
   return (
@@ -108,27 +112,22 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
       <div className={styles.background}>
         <pre>
           {`
-                    ,,           .-.
-           .       || |     .     ) )
-                   || |   ,      '-'
-                   || |  | |   .
-                   || '--' |
-        .    ,,    || .----'
-            || |   || |   .
-            |  '---'| |
-            '------.| |        .
-            .      || |
-                   || | .        *
-         ____\\|/___||_|_________\\|/____
+   .-.      ,,           
+    ) )    || |     . 
+   '-'     || |   , 
+           || |  | |   .
+           || '--' |
+.    ,,    || .----'
+    || |   || |   .
+    |  '---'| |
+    '------.| |        .
+    .      || |
+           || | .        *
+____\\|/___||_|_________\\|/____
         `}
         </pre>
       </div>
-      <div
-        className={styles.animal_itself}
-        onMouseEnter={() => {
-          triggerPet();
-        }}
-      >
+      <div className={styles.animal_itself} ref={animalRef}>
         {shouldWink ? characterWinkState : <CurrentCharacterState />}
       </div>
       <div className={styles.metadata}>

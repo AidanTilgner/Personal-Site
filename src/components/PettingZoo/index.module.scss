@@ -11,7 +11,7 @@
 
 .land_animals {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   grid-template-rows: 30vh;
   margin-bottom: 2.4rem;
 
@@ -30,7 +30,7 @@
 
 .sea_creatures {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   grid-template-rows: 30vh;
 
   @media screen and (min-width: 768px) {
