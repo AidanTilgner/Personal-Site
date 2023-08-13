@@ -27,7 +27,7 @@ function index() {
           `}
         </pre>
       </div>
-      <div className={styles.waterline}>{`~`.repeat(100)}</div>
+      <div className={styles.waterline}>{`~`.repeat(500)}</div>
       <div className={styles.sea_creatures}>
         {sea_creatures.map((Animal, index) => {
           return <Animal key={index} is_talking={true} talk_speed={300} />;

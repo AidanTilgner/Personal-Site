@@ -74,8 +74,20 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
     </pre>
   );
 
+  const petsThreshold = 15;
+
+  const [shouldWink, setShouldWink] = React.useState(false);
+  const petsRef = useRef<HTMLParagraphElement>(null);
+  const animalRef = useRef<HTMLDivElement>(null);
+  const { num_pets } = usePets({
+    name: "cosmo_the_camel",
+    petsRef,
+    animalRef,
+    setTalking: setShouldTalk,
+  });
+
   useEffect(() => {
-    if (shouldTalk) {
+    if (shouldTalk && num_pets >= petsThreshold) {
       const interval = setInterval(() => {
         setCurrentCharacterState((prev) => (prev + 1) % CharacterStates.length);
       }, talk_speed);
@@ -89,16 +101,6 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
   const CurrentCharacterState = () => {
     return CharacterStates[currentCharacterState];
   };
-
-  const [shouldWink, setShouldWink] = React.useState(false);
-  const petsRef = useRef<HTMLParagraphElement>(null);
-  const animalRef = useRef<HTMLDivElement>(null);
-  usePets({
-    name: "cosmo_the_camel",
-    petsRef,
-    animalRef,
-    setTalking: setShouldTalk,
-  });
 
   return (
     <div

@@ -42,5 +42,5 @@ export const usePets = ({
     };
   }, []);
 
-  return { triggerPet };
+  return { triggerPet, num_pets: pets.current };
 };

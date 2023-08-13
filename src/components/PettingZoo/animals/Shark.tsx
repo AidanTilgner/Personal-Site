@@ -76,12 +76,25 @@ function Shark({ is_talking, talk_speed }: AnimalProps) {
               '
 
 
-`}
+              `}
     </pre>
   );
 
+  const [shouldWink, setShouldWink] = React.useState(false);
+  const petsRef = useRef<HTMLParagraphElement>(null);
+  const animalRef = useRef<HTMLDivElement>(null);
+
+  const petsThreshold = 50;
+
+  const { num_pets } = usePets({
+    name: "sharkira_the_shark",
+    petsRef,
+    animalRef,
+    setTalking: setShouldTalk,
+  });
+
   useEffect(() => {
-    if (shouldTalk) {
+    if (shouldTalk && num_pets >= petsThreshold) {
       const interval = setInterval(() => {
         setCurrentCharacterState((prev) => (prev + 1) % CharacterStates.length);
       }, talk_speed);
@@ -90,21 +103,11 @@ function Shark({ is_talking, talk_speed }: AnimalProps) {
     if (!shouldTalk) {
       setCurrentCharacterState(0);
     }
-  }, [shouldTalk]);
+  }, [shouldTalk, num_pets]);
 
   const CurrentCharacterState = () => {
     return CharacterStates[currentCharacterState];
   };
-
-  const [shouldWink, setShouldWink] = React.useState(false);
-  const petsRef = useRef<HTMLParagraphElement>(null);
-  const animalRef = useRef<HTMLDivElement>(null);
-  usePets({
-    name: "sharkira_the_shark",
-    petsRef,
-    animalRef,
-    setTalking: setShouldTalk,
-  });
 
   return (
     <div
