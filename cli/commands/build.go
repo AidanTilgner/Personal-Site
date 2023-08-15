@@ -9,9 +9,8 @@ import (
 
 func BuildCommand() *cli.Command {
 	cmd := cli.Command{
-		Name:    "build",
-		Aliases: []string{"a"},
-		Usage:   "Manage blocks on the site.",
+		Name:  "build",
+		Usage: "Handle site builds.",
 		Subcommands: []*cli.Command{
 			buildAstro(),
 		},

@@ -13,9 +13,8 @@ import (
 
 func BlockCommand() *cli.Command {
 	cmd := cli.Command{
-		Name:    "blocks",
-		Aliases: []string{"a"},
-		Usage:   "Manage blocks on the site.",
+		Name:  "blocks",
+		Usage: "Manage blocks on the site.",
 		Subcommands: []*cli.Command{
 			addBlock(),
 		},

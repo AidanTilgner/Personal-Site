@@ -28,6 +28,7 @@ func main() {
 		Commands: []*cli.Command{
 			cmds.BlockCommand(),
 			cmds.BuildCommand(),
+			cmds.PostCommand(),
 		},
 	}
 
