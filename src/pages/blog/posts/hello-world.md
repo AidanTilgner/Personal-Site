@@ -17,13 +17,3 @@ It all started when I was watching [this video](https://youtu.be/cEqGWyq-HJs), w
 Your website is your home on the internet. So make it how you would want your home to be! Reject the aesthetic of a neat and tidy, picturesque home! Embrace the home that is lived in, and gets a little cluttered because it's full of the things you love.
 
 Obviously, your website is probably a lot less important than your real-life home, but you get my point. Basically, I'm trying to do my own part to revitalize the web, and bring it back to the eclectic, beautiful monstrosity that it was before some nerds went and cleaned it all up.
-
-# I am a title
-
-## I am a subtitle
-
-### I am a sub subtitle
-
-#### I'm a smol boi
-
-##### IDEK man
