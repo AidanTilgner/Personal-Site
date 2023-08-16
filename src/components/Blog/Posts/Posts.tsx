@@ -14,6 +14,8 @@ function Posts({ posts }: PostsProps) {
     setQueryState(getAlphanumericText(query));
   };
 
+  const [sortBy, setSortByState] = React.useState<string>("recent");
+
   const filteredPosts = posts.filter((post) => {
     if (post.draft) return false;
 
@@ -33,6 +35,20 @@ function Posts({ posts }: PostsProps) {
       return passesTitle || passesDescription || passesDate || passesTags;
     };
     return query === "" ? true : passes();
+  });
+
+  const sortedPosts = filteredPosts.sort((a, b) => {
+    if (sortBy === "recent") {
+      const aDate = new Date(a.postdate);
+      const bDate = new Date(b.postdate);
+      return bDate.getTime() - aDate.getTime();
+    }
+    if (sortBy === "oldest") {
+      const aDate = new Date(a.postdate);
+      const bDate = new Date(b.postdate);
+      return aDate.getTime() - bDate.getTime();
+    }
+    return 0;
   });
 
   useEffect(() => {
@@ -63,12 +79,25 @@ function Posts({ posts }: PostsProps) {
             <X />
           </button>
         </div>
+        <div className={styles.options}>
+          <div className={styles.sortby}>
+            <select
+              name="sortby"
+              value={sortBy}
+              onChange={(e) => setSortByState(e.target.value)}
+              className={`select`}
+            >
+              <option value="recent">Recent</option>
+              <option value="oldest">Oldest</option>
+            </select>
+          </div>
+        </div>
       </div>
       <div className={styles.allposts}>
-        {filteredPosts.map((post) => (
+        {sortedPosts.map((post) => (
           <Post key={post.description} post={post} />
         ))}
-        {!filteredPosts.length && (
+        {!sortedPosts.length && (
           <p className={styles.noresults}>No results found.</p>
         )}
       </div>

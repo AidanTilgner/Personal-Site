@@ -5,7 +5,7 @@ import Posts from "../../components/Blog/Posts/Posts";
 const posts = await Astro.glob("./posts/*.md");
 
 const mappedPosts = posts.map((post) => {
-  const { title, author, description, postdate, updatedate, tags } =
+  const { title, author, description, postdate, updatedate, tags, draft } =
     post.frontmatter;
   return {
     title,
@@ -15,6 +15,7 @@ const mappedPosts = posts.map((post) => {
     updatedate,
     tags,
     url: post.url,
+    draft,
   };
 });
 ---

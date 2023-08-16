@@ -5,8 +5,8 @@ description: "A dive into the sameness virus which has flattened our web, and ho
 author: "Aidan Tilgner"
 postdate: "2023-08-16"
 updatedate: "2023-08-16"
-tags: []
+tags: ["rant", "web1.0", "my-site"]
 draft: true
 ---
 
-### Coming soon!
+Our web is flat. No not like the Earth, but like a previously interesting depth filled space which was squeezed into a 2 dimensional shadow of itself.

@@ -118,7 +118,9 @@ function Content({ blocks }: ContentProps) {
       {loadedBlocks.length ? (
         loadedBlocks.map((b) => b.content)
       ) : (
-        <p className={styles.disclaimer}>Something should go here...</p>
+        <p className={styles.disclaimer}>
+          Area populates based on what you say...
+        </p>
       )}
     </div>
   );
