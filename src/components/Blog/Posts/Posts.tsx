@@ -15,6 +15,8 @@ function Posts({ posts }: PostsProps) {
   };
 
   const filteredPosts = posts.filter((post) => {
+    if (post.draft) return false;
+
     const passes = () => {
       const passesTitle = post.title
         .toLowerCase()

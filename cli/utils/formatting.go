@@ -29,3 +29,19 @@ func FormatAll() {
 		panic(err)
 	}
 }
+
+func RemoveNonAlphaNumeric(s string, except []string) string {
+	var newString string
+	for _, l := range s {
+		if (l >= 'a' && l <= 'z') || (l >= 'A' && l <= 'Z') || (l >= '0' && l <= '9') {
+			newString += string(l)
+		} else {
+			for _, e := range except {
+				if string(l) == e {
+					newString += string(l)
+				}
+			}
+		}
+	}
+	return newString
+}

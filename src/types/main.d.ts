@@ -7,4 +7,5 @@ export interface BlogPost {
   tags: string[];
   url?: string;
   image?: string;
+  draft?: boolean;
 }

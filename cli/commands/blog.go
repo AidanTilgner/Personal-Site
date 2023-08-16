@@ -1,8 +1,10 @@
 package commands
 
 import (
+	"fmt"
 	"os"
 	u "personal-site-cli/utils"
+	"strconv"
 	"strings"
 	"time"
 
@@ -15,6 +17,7 @@ type Post struct {
 	Date        string
 	Description string
 	Tags        []string
+	Draft       bool
 }
 
 var postDirectory = "src/pages/blog/posts"
@@ -43,7 +46,8 @@ func PostCommand() *cli.Command {
 }
 
 func titleToFileName(title string) string {
-	return strings.ReplaceAll(strings.ToLower(title), " ", "-")
+	// remove all non-alphanumeric characters, and swap spaces for dashes
+	return u.RemoveNonAlphaNumeric(strings.ToLower(strings.ReplaceAll(title, " ", "-")), []string{"-"})
 }
 
 func currentDate() string {
@@ -68,6 +72,7 @@ author: ` + "\"" + post.Author + "\"" + `
 postdate: ` + "\"" + post.Date + "\"" + `
 updatedate: ` + "\"" + post.Date + "\"" + `
 tags: ` + "[" + strings.Join(getQuotedStringSlice(post.Tags), ", ") + "]" + `
+draft: ` + strings.ToLower(strconv.FormatBool(post.Draft)) + `
 ---
 ` + `
 ### Coming soon!
@@ -81,6 +86,7 @@ func addPost() *cli.Command {
 	var extension string
 	var description string
 	var tags cli.StringSlice
+	var draft bool
 
 	cmd := cli.Command{
 		Name: "add",
@@ -127,6 +133,13 @@ func addPost() *cli.Command {
 				Aliases:     []string{"g"},
 				Destination: &tags,
 			},
+			&cli.BoolFlag{
+				Name:        "draft",
+				Usage:       "Whether or not the post is a draft.",
+				Required:    false,
+				Value:       false,
+				Destination: &draft,
+			},
 		},
 		Action: func(c *cli.Context) error {
 			rootDir, err := u.GetRoot()
@@ -142,6 +155,7 @@ func addPost() *cli.Command {
 				Author:      author,
 				Date:        date,
 				Tags:        tags.Value(),
+				Draft:       draft,
 			}
 
 			file, err := os.Create(filePath)
@@ -154,6 +168,9 @@ func addPost() *cli.Command {
 			if err != nil {
 				return err
 			}
+
+			// tell the user that the post was created, and where it is
+			fmt.Println("Created post at " + filePath)
 
 			return nil
 		},
