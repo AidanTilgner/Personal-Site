@@ -2,9 +2,10 @@
 import Navbar from "../components/Navigation/Navbar/Navbar";
 export interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const { title, description } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -16,7 +17,7 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <meta
       name="description"
-      content="Software Engineer, using the latest technologies to bring the world better services."
+      content={description || "Aidan's corner of the interweb."}
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
