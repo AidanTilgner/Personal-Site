@@ -68,6 +68,24 @@ const { title, description } = Astro.props;
         color: red;
       }
 
+      .back-button {
+        font-size: 1.8rem;
+        color: rgba($color: var(--text-color), $alpha: 0.6);
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+
+        @media (min-width: 768px) {
+          font-size: 1.6rem;
+        }
+
+        &:hover {
+          svg {
+            transform: translateX(-0.4rem);
+          }
+        }
+      }
+
       .select {
         box-sizing: border-box;
         border: 1px solid rgb(var(--text-color));

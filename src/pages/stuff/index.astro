@@ -2,18 +2,16 @@
 import Layout from "../../layouts/Layout.astro";
 ---
 
-<Layout title="Links">
+<Layout title="Cool Stuff">
   <main>
-    <section class="friends">
-      <h1>Friend's Sites</h1>
-      <ul>
-        <li><a href="https://nimo.is" target="_blank">Nathan</a></li>
-      </ul>
+    <section>
+      <h1>Cool Stuff</h1>
+      <p>Here's some cool I've found.</p>
     </section>
     <section>
-      <h1>Other People</h1>
       <ul>
-        <li><a href="http://xahlee.info/" target="_blank">Xah Talk Show</a></li>
+        <li><a href="/stuff/links">Links</a></li>
+        <li><a href="/stuff/videos">Videos</a></li>
       </ul>
     </section>
   </main>
@@ -26,6 +24,10 @@ import Layout from "../../layouts/Layout.astro";
 
   section {
     margin-bottom: 3.6rem;
+  }
+
+  p {
+    font-size: 1.8rem;
   }
 
   h1 {

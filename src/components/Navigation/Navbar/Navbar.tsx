@@ -32,8 +32,8 @@ function Navbar() {
     <li key="projects">
       <a href="/projects">Projects</a>
     </li>,
-    <li key="cool-stuff">
-      <a href="/cool-stuff">Cool Stuff</a>
+    <li key="stuff">
+      <a href="/stuff">Stuff</a>
     </li>,
   ];
 
