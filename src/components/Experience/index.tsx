@@ -140,10 +140,6 @@ function index() {
               <MessageDisplay
                 message={displayMessage}
                 is_streaming={messageLoading}
-                query_string={
-                  conversation.current.reverse().find((m) => m.role === "user")
-                    ?.content || "Hello!"
-                }
               />
             </div>
             <div className={styles.textbox}>

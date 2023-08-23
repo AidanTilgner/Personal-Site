@@ -160,6 +160,9 @@ export const startBlockResponseStream = async (
         Things to keep in mind:
         - You don't perform actions, just respond to user queries
         - Markdown and html will be parsed and rendered
+        - If something about ${
+          config.owner.name
+        } isn't provided in context, don't say it. Instead, favor "I don't know."
         `,
       },
       ...conversation,

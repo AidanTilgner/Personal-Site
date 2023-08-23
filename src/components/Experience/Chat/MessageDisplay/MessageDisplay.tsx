@@ -7,7 +7,6 @@ import showdown from "showdown";
 interface MessageDisplayProps {
   message: string;
   is_streaming: boolean;
-  query_string: string;
 }
 
 const converter = new showdown.Converter();
@@ -16,11 +15,7 @@ const parseMarkdown = (message: string) => {
   return converter.makeHtml(message);
 };
 
-function MessageDisplay({
-  message,
-  is_streaming,
-  query_string,
-}: MessageDisplayProps) {
+function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
   const [characterHover, setCharacterHover] = React.useState(false);
 
   const CharacterStates = [
@@ -127,7 +122,6 @@ function MessageDisplay({
         {characterHover ? characterWinkState : <CurrentCharacterState />}
       </a>
       <p className={styles.message}>
-        <span className={styles.queryString}>{query_string}</span>
         <span
           dangerouslySetInnerHTML={{
             __html: parseMarkdown(message),
