@@ -45,3 +45,10 @@ p {
   scrollbar-color: rgba(var(--text-color), 0.15) transparent;
   font-family: var(--code-font-family);
 }
+
+.queryString {
+  display: inline-block;
+  font-size: 1.6rem;
+  opacity: 0.6;
+  margin: 2.4rem 0;
+}

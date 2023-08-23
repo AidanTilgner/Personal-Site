@@ -113,15 +113,33 @@ function Content({ blocks }: ContentProps) {
     };
   });
 
+  const getEmail = () => {
+    const f = "aidantilgner";
+    const s = "02";
+    const t = "@gmail.com";
+    return `${f}${s}${t}`;
+  };
+
   return (
     <div className={styles.content}>
       {loadedBlocks.length ? (
         loadedBlocks.map((b) => b.content)
       ) : (
         <p className={styles.disclaimer}>
-          Area populates based on what you say...
+          Area populates based on the conversation...
         </p>
       )}
+      <div className={styles.persistent}>
+        <a href={`mailto:${getEmail()}`}>Email me</a>
+        <a href="/petting-zoo">Pet some animals</a>
+        <a
+          href="https://github.com/AidanTilgner"
+          target="_blank"
+          rel="noopenner noreferrer"
+        >
+          Check out my github
+        </a>
+      </div>
     </div>
   );
 }

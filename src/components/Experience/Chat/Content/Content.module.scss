@@ -21,3 +21,15 @@
 .disclaimer {
   opacity: 0.5;
 }
+
+.persistent {
+  margin-top: 2.4rem;
+  display: flex;
+  gap: 1.8rem;
+  flex-wrap: wrap;
+
+  a {
+    opacity: 0.75;
+    color: rgba(var(--text-color), 1);
+  }
+}

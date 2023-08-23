@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Intro from "./Intro/Intro";
 import styles from "./index.module.scss";
 import TextBox from "./Chat/TextBox/TextBox";
@@ -52,28 +52,21 @@ function index() {
     );
   };
 
-  const playDefaultMessage = () => {
+  const playDefaultMessage = useCallback(() => {
+    const m = "Hello there! I'm Aidan's website, how can I help you?";
+    // split the initial message into 1 word per message
     setMessageLoading(true);
-    const m = "Hello there, I'm Aidan's website, how can I help you?";
-    const words = m.split(" ");
-    let i = 0;
-    const interval = setInterval(() => {
-      const isLast = i === words.length - 1;
-      setDisplayMessage((prev) => {
-        return prev + words[i] + " ";
-      });
-      i++;
-      if (isLast) {
-        setMessageLoading(false);
-        addMessage({
-          role: "assistant",
-          content: m,
-        });
-        clearInterval(interval);
-      }
-    }, 200);
-    return interval;
-  };
+    const splitMessage = m.split(" ");
+    splitMessage.forEach((word, i) => {
+      const isLast = i === splitMessage.length - 1;
+      setTimeout(() => {
+        setDisplayMessage((prev) => prev + word + " ");
+        if (isLast) {
+          setMessageLoading(false);
+        }
+      }, i * 100);
+    });
+  }, []);
 
   useEffect(() => {
     const storedConversation = sessionStorage.getItem("conversation");
@@ -112,7 +105,9 @@ function index() {
       },
     );
 
-    const int = playDefaultMessage();
+    const t = setTimeout(() => {
+      playDefaultMessage();
+    }, 500);
 
     socket.on("connect", () => {
       setLoading(false);
@@ -122,7 +117,7 @@ function index() {
       storeConversation();
       socket.off("block-response-stream");
       socket.off("connect");
-      clearInterval(int);
+      clearTimeout(t);
     };
   }, []);
 
@@ -145,6 +140,10 @@ function index() {
               <MessageDisplay
                 message={displayMessage}
                 is_streaming={messageLoading}
+                query_string={
+                  conversation.current.reverse().find((m) => m.role === "user")
+                    ?.content || "Hello!"
+                }
               />
             </div>
             <div className={styles.textbox}>
