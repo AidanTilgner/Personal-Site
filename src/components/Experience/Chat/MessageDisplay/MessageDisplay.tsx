@@ -2,11 +2,18 @@
 /* eslint-disable no-useless-escape */
 import React, { useEffect } from "react";
 import styles from "./MessageDisplay.module.scss";
+import showdown from "showdown";
 
 interface MessageDisplayProps {
   message: string;
   is_streaming: boolean;
 }
+
+const converter = new showdown.Converter();
+
+const parseMarkdown = (message: string) => {
+  return converter.makeHtml(message);
+};
 
 function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
   const [characterHover, setCharacterHover] = React.useState(false);
@@ -115,7 +122,11 @@ function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
         {characterHover ? characterWinkState : <CurrentCharacterState />}
       </a>
       <p className={styles.message}>
-        <span>{message}</span>
+        <span
+          dangerouslySetInnerHTML={{
+            __html: parseMarkdown(message),
+          }}
+        />
         <span ref={scrollRef} />
       </p>
     </div>

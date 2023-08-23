@@ -3,12 +3,7 @@ import type { Block } from "../../types/blocks";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
-import {
-  train,
-  processQuery,
-  getIntentFilteredBlocks,
-  getClassificationFilteredBlocks,
-} from "./nlp";
+import { train, processQuery, getClassificationFilteredBlocks } from "./nlp";
 import { generateMetaData } from "./metadata";
 
 await train().then(() => {

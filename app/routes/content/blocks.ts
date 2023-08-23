@@ -5,7 +5,7 @@ import {
   getBlocks,
   parseBlockContent,
 } from "../../blocks";
-import { startBlockResponseStream } from "../../blocks/gpt";
+import { startBlockResponseStream } from "../../gpt";
 import { getConnection } from "../socket-io";
 import type { Message } from "../../../types/conversation";
 

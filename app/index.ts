@@ -34,6 +34,10 @@ app.use(Express.urlencoded({ extended: true }));
 app.use("/content", contentRouter);
 app.use(Express.static(path.join(__dirname, "./public")));
 
+if (process.env.NODE_ENV) {
+  app.use("/app", Express.static(path.join(__dirname, "./ui")));
+}
+
 httpServer.listen(PORT, () => {
   console.info(`Server listening on port ${PORT}`);
 });

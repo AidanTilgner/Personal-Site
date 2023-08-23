@@ -52,6 +52,29 @@ function index() {
     );
   };
 
+  const playDefaultMessage = () => {
+    setMessageLoading(true);
+    const m = "Hello there, I'm Aidan's website, how can I help you?";
+    const words = m.split(" ");
+    let i = 0;
+    const interval = setInterval(() => {
+      const isLast = i === words.length - 1;
+      setDisplayMessage((prev) => {
+        return prev + words[i] + " ";
+      });
+      i++;
+      if (isLast) {
+        setMessageLoading(false);
+        addMessage({
+          role: "assistant",
+          content: m,
+        });
+        clearInterval(interval);
+      }
+    }, 200);
+    return interval;
+  };
+
   useEffect(() => {
     const storedConversation = sessionStorage.getItem("conversation");
     if (storedConversation) {
@@ -89,6 +112,8 @@ function index() {
       },
     );
 
+    const int = playDefaultMessage();
+
     socket.on("connect", () => {
       setLoading(false);
     });
@@ -97,6 +122,7 @@ function index() {
       storeConversation();
       socket.off("block-response-stream");
       socket.off("connect");
+      clearInterval(int);
     };
   }, []);
 

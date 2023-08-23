@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import path from "path";
 import { format } from "prettier";
 import type { Message } from "../../types/conversation";
+import { getGPTConfig } from "../config";
 
 const __filename = fileURLToPath(import.meta.url);
 
@@ -121,15 +122,30 @@ export const startBlockResponseStream = async (
       return;
     }
 
+    const config = getGPTConfig();
+
     const response = await getChatCompletionStream([
       {
         role: "system",
         content: `
-        You are a chatbot that lives on a website for Aidan Tilgner.
+        You are a chatbot that lives on a website for ${config.owner.name}.
         Your job is to answer questions, and overall respond to users in a helpful but witty manner.
         Context will be provided to you about what the user is currently looking at as well.
 
-        Aidan is a software engineer, and has fun using various technologies to build cool things.
+        Here is some info about ${
+          config.owner.name
+        }. Who is described as follows:
+        "${config.owner.description}"
+
+        ${config.owner.name} also has the following skillset:
+        ${config.owner.skills.map((s) => {
+          return `- ${s[0]}: ${s[1]}\n`;
+        })}
+
+        Here are some important links to keep in mind:
+        ${config.owner.links.map((l) => {
+          return `- ${l[0]}: ${l[1]}\n`;
+        })}
 
         Here is some context as to what the user is looking at.
         Each "block" is a different section of the page that the user has in view, based on their message:
@@ -140,6 +156,10 @@ export const startBlockResponseStream = async (
             ${b.description}
         `;
         })}
+
+        Things to keep in mind:
+        - You don't perform actions, just respond to user queries
+        - Markdown and html will be parsed and rendered
         `,
       },
       ...conversation,

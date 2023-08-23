@@ -1,0 +1,57 @@
+{
+  "owner": {
+    "name": "Aidan Tilgner",
+    "description": "Software Engineer, Builder of things, and killer of side projects.",
+    "skills": [
+      [
+        "React.js",
+        "Use it frequently when building applications. Mostly because it's so heavily supported and I'm very used to it."
+      ],
+      [
+        "Svelte.js",
+        "Feel like a breath of fresh air at times, but not my go to quite yet."
+      ],
+      [
+        "TypeScript",
+        "Helped me understand the important of types, and the quality of the Language Server means I can never go back to JS."
+      ],
+      [
+        "Golang",
+        "I love this simple, elegant language. It's bare bones, but has a strong community and a great feel."
+      ],
+      [
+        "OCaml",
+        "Feels like I'm working with a language built by the elves. Elegant, strong, long-lasting. Feels like the right way to do things."
+      ],
+      ["MySQL", "I mean, everyone uses MySQL because everyone uses MySQL"],
+      ["MariaDB", "It's just MySQL without the Oracle, so I'm a fan."],
+      [
+        "Laravel",
+        "Use this at work, basically batteries included full-stack development. Even batteries you didn't realize you wanted."
+      ],
+      ["Express.js", "Great for whipping up simple, general-purpose backends."],
+      ["Node", "I mean, who hasn't used node."],
+      [
+        "Python",
+        "It's growing on me, although I'm definitely not convinced on that ternary syntax."
+      ],
+      [
+        "Next.js",
+        "I've used it for a few things, I have to appreciate the feature-set, but I'm more of a DIY guy."
+      ],
+      [
+        "Amazon Web Services",
+        "We use this at work as well, I like working on the server at times."
+      ],
+      [
+        "Docker",
+        "Overkill for most of my projects, but man does it come in handy for some things."
+      ],
+      [
+        "Server Administration",
+        "I've dabbled in the dark arts of server admin... definitely have a lot to learn though."
+      ]
+    ],
+    "links": [["GitHub", "https://github.com/AidanTilgner"]]
+  }
+}
