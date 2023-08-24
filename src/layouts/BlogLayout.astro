@@ -15,6 +15,7 @@ const {
     updatedate,
     tags,
     image,
+    draft,
   },
 } = Astro.props;
 ---
@@ -43,6 +44,13 @@ const {
     <Navbar client:load />
     <a class="back-button" href="/blog"><ArrowLeft /> All Posts</a>
     <div class="metadata">
+      {
+        draft && (
+          <p class="draft-disclaimer">
+            * This post is a draft, it may be incomplete or something.
+          </p>
+        )
+      }
       <h1 class="title">{title}</h1>
       <p class="description">{description}</p>
       <div class="metadata__info">
@@ -90,8 +98,12 @@ const {
         box-sizing: border-box;
       }
 
+      h2 {
+        margin-top: 5.6rem;
+      }
+
       a {
-        color: rgb(var(--primary-color));
+        color: rgb(var(--accent-color));
         text-decoration: none;
 
         &:hover {
@@ -177,6 +189,11 @@ const {
           padding: 2.4rem 12.4rem;
           font-size: 2.4rem;
         }
+      }
+
+      .draft-disclaimer {
+        color: red;
+        font-size: 1.4rem;
       }
     </style>
   </body>
