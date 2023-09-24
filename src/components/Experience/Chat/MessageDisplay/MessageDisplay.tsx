@@ -121,6 +121,7 @@ function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
       >
         {characterHover ? characterWinkState : <CurrentCharacterState />}
       </a>
+      <span className={styles.disclaimer}>* This isn't done yet so don't trust output</span>
       <p className={styles.message}>
         <span
           dangerouslySetInnerHTML={{
