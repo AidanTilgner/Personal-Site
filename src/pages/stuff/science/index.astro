@@ -1,6 +1,8 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import { ArrowLeft } from "@phosphor-icons/react";
+import science from "./science.json";
+const papers = science.papers;
 ---
 
 <Layout title="Links">
@@ -9,18 +11,17 @@ import { ArrowLeft } from "@phosphor-icons/react";
       <a class="back-button" href="/stuff"><ArrowLeft /> All Stuff</a>
     </section>
     <section>
+      <h2>Papers</h2>
       <ul>
-        <li>
-          <a
-            href="https://agupubs.onlinelibrary.wiley.com/doi/epdf/10.1029/2023GB007875"
-            >Ice Age Termination Event</a
-          >
-        </li>
-        <li>
-          <a href="https://arxiv.org/abs/2101.04255"
-            >Quantum Mechanics in Artificial Intelligence</a
-          >
-        </li>
+        {
+          papers.map((paper) => {
+            return (
+              <li>
+                <a href={paper.link}>{paper.name}</a>
+              </li>
+            );
+          })
+        }
       </ul>
     </section>
   </main>

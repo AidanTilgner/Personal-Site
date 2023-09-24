@@ -29,6 +29,7 @@ func main() {
 			cmds.BlockCommand(),
 			cmds.BuildCommand(),
 			cmds.PostCommand(),
+			cmds.StuffCommand(),
 		},
 	}
 
