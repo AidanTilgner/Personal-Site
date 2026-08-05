@@ -1,4 +1,3 @@
-import React from "react";
 import { land_animals, sea_creatures } from "./animals";
 import styles from "./index.module.scss";
 

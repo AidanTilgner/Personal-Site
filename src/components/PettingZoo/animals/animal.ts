@@ -1,46 +1,34 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-interface usePetsOptions {
+interface UsePetsOptions {
   name: string;
-  petsRef: React.RefObject<HTMLParagraphElement>;
-  animalRef: React.RefObject<HTMLDivElement>;
-  setTalking: React.Dispatch<React.SetStateAction<boolean>>;
+  setTalking?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const usePets = ({
-  name,
-  petsRef,
-  animalRef,
-  setTalking,
-}: usePetsOptions) => {
-  const pets = useRef(0);
-
+export const usePets = ({ name, setTalking }: UsePetsOptions) => {
+  const [numPets, setNumPets] = useState(0);
   const keyName = `${name}_total_pets`;
 
-  const triggerPet = () => {
-    pets.current += 1;
-    petsRef.current!.innerHTML = `pets: ${pets.current}`;
-    localStorage.setItem(keyName, pets.current.toString());
+  useEffect(() => {
+    const stored = Number.parseInt(localStorage.getItem(keyName) ?? "0", 10);
+    setNumPets(Number.isFinite(stored) ? stored : 0);
+  }, [keyName]);
+
+  const triggerPet = useCallback(() => {
+    setNumPets((current) => {
+      const next = current + 1;
+      localStorage.setItem(keyName, String(next));
+      return next;
+    });
+  }, [keyName]);
+
+  const petHandlers = {
+    onMouseEnter: () => {
+      setTalking?.(false);
+      triggerPet();
+    },
+    onMouseLeave: () => setTalking?.(true),
   };
 
-  useEffect(() => {
-    const numPets = localStorage.getItem(keyName)
-      ? parseInt(localStorage.getItem(keyName)!)
-      : 0;
-    pets.current = numPets - 1;
-    triggerPet();
-  }, []);
-
-  useEffect(() => {
-    // if the animal is talking, petting it will stop it from talking
-    animalRef.current!.onmouseenter = () => {
-      setTalking(false);
-      triggerPet();
-    };
-    animalRef.current!.onmouseleave = () => {
-      setTalking(true);
-    };
-  }, []);
-
-  return { triggerPet, num_pets: pets.current };
+  return { triggerPet, numPets, petHandlers };
 };

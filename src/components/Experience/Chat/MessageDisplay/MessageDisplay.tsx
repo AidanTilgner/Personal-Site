@@ -1,135 +1,127 @@
-/* eslint-disable react/jsx-no-comment-textnodes */
-/* eslint-disable no-useless-escape */
-import React, { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./MessageDisplay.module.scss";
-import showdown from "showdown";
+import Markdown from "react-markdown";
 
 interface MessageDisplayProps {
   message: string;
   is_streaming: boolean;
+  latestQuestion: string | null;
 }
 
-const converter = new showdown.Converter();
+const camelStates = [
+  String.raw`      //
+   _oo\
+  (__/ \  _  _
+     \  \/ \/ \
+     (         )\
+      \_______/  \
+       [[] [[]]`,
+  String.raw`      |/
+   _oo\
+  (o_/ \  _  _
+     \  \/ \/ \
+     (         )\
+      \_______/  \
+       [[] [[]]`,
+  String.raw`      \/
+   _oo\
+  (O_/ \  _  _
+     \  \/ \/ \
+     (         )\
+      \_______/  \
+       [[] [[]]`,
+];
 
-const parseMarkdown = (message: string) => {
-  return converter.makeHtml(message);
-};
+const camelWink = String.raw`      //
+   _o-\
+  (*_/ \  _  _
+     \  \/ \/ \
+     (         )\
+      \_______/  \
+       [[] [[]]`;
 
-function MessageDisplay({ message, is_streaming }: MessageDisplayProps) {
-  const [characterHover, setCharacterHover] = React.useState(false);
-
-  const CharacterStates = [
-    <pre key={"state-1"}>
-      {`
-      //
-   _oo\\
-  (__/ \\  _  _
-     \\  \\/ \\/ \\
-     (         )\\
-      \\_______/  \\
-       [[] [[]]
-       [[] [[]]
-      `}
-    </pre>,
-    <pre key={"state-2"}>
-      {`
-      //
-   _oo\\
-  (o_/ \\  _  _
-     \\  \\/ \\/ \\
-     (         )\\
-      \\_______/  \\
-       [[] [[]]
-       [[] [[]]
-      `}
-    </pre>,
-    <pre key={"state-3"}>
-      {`
-      //
-   _oo\\
-  (O_/ \\  _  _
-     \\  \\/ \\/ \\
-     (         )\\
-      \\_______/  \\
-       [[] [[]]
-       [[] [[]]
-      `}
-    </pre>,
-    <pre key={"state-4"}>
-      {`
-      //
-   _oo\\
-  (o_/ \\  _  _
-     \\  \\/ \\/ \\
-     (         )\\
-      \\_______/  \\
-       [[] [[]]
-       [[] [[]]
-      `}
-    </pre>,
-  ];
-
-  const characterWinkState = (
-    <pre>
-      {`
-      //
-   _o-\\
-  (*_/ \\  _  _
-     \\  \\/ \\/ \\
-     (         )\\
-      \\_______/  \\
-       [[] [[]]
-       [[] [[]]
-      `}
-    </pre>
-  );
-
-  const [currentCharacterState, setCurrentCharacterState] = React.useState(0);
+function MessageDisplay({
+  message,
+  is_streaming,
+  latestQuestion,
+}: MessageDisplayProps) {
+  const [hovered, setHovered] = useState(false);
+  const [currentState, setCurrentState] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (is_streaming) {
-      const interval = setInterval(() => {
-        setCurrentCharacterState((prev) => (prev + 1) % CharacterStates.length);
-      }, 100);
-      return () => clearInterval(interval);
-    }
     if (!is_streaming) {
-      setCurrentCharacterState(0);
+      setCurrentState(0);
+      return;
     }
+    const interval = window.setInterval(() => {
+      setCurrentState((previous) => (previous + 1) % camelStates.length);
+    }, 180);
+    return () => window.clearInterval(interval);
   }, [is_streaming]);
 
-  const CurrentCharacterState = () => {
-    return CharacterStates[currentCharacterState];
-  };
-
-  const scrollRef = React.useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+    scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [message]);
 
   return (
-    <div className={styles.message_display}>
+    <div className={styles.messageDisplay}>
       <a
-        className={`${styles.character} ${message ? styles.with_message : ""}`}
-        title="*camel noises*"
+        className={styles.character}
+        title="Visit Cosmo in the petting zoo"
         href="/petting-zoo"
-        onMouseEnter={() => setCharacterHover(true)}
-        onMouseLeave={() => setCharacterHover(false)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        aria-label="Cosmo the camel — visit the petting zoo"
       >
-        {characterHover ? characterWinkState : <CurrentCharacterState />}
+        <pre aria-hidden="true">
+          {hovered ? camelWink : camelStates[currentState]}
+        </pre>
       </a>
-      <span className={styles.disclaimer}>* This isn't done yet so don't trust output</span>
-      <p className={styles.message}>
-        <span
-          dangerouslySetInnerHTML={{
-            __html: parseMarkdown(message),
-          }}
-        />
-        <span ref={scrollRef} />
-      </p>
+      <div className={styles.exchange}>
+        {latestQuestion && (
+          <div
+            className={styles.latestQuestion}
+            aria-label="Your latest question"
+          >
+            <span>You asked</span>
+            <p>{latestQuestion}</p>
+          </div>
+        )}
+        <div
+          className={styles.response}
+          aria-live="polite"
+          aria-busy={is_streaming}
+        >
+          {message ? (
+            <Markdown
+              skipHtml
+              components={{
+                a: ({ href, children }) => {
+                  const external = href?.startsWith("http");
+                  return (
+                    <a
+                      href={href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
+                    >
+                      {children}
+                    </a>
+                  );
+                },
+              }}
+            >
+              {message}
+            </Markdown>
+          ) : (
+            <p className={styles.thinking}>Looking through the index…</p>
+          )}
+          {is_streaming && (
+            <span className={styles.cursor} aria-hidden="true" />
+          )}
+          <div ref={scrollRef} />
+        </div>
+      </div>
     </div>
   );
 }

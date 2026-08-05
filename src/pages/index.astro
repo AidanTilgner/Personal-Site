@@ -13,16 +13,17 @@ import Experience from "../components/Experience";
 
 <style lang="scss">
   main {
-    text-align: center;
-    height: calc(100vh - 82px);
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: calc(100dvh - var(--home-nav-height));
+    min-height: 0;
+    overflow: hidden;
   }
 
   .experience {
     width: 100%;
     height: 100%;
+  }
+
+  :global(body) {
+    overflow: hidden;
   }
 </style>

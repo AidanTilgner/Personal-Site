@@ -1,6 +1,5 @@
-/* eslint-disable no-useless-escape */
-/* eslint-disable react/no-unescaped-entities */
-import React, { useEffect, useRef } from "react";
+/* eslint-disable no-useless-escape -- ASCII art uses literal backslashes. */
+import React, { useEffect } from "react";
 import type { AnimalProps } from "..";
 import { usePets } from "./animal";
 import styles from "./styles/animal.module.scss";
@@ -66,35 +65,19 @@ function Bat({ is_talking, talk_speed }: AnimalProps) {
   useEffect(() => {
     if (is_talking) {
       const interval = setInterval(() => {
-        setCurrentCharacterState((prev) => (prev + 1) % CharacterStates.length);
+        setCurrentCharacterState((prev) => (prev + 1) % 3);
       }, talk_speed);
       return () => clearInterval(interval);
     }
-    if (!is_talking) {
-      setCurrentCharacterState(0);
-    }
-  }, [is_talking]);
-
-  const CurrentCharacterState = () => {
-    return CharacterStates[currentCharacterState];
-  };
+  }, [is_talking, talk_speed]);
 
   const [shouldWink, setShouldWink] = React.useState(false);
-  const petsRef = useRef<HTMLParagraphElement>(null);
-  const { triggerPet } = usePets({
+  const { triggerPet, numPets } = usePets({
     name: "bruce_the_bat",
-    petsRef,
   });
 
   return (
-    <div
-      onClick={() => {
-        setShouldWink((prev) => !prev);
-      }}
-      title="*camel noises*"
-      className={styles.animal}
-      id="camel"
-    >
+    <div className={styles.animal} id="bat">
       <div className={styles.background}>
         <pre>
           {`
@@ -113,19 +96,24 @@ function Bat({ is_talking, talk_speed }: AnimalProps) {
     `}
         </pre>
       </div>
-      <div
+      <button
+        type="button"
         className={styles.animal_itself}
+        onClick={() => setShouldWink((previous) => !previous)}
         onMouseEnter={() => {
           triggerPet();
         }}
+        title="*bat noises*"
       >
-        {shouldWink ? characterWinkState : <CurrentCharacterState />}
-      </div>
+        {shouldWink
+          ? characterWinkState
+          : CharacterStates[is_talking ? currentCharacterState : 0]}
+      </button>
       <div className={styles.metadata}>
         <p className={styles.name}>
           Bruce the Bat <sup>TM</sup>
         </p>
-        <p className={styles.total_pets} ref={petsRef} />
+        <p className={styles.total_pets}>pets: {numPets}</p>
       </div>
       {shouldWink && (
         <p className={styles.description}>

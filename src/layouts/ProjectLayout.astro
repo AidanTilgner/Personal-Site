@@ -1,0 +1,299 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Layout from "./Layout.astro";
+
+type Project = CollectionEntry<"projects">["data"];
+type Props = { project: Project };
+
+const { project } = Astro.props;
+const status = project.status.charAt(0).toUpperCase() + project.status.slice(1);
+const timeline = [
+  project.started?.slice(0, 4),
+  project.completed?.slice(0, 4),
+].filter(Boolean);
+---
+
+<Layout title={project.title} description={project.description}>
+  <main class="project-shell">
+    <a class="project-back" href="/projects">
+      <span aria-hidden="true">←</span> Projects
+    </a>
+
+    <header class="project-header">
+      <div class="project-kicker">
+        <span>{status}</span>
+        {timeline.length > 0 && <span>{timeline.join(" — ")}</span>}
+      </div>
+      <h1>{project.title}</h1>
+      <p class="project-description">{project.description}</p>
+
+      <dl class="project-details">
+        {
+          project.role && (
+            <div>
+              <dt>Role</dt>
+              <dd>{project.role}</dd>
+            </div>
+          )
+        }
+        {
+          project.technologies.length > 0 && (
+            <div>
+              <dt>Built with</dt>
+              <dd>{project.technologies.join(", ")}</dd>
+            </div>
+          )
+        }
+        {
+          project.links.length > 0 && (
+            <div>
+              <dt>Links</dt>
+              <dd class="project-links">
+                {project.links.map((link) => (
+                  <a href={link.href}>{link.label} ↗</a>
+                ))}
+              </dd>
+            </div>
+          )
+        }
+      </dl>
+    </header>
+
+    {
+      project.image && (
+        <figure class="project-image">
+          <img src={project.image.src} alt={project.image.alt} />
+        </figure>
+      )
+    }
+
+    {
+      project.highlights.length > 0 && (
+        <aside
+          class="project-highlights"
+          aria-labelledby="project-highlights-title"
+        >
+          <p id="project-highlights-title">Highlights</p>
+          <ul>
+            {project.highlights.map((highlight) => (
+              <li>{highlight}</li>
+            ))}
+          </ul>
+        </aside>
+      )
+    }
+
+    <article class="project-body">
+      <slot />
+    </article>
+  </main>
+</Layout>
+
+<style lang="scss" is:global>
+  .project-shell {
+    width: min(100%, 132rem);
+    margin: 0 auto;
+    padding: 4rem clamp(2.4rem, 7vw, 9rem) 10rem;
+  }
+
+  .project-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: rgba(var(--text-color), 0.5);
+    font-family: var(--code-font-family);
+    font-size: 1.1rem;
+
+    &:hover {
+      color: rgb(var(--accent-color));
+      text-decoration: none;
+    }
+  }
+
+  .project-header {
+    margin: clamp(5rem, 9vw, 11rem) 0 clamp(5rem, 8vw, 9rem);
+  }
+
+  .project-kicker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 2rem;
+    margin-bottom: 2.4rem;
+    color: rgb(var(--accent-color));
+    font-family: var(--code-font-family);
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+
+    span + span {
+      color: rgba(var(--text-color), 0.35);
+    }
+  }
+
+  .project-header h1 {
+    max-width: 108rem;
+    margin: 0;
+    font-size: clamp(5rem, 9vw, 11rem);
+    font-weight: 620;
+    letter-spacing: -0.065em;
+    line-height: 0.92;
+    text-wrap: balance;
+  }
+
+  .project-description {
+    max-width: 76rem;
+    margin: 3rem 0 0;
+    color: rgba(var(--text-color), 0.58);
+    font-size: clamp(1.8rem, 2.5vw, 2.5rem);
+    line-height: 1.5;
+  }
+
+  .project-details {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3rem;
+    margin: clamp(4rem, 7vw, 7rem) 0 0;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(var(--text-color), 0.14);
+
+    > div {
+      display: grid;
+      gap: 1rem;
+    }
+
+    dt {
+      color: rgba(var(--text-color), 0.32);
+      font-family: var(--code-font-family);
+      font-size: 0.95rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    dd {
+      margin: 0;
+      color: rgba(var(--text-color), 0.7);
+      font-size: 1.5rem;
+      line-height: 1.5;
+    }
+  }
+
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.6rem;
+  }
+
+  .project-image {
+    margin: 0 0 clamp(5rem, 9vw, 10rem);
+    border: 1px solid rgba(var(--text-color), 0.12);
+    background: rgb(var(--surface-color));
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .project-highlights {
+    display: grid;
+    grid-template-columns: minmax(14rem, 0.32fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 7rem);
+    max-width: 96rem;
+    margin-bottom: clamp(6rem, 9vw, 10rem);
+    padding: clamp(2.4rem, 4vw, 4rem);
+    border: 1px solid rgba(var(--text-color), 0.12);
+    background: rgb(var(--surface-color));
+
+    > p {
+      margin: 0;
+      color: rgb(var(--accent-color));
+      font-family: var(--code-font-family);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    ul {
+      display: grid;
+      gap: 1.5rem;
+      margin: 0;
+      padding-left: 2rem;
+      color: rgba(var(--text-color), 0.72);
+      font-size: clamp(1.55rem, 2vw, 1.85rem);
+      line-height: 1.55;
+    }
+  }
+
+  .project-body {
+    max-width: 78rem;
+    color: rgba(var(--text-color), 0.76);
+    font-size: clamp(1.75rem, 2vw, 2.05rem);
+    line-height: 1.78;
+
+    h2,
+    h3 {
+      color: rgb(var(--text-color));
+      font-weight: 560;
+      letter-spacing: -0.035em;
+      line-height: 1.15;
+    }
+
+    h2 {
+      margin: 6rem 0 2rem;
+      font-size: clamp(3rem, 4vw, 4.4rem);
+    }
+
+    h3 {
+      margin: 4.5rem 0 1.6rem;
+      font-size: clamp(2.3rem, 3vw, 3.2rem);
+    }
+
+    p,
+    ul,
+    ol,
+    pre,
+    blockquote,
+    figure {
+      margin: 0 0 2.4rem;
+    }
+
+    a {
+      text-decoration: underline;
+      text-decoration-color: rgba(var(--accent-color), 0.45);
+      text-underline-offset: 0.18em;
+    }
+
+    blockquote {
+      padding-left: 2rem;
+      border-left: 2px solid rgb(var(--accent-color));
+      color: rgba(var(--text-color), 0.58);
+    }
+
+    code,
+    pre {
+      font-family: var(--code-font-family);
+    }
+
+    pre {
+      overflow-x: auto;
+      padding: 2rem;
+      border: 1px solid rgba(var(--text-color), 0.12);
+      background: rgb(var(--surface-color));
+      font-size: 1.35rem;
+      line-height: 1.6;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .project-details,
+    .project-highlights {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

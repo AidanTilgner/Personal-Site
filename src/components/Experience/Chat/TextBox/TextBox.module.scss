@@ -1,73 +1,162 @@
 .textbox {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  border-top: 1px solid rgba(var(--text-color), 0.14);
+  padding-top: 1.2rem;
+}
 
-  input {
-    border: none;
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    padding: 1.4rem 1.8rem;
-    background-color: rgba(var(--background-color), 1);
-    color: rgb(var(--text-color));
-    font-size: 1.8rem;
-    border: 1.5px solid rgba($color: var(--text-color), $alpha: 0.75);
+.suggestions {
+  display: grid;
+  margin-bottom: 1.8rem;
+}
 
-    &:focus {
-      outline: none;
-      border: 1.5px solid rgba($color: var(--text-color), $alpha: 1);
+.suggestion {
+  position: relative;
+  padding: 1rem 2.6rem 1rem 0;
+  border: 0;
+  border-bottom: 1px solid rgba(var(--text-color), 0.14);
+  background: transparent;
+  color: rgba(var(--text-color), 0.68);
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1.35;
+  text-align: left;
+  transition:
+    border-color 140ms ease,
+    color 140ms ease;
+
+  &::after {
+    position: absolute;
+    top: 50%;
+    right: 0.4rem;
+    color: rgba(var(--text-color), 0.34);
+    content: "↗";
+    font-family: var(--code-font-family);
+    transform: translateY(-50%);
+  }
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    color: rgb(var(--accent-color));
+
+    &::after {
+      color: rgb(var(--accent-color));
     }
   }
 
-  .suggestions {
-    display: none;
-    align-items: center;
-    gap: 0.8rem;
-    flex-wrap: wrap;
-    margin: 1.8rem 0;
+  &:disabled {
+    cursor: default;
+    color: rgba(var(--text-color), 0.52);
 
-    @media screen and (min-width: 768px) {
-      display: flex;
-    }
-  }
-
-  .suggestion {
-    color: rgba(var(--text-color), 0.75);
-    border: none;
-    background-color: transparent;
-    font-size: 1.6rem;
-    cursor: pointer;
-
-    &:hover {
-      text-decoration: underline;
-      color: rgba(var(--text-color), 1);
+    &::after {
+      color: rgba(var(--text-color), 0.26);
     }
   }
 }
 
 .textboxcontainer {
-  position: relative;
+  > div {
+    position: relative;
+    display: flex;
+    min-height: 5.4rem;
+    align-items: center;
+    border: 1px solid rgba(var(--text-color), 0.18);
+    border-radius: 0.4rem;
+    background: rgba(var(--background-color), 0.46);
+    transition: border-color 150ms ease;
+
+    &:focus-within {
+      border-color: rgb(var(--accent-color));
+    }
+  }
+
+  input {
+    min-width: 0;
+    flex: 1;
+    align-self: stretch;
+    padding: 1.4rem 5.2rem 1.4rem 3.8rem;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: rgb(var(--text-color));
+    font-family: var(--code-font-family);
+    font-size: 1.35rem;
+
+    &::placeholder {
+      color: rgba(var(--text-color), 0.3);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+}
+
+.promptMark {
+  position: absolute;
+  left: 1.4rem;
+  color: rgb(var(--accent-color));
+  font-family: var(--code-font-family);
+  font-size: 1.3rem;
 }
 
 .sendmessage {
   position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  aspect-ratio: 1/1;
-  font-size: 2.4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  color: rgba(var(--text-color), 0.75);
-  border: none;
+  right: 0.6rem;
+  display: grid;
+  width: 4.2rem;
+  height: 4.2rem;
+  place-items: center;
+  border: 0;
+  border-radius: 0.3rem;
+  background: rgb(var(--accent-color));
+  color: rgb(var(--accent-ink));
   cursor: pointer;
+  font-size: 1.8rem;
+  transition: opacity 140ms ease;
 
-  &:hover {
-    color: rgba(var(--text-color), 1);
+  &:disabled {
+    cursor: default;
+    opacity: 0.18;
+  }
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@media (max-width: 899px) {
+  .suggestions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.6rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .suggestion {
+    min-height: 4.2rem;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    font-size: 1.05rem;
+  }
+
+  .textboxcontainer > div {
+    min-height: 4.8rem;
+  }
+
+  .sendmessage {
+    width: 3.8rem;
+    height: 3.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .suggestion,
+  .sendmessage,
+  .textboxcontainer > div {
+    transition: none;
   }
 }

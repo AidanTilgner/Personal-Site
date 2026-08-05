@@ -4,44 +4,151 @@ import Layout from "../../layouts/Layout.astro";
 
 <Layout title="Cool Stuff">
   <main>
-    <section>
-      <h1>Cool Stuff</h1>
-      <p>Here's some cool I've found.</p>
-    </section>
-    <section>
-      <ul>
-        <li><a href="/stuff/links">Links</a></li>
-        <li><a href="/stuff/videos">Videos</a></li>
-        <li><a href="/stuff/science">Science</a></li>
-      </ul>
-    </section>
+    <header class="page-intro">
+      <p class="eyebrow">Lab / personal index</p>
+      <h1>Things worth keeping around.</h1>
+      <p class="lede">
+        A quieter corner for references, experiments, curiosities, and material
+        that does not need to become a case study.
+      </p>
+    </header>
+
+    <nav class="collections" aria-label="Lab collections">
+      <a href="/stuff/links">
+        <span class="number">01</span>
+        <div>
+          <h2>Links</h2>
+          <p>Bookmarks and useful corners of the web.</p>
+        </div>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+      <a href="/stuff/videos">
+        <span class="number">02</span>
+        <div>
+          <h2>Videos</h2>
+          <p>Talks, demonstrations, and things worth watching again.</p>
+        </div>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+      <a href="/stuff/science">
+        <span class="number">03</span>
+        <div>
+          <h2>Science</h2>
+          <p>Small explorations of systems, observations, and questions.</p>
+        </div>
+        <span class="arrow" aria-hidden="true">↗</span>
+      </a>
+    </nav>
   </main>
 </Layout>
 
 <style lang="scss">
   main {
-    padding: 1.4rem 2.4rem;
+    width: min(100%, 144rem);
+    min-height: calc(100vh - var(--home-nav-height));
+    margin: 0 auto;
+    padding: clamp(4rem, 8vw, 10rem) clamp(2.4rem, 6vw, 8rem) 8rem;
   }
 
-  section {
-    margin-bottom: 3.6rem;
+  .page-intro {
+    max-width: 94rem;
+    margin-bottom: clamp(6rem, 10vw, 12rem);
   }
 
-  p {
-    font-size: 1.8rem;
+  .eyebrow,
+  .number {
+    font-family: var(--code-font-family);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow {
+    margin: 0 0 2.4rem;
+    color: rgb(var(--accent-color));
+    font-size: 1.1rem;
   }
 
   h1 {
-    font-size: 3.6rem;
-    margin-bottom: 1.4rem;
-  }
-
-  ul {
     margin: 0;
+    font-size: clamp(5.2rem, 9vw, 11rem);
+    font-weight: 620;
+    letter-spacing: -0.065em;
+    line-height: 0.92;
   }
 
-  li {
-    margin-bottom: 0.8rem;
-    font-size: 2.4rem;
+  .lede {
+    max-width: 68rem;
+    margin: 3rem 0 0;
+    color: rgba(var(--text-color), 0.55);
+    font-size: clamp(1.7rem, 2.2vw, 2.3rem);
+    line-height: 1.55;
+  }
+
+  .collections {
+    border-top: 1px solid rgba(var(--text-color), 0.14);
+
+    > a {
+      display: grid;
+      min-height: 18rem;
+      grid-template-columns: 8rem minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 2rem;
+      padding: clamp(2.4rem, 4vw, 4rem) 0;
+      border-bottom: 1px solid rgba(var(--text-color), 0.14);
+      color: rgb(var(--text-color));
+      transition:
+        padding 160ms ease,
+        background-color 160ms ease;
+
+      &:hover {
+        padding-right: 2rem;
+        padding-left: 2rem;
+        background: rgb(var(--surface-raised));
+        text-decoration: none;
+
+        .arrow {
+          color: rgb(var(--accent-color));
+          transform: translate(0.3rem, -0.3rem);
+        }
+      }
+    }
+  }
+
+  .number {
+    align-self: start;
+    color: rgba(var(--text-color), 0.28);
+    font-size: 1rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: clamp(3.2rem, 6vw, 6.8rem);
+    font-weight: 520;
+    letter-spacing: -0.055em;
+    line-height: 1;
+  }
+
+  .collections p {
+    max-width: 58rem;
+    margin: 1.4rem 0 0;
+    color: rgba(var(--text-color), 0.48);
+    font-size: 1.55rem;
+    line-height: 1.5;
+  }
+
+  .arrow {
+    color: rgba(var(--text-color), 0.25);
+    font-size: 2.8rem;
+    transition:
+      color 160ms ease,
+      transform 160ms ease;
+  }
+
+  @media (max-width: 620px) {
+    .collections > a {
+      min-height: 15rem;
+      grid-template-columns: 4rem minmax(0, 1fr) auto;
+      gap: 1rem;
+    }
   }
 </style>

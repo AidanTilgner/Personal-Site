@@ -11,6 +11,18 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+func splitAliases(value string) []string {
+	parts := strings.Split(value, ",")
+	aliases := make([]string, 0, len(parts))
+	for _, part := range parts {
+		alias := strings.TrimSpace(part)
+		if alias != "" {
+			aliases = append(aliases, alias)
+		}
+	}
+	return aliases
+}
+
 func BlockCommand() *cli.Command {
 	cmd := cli.Command{
 		Name:  "blocks",
@@ -94,13 +106,13 @@ func addBlock() *cli.Command {
 			}
 			fmt.Printf("\nBlock content: %s\n", strings.TrimSuffix(data, "\n"))
 
-			fmt.Print("\nWhat intents should this block be included in? (comma separated): ")
-			intents, err := reader.ReadString('\n')
+			fmt.Print("\nWhat search aliases should show this block? (comma separated, optional): ")
+			aliases, err := reader.ReadString('\n')
 			if err != nil {
-				fmt.Printf("Error reading block intents: %s\n", err)
+				fmt.Printf("Error reading block aliases: %s\n", err)
 				return err
 			}
-			fmt.Printf("\nBlock intents: %s\n", strings.TrimSuffix(intents, "\n"))
+			fmt.Printf("\nBlock aliases: %s\n", strings.TrimSuffix(aliases, "\n"))
 
 			var useDataType bl.IBlockContentType
 			if validContentType == bl.SelfUrl {
@@ -116,7 +128,7 @@ func addBlock() *cli.Command {
 					Datatype: useDataType,
 					Data:     data,
 				},
-				When_intents: strings.Split(u.RemoveRune(intents, '\n'), ","),
+				Aliases: splitAliases(u.RemoveRune(aliases, '\n')),
 			}
 			bl.AddBlock(&block)
 			return nil

@@ -12,22 +12,12 @@
           >LinkedIn</a
         >
       </li>
-      <li><span id="socials-email-open">Email me</span></li>
+      <li>
+        <a
+          href="mailto:aidantilgner02@gmail.com?subject=Hello&amp;body=I'm%20interested%20in%20working%20with%20you."
+          >Email me</a
+        >
+      </li>
     </ul>
   </div>
-  <style>
-    #socials-email-open {
-      cursor: pointer;
-    }
-  </style>
-  <script>
-    const emailCopy = document.querySelector("#socials-email-open");
-    emailCopy.addEventListener("click", () => {
-      const yr = "02";
-      const email = "aidan" + "tilgner" + yr + "@gmail.com";
-      const subject = "Hello";
-      const body = "I'm interested in working with you.";
-      window.open(`mailto:${email}?subject=${subject}&body=${body}`);
-    });
-  </script>
 </div>

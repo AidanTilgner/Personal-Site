@@ -15,19 +15,4 @@
       white-space: pre;
     }
   </style>
-
-  <script>
-    const ascii = document.querySelector(".ascii-art-welcome");
-    const colors = ["red", "green", "blue", "yellow", "orange", "purple"];
-    // every character should be wrapped in a span, then given a class of "color-<color>"
-    // where <color> is a random color from the colors array
-    const asciiChars = ascii.innerText.split("");
-    const asciiCharsWithSpans = asciiChars.map(
-      (char) =>
-        `<span style="color: ${
-          colors[Math.floor(Math.random() * colors.length)]
-        };">${char}</span>`,
-    );
-    ascii.innerHTML = asciiCharsWithSpans.join("");
-  </script>
 </div>

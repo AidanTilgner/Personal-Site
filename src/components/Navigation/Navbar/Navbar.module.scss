@@ -1,83 +1,179 @@
 .navbar {
-  z-index: 10;
-  padding-inline: 2.4rem;
+  position: sticky;
+  z-index: 20;
+  top: 0;
   display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
-  height: 82px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background-color: rgba($color: var(--background-color), $alpha: 0.95);
+  padding: 2rem clamp(2.4rem, 5vw, 7.2rem);
+  border-bottom: 1px solid transparent;
+  background: rgba(var(--background-color), 0.96);
+  backdrop-filter: blur(18px);
+  transition:
+    padding 180ms ease,
+    border-color 180ms ease;
 }
 
-.navLogo {
-  display: flex;
-  align-items: flex-end;
-  gap: 0.8rem;
-  font-size: 2.4rem;
+.scrolled {
+  padding: 1.1rem clamp(2rem, 3vw, 4.8rem);
+  border-bottom-color: rgba(var(--text-color), 0.12);
+}
+
+.identity {
+  color: rgb(var(--text-color));
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+
+  &:hover {
+    color: rgb(var(--accent-color));
+    text-decoration: none;
+  }
+}
+
+.desktopNav {
+  display: none;
+  align-items: center;
+  gap: clamp(1.8rem, 3vw, 3.6rem);
+
+  @media (min-width: 760px) {
+    display: flex;
+  }
 
   a {
-    color: rgba($color: var(--text-color), $alpha: 1);
-  }
+    color: rgba(var(--text-color), 0.54);
+    font-size: 1.2rem;
+    transition: color 140ms ease;
 
-  .disclaimer {
-    font-size: 1rem;
-    color: red;
-  }
-}
-
-.navItems {
-  display: flex;
-  list-style: none;
-  gap: 1.8rem;
-
-  li {
-    font-size: 1.6rem;
-
-    a {
-      color: rgba($color: var(--text-color), $alpha: 0.75);
-
-      &:hover {
-        color: rgba($color: var(--text-color), $alpha: 1);
-      }
+    &:hover {
+      color: rgb(var(--text-color));
+      text-decoration: none;
     }
   }
 }
 
 .menuButton {
-  position: relative;
-  z-index: 26;
-  font-size: 2.4rem;
-  color: rgba($color: var(--text-color), $alpha: 1);
-  background-color: transparent;
-  border: none;
+  display: grid;
+  width: 3.2rem;
+  height: 3.2rem;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: rgb(var(--text-color));
   cursor: pointer;
+  line-height: 1;
+
+  &:focus-visible {
+    outline: 2px solid rgb(var(--accent-color));
+    outline-offset: 0.3rem;
+  }
+
+  @media (min-width: 760px) {
+    display: none;
+  }
 }
 
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
+.menuIcon {
+  position: relative;
+  display: block;
+  width: 2.2rem;
+  height: 2px;
+  background: currentColor;
+  transition:
+    background-color 80ms ease 90ms,
+    transform 180ms cubic-bezier(0.65, 0, 0.35, 1);
+
+  &::before,
+  &::after {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    content: "";
+    transition:
+      top 180ms cubic-bezier(0.65, 0, 0.35, 1),
+      transform 220ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  &::before {
+    top: -0.65rem;
+  }
+
+  &::after {
+    top: 0.65rem;
+  }
+}
+
+.menuIconOpen {
+  background-color: transparent;
+  transform: rotate(180deg);
+
+  &::before,
+  &::after {
+    top: 0;
+  }
+
+  &::before {
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    transform: rotate(-45deg);
+  }
+}
+
+@media (max-width: 759px) {
+  .navbar {
+    padding-block: 1.4rem;
+  }
+
+  .scrolled {
+    padding-block: 0.8rem;
+  }
+}
+
+.mobileNav {
+  position: absolute;
+  top: 100%;
   right: 0;
-  bottom: 0;
-  z-index: 25;
-  background-color: rgba($color: var(--background-color), $alpha: 0.75);
-}
-
-.mobileMenu {
-  height: 100%;
-  width: 100%;
-  font-size: 3.6rem;
-  list-style-type: none;
-  padding: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  padding: 1rem 2.4rem 2.4rem;
+  border-bottom: 1px solid rgba(var(--text-color), 0.12);
+  background: rgb(var(--background-color));
 
   a {
-    color: rgba($color: var(--text-color), $alpha: 1);
+    padding: 1.4rem 0;
+    border-bottom: 1px solid rgba(var(--text-color), 0.1);
+    color: rgba(var(--text-color), 0.72);
+    font-size: 1.6rem;
+
+    &:hover {
+      color: rgb(var(--accent-color));
+      text-decoration: none;
+    }
+  }
+
+  .contact {
+    width: fit-content;
+    margin-top: 1.8rem;
+    padding: 1.1rem 1.4rem;
+    border: 1px solid rgb(var(--accent-color));
+    color: rgb(var(--accent-color));
+    font-family: var(--code-font-family);
+    font-size: 1.1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar,
+  .desktopNav a,
+  .menuIcon,
+  .menuIcon::before,
+  .menuIcon::after {
+    transition: none;
   }
 }

@@ -1,49 +1,40 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import Intro from "./Intro/Intro";
+import { useEffect, useRef, useState } from "react";
 import styles from "./index.module.scss";
 import TextBox from "./Chat/TextBox/TextBox";
 import type { Message } from "../../../types/conversation";
 import Content from "./Chat/Content/Content";
 import type { Block } from "../../../types/blocks";
-import { getSocket, socket } from "../../utils/socket.io-client";
+import type { ChatRequest } from "../../../types/chat";
+import {
+  createChatSocket,
+  createRequestId,
+  parseChatServerMessage,
+  parseStoredConversation,
+  trimConversation,
+} from "../../utils/chat-client";
 import MessageDisplay from "./Chat/MessageDisplay/MessageDisplay";
 
-function index() {
-  const [loading, setLoading] = useState(true);
-  const [playingIntro, setPlayingIntro] = useState(false);
+type ConnectionState = "connecting" | "online" | "offline";
+
+const starterPrompts = [
+  "Show me Aidan's AI work",
+  "What has Aidan built?",
+  "What are his strongest skills?",
+  "How can we work together?",
+];
+
+const welcomeMessage =
+  "Ask me about Aidan's work, experience, or the ideas he keeps returning to.";
+
+function Experience() {
   const conversation = useRef<Message[]>([]);
+  const socket = useRef<WebSocket | null>(null);
+  const activeRequestId = useRef<string | null>(null);
   const [blocks, setBlocks] = useState<Block[]>([]);
-  const [displayMessage, setDisplayMessage] = useState<string>("");
-  const [messageLoading, setMessageLoading] = useState<boolean>(false);
-
-  const addMessage = (message: Message) => {
-    conversation.current = [...conversation.current, message];
-  };
-
-  useEffect(() => {
-    if (localStorage.getItem("seen_intro") !== "true") {
-      setPlayingIntro(true);
-    }
-  }, []);
-
-  const submitMessage = async () => {
-    if (!conversation || loading) {
-      return;
-    }
-    const response = await fetch(`/api/content`, {
-      method: "POST",
-      body: JSON.stringify({
-        conversation: conversation.current,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        "x-socket-id": getSocket().id,
-      },
-    });
-    const data = await response.json();
-
-    setBlocks(data.data.blocks);
-  };
+  const [displayMessage, setDisplayMessage] = useState(welcomeMessage);
+  const [latestQuestion, setLatestQuestion] = useState<string | null>(null);
+  const [messageLoading, setMessageLoading] = useState(false);
+  const [connection, setConnection] = useState<ConnectionState>("connecting");
 
   const storeConversation = () => {
     sessionStorage.setItem(
@@ -52,118 +43,166 @@ function index() {
     );
   };
 
-  const playDefaultMessage = useCallback(() => {
-    const m = "Hello there! I'm Aidan's website, how can I help you?";
-    // split the initial message into 1 word per message
-    setMessageLoading(true);
-    const splitMessage = m.split(" ");
-    splitMessage.forEach((word, i) => {
-      const isLast = i === splitMessage.length - 1;
-      setTimeout(() => {
-        setDisplayMessage((prev) => prev + word + " ");
-        if (isLast) {
-          setMessageLoading(false);
-        }
-      }, i * 100);
-    });
-  }, []);
+  const submitMessage = (text: string) => {
+    const query = text.trim();
+    if (!query || messageLoading) return;
 
-  useEffect(() => {
-    const storedConversation = sessionStorage.getItem("conversation");
-    if (storedConversation) {
-      conversation.current = storedConversation.startsWith("[")
-        ? JSON.parse(storedConversation)
-        : [];
+    setLatestQuestion(query);
+
+    if (socket.current?.readyState !== WebSocket.OPEN) {
+      setDisplayMessage(
+        "The knowledge station is offline for a moment. You can still browse the work and writing directly.",
+      );
+      return;
     }
 
-    socket.on(
-      "block-response-stream",
-      (message: {
-        success: boolean;
-        message_fragment: string;
-        done: boolean;
-        index: number;
-        full_message: string;
-      }) => {
-        if (message.done) {
-          setMessageLoading(false);
-          setDisplayMessage(message.full_message);
-          addMessage({
-            role: "assistant",
-            content: message.full_message,
-          });
-          return;
-        }
-        setDisplayMessage((prev) => {
-          // if it wasn't loading before, then it's a new message
-          if (message.index === 0) {
-            return message.message_fragment;
-          }
-          return prev + message.message_fragment;
-        });
-        setMessageLoading(true);
-      },
+    const nextConversation = trimConversation([
+      ...conversation.current,
+      { role: "user" as const, content: query },
+    ]);
+    conversation.current = nextConversation;
+    const requestId = createRequestId();
+    activeRequestId.current = requestId;
+    setDisplayMessage("");
+    setMessageLoading(true);
+
+    const request: ChatRequest = {
+      type: "chat.request",
+      requestId,
+      conversation: nextConversation,
+    };
+    socket.current.send(JSON.stringify(request));
+  };
+
+  useEffect(() => {
+    conversation.current = trimConversation(
+      parseStoredConversation(sessionStorage.getItem("conversation")),
     );
+    setLatestQuestion(
+      [...conversation.current]
+        .reverse()
+        .find((message) => message.role === "user")?.content ?? null,
+    );
+    let disposed = false;
+    let reconnectTimer: number | undefined;
+    let reconnectAttempt = 0;
 
-    const t = setTimeout(() => {
-      playDefaultMessage();
-    }, 500);
+    const connect = () => {
+      if (disposed) return;
+      setConnection("connecting");
+      let chatSocket: WebSocket;
+      try {
+        chatSocket = createChatSocket();
+      } catch {
+        setConnection("offline");
+        return;
+      }
+      socket.current = chatSocket;
 
-    socket.on("connect", () => {
-      setLoading(false);
-    });
+      chatSocket.addEventListener("message", (event) => {
+        const message = parseChatServerMessage(event.data);
+        if (!message || message.requestId !== activeRequestId.current) return;
+
+        switch (message.type) {
+          case "content.blocks":
+            setBlocks(message.blocks);
+            break;
+          case "assistant.delta":
+            setDisplayMessage((previous) =>
+              message.index === 0 ? message.text : previous + message.text,
+            );
+            setMessageLoading(true);
+            break;
+          case "assistant.done":
+            setMessageLoading(false);
+            setDisplayMessage(message.message);
+            conversation.current = trimConversation([
+              ...conversation.current,
+              { role: "assistant", content: message.message },
+            ]);
+            activeRequestId.current = null;
+            break;
+          case "error":
+            setMessageLoading(false);
+            setDisplayMessage(message.message);
+            activeRequestId.current = null;
+            break;
+        }
+      });
+
+      chatSocket.addEventListener("open", () => {
+        reconnectAttempt = 0;
+        setConnection("online");
+      });
+      chatSocket.addEventListener("close", () => {
+        if (socket.current === chatSocket) socket.current = null;
+        activeRequestId.current = null;
+        setConnection("offline");
+        setMessageLoading(false);
+        if (!disposed) {
+          const delay = Math.min(1_000 * 2 ** reconnectAttempt++, 15_000);
+          reconnectTimer = window.setTimeout(connect, delay);
+        }
+      });
+      chatSocket.addEventListener("error", () => chatSocket.close());
+    };
+
+    connect();
 
     return () => {
+      disposed = true;
+      if (reconnectTimer) window.clearTimeout(reconnectTimer);
       storeConversation();
-      socket.off("block-response-stream");
-      socket.off("connect");
-      clearTimeout(t);
+      socket.current?.close(1000, "Component unmounted");
+      socket.current = null;
     };
   }, []);
 
+  const connectionLabel = {
+    connecting: "Connecting",
+    online: "Knowledge online",
+    offline: "Browse mode",
+  }[connection];
+
   return (
     <div className={styles.experience}>
-      {playingIntro && (
-        <Intro
-          onComplete={() => {
-            setPlayingIntro(false);
-          }}
-        />
-      )}
-      {!playingIntro && (
-        <div className={styles.chat}>
-          <div className={styles.content}>
-            <Content blocks={blocks} />
-          </div>
-          <div className={styles.text}>
-            <div className={styles.display_message}>
-              <MessageDisplay
-                message={displayMessage}
-                is_streaming={messageLoading}
-              />
-            </div>
-            <div className={styles.textbox}>
-              <TextBox
-                onSubmit={(text) => {
-                  addMessage({
-                    role: "user" as const,
-                    content: text,
-                  });
-                  submitMessage();
-                }}
-                suggestions={[
-                  "What is this?",
-                  "Aidan Who?",
-                  "Projects.",
-                  "Skills.",
-                ]}
-              />
-            </div>
-          </div>
+      <section className={styles.workspace} aria-label="Adaptive content">
+        <div
+          className={styles.workspaceBody}
+          aria-live="polite"
+          data-workspace-scroll
+        >
+          <Content
+            blocks={blocks}
+            onStartConversation={() => submitMessage("Show me something cool")}
+          />
         </div>
-      )}
+      </section>
+
+      <aside className={styles.guide} aria-label="Ask Aidan's site">
+        <span
+          className={`${styles.connection} ${styles[connection]}`}
+          title={connectionLabel}
+          role="status"
+          aria-label={connectionLabel}
+        >
+          <span />
+        </span>
+        <div className={styles.guideBody}>
+          <MessageDisplay
+            message={displayMessage}
+            is_streaming={messageLoading}
+            latestQuestion={latestQuestion}
+          />
+          <TextBox
+            onSubmit={submitMessage}
+            suggestions={starterPrompts}
+            disabled={connection !== "online" || messageLoading}
+          />
+        </div>
+      </aside>
     </div>
   );
 }
 
-export default index;
+export default Experience;

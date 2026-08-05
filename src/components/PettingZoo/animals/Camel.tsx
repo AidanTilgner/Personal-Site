@@ -1,5 +1,4 @@
-/* eslint-disable no-useless-escape */
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import type { AnimalProps } from "..";
 import styles from "./styles/animal.module.scss";
 import { usePets } from "./animal";
@@ -77,40 +76,22 @@ function Camel({ is_talking, talk_speed }: AnimalProps) {
   const petsThreshold = 15;
 
   const [shouldWink, setShouldWink] = React.useState(false);
-  const petsRef = useRef<HTMLParagraphElement>(null);
-  const animalRef = useRef<HTMLDivElement>(null);
-  const { num_pets } = usePets({
+  const { numPets, petHandlers } = usePets({
     name: "cosmo_the_camel",
-    petsRef,
-    animalRef,
     setTalking: setShouldTalk,
   });
 
   useEffect(() => {
-    if (shouldTalk && num_pets >= petsThreshold) {
+    if (shouldTalk && numPets >= petsThreshold) {
       const interval = setInterval(() => {
-        setCurrentCharacterState((prev) => (prev + 1) % CharacterStates.length);
+        setCurrentCharacterState((prev) => (prev + 1) % 4);
       }, talk_speed);
       return () => clearInterval(interval);
     }
-    if (!shouldTalk) {
-      setCurrentCharacterState(0);
-    }
-  }, [shouldTalk]);
-
-  const CurrentCharacterState = () => {
-    return CharacterStates[currentCharacterState];
-  };
+  }, [numPets, shouldTalk, talk_speed]);
 
   return (
-    <div
-      onClick={() => {
-        setShouldWink((prev) => !prev);
-      }}
-      title="*camel noises*"
-      className={styles.animal}
-      id="camel"
-    >
+    <div className={styles.animal} id="camel">
       <div className={styles.background}>
         <pre>
           {`
@@ -129,12 +110,20 @@ ____\\|/___||_|_________\\|/____
         `}
         </pre>
       </div>
-      <div className={styles.animal_itself} ref={animalRef}>
-        {shouldWink ? characterWinkState : <CurrentCharacterState />}
-      </div>
+      <button
+        type="button"
+        className={styles.animal_itself}
+        onClick={() => setShouldWink((previous) => !previous)}
+        title="*camel noises*"
+        {...petHandlers}
+      >
+        {shouldWink
+          ? characterWinkState
+          : CharacterStates[shouldTalk ? currentCharacterState : 0]}
+      </button>
       <div className={styles.metadata}>
         <p className={styles.name}>Cosmo the Camel</p>
-        <p className={styles.total_pets} ref={petsRef} />
+        <p className={styles.total_pets}>pets: {numPets}</p>
       </div>
       {shouldWink && (
         <p className={styles.description}>

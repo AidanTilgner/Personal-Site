@@ -1,43 +1,44 @@
-import {
-  OpenAIApi,
-  Configuration,
-  CreateChatCompletionRequest,
-} from "openai-edge";
-import { OpenAIStream } from "ai";
-import { config as dotenvConfig } from "dotenv";
+import OpenAI from "openai";
+import type { Message } from "../../types/conversation";
 
-dotenvConfig();
+const MODEL = process.env.OPENAI_CHAT_MODEL ?? "gpt-5.6-luna";
+let client: OpenAI | undefined;
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-
-const config = new Configuration({
-  apiKey: OPENAI_API_KEY,
-});
-
-const openai = new OpenAIApi(config);
-
-export const getChatCompletionStream = async (
-  messages: CreateChatCompletionRequest["messages"],
-  model: CreateChatCompletionRequest["model"] = "gpt-3.5-turbo",
-) => {
-  try {
-    const response = await openai.createChatCompletion({
-      model,
-      messages,
-      stream: true,
-    });
-
-    const stream = OpenAIStream(response);
-
-    return {
-      success: true,
-      stream,
-    };
-  } catch (error) {
-    console.error(error);
-    return {
-      success: false,
-      stream: null,
-    };
+const getClient = () => {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error("OPENAI_API_KEY is required for assistant responses.");
   }
+  client ??= new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  return client;
 };
+
+export const createAssistantResponseStream = async ({
+  instructions,
+  conversation,
+  signal,
+}: {
+  instructions: string;
+  conversation: Message[];
+  signal?: AbortSignal;
+}) =>
+  getClient().responses.create(
+    {
+      model: MODEL,
+      instructions,
+      input: conversation
+        .filter((message) => message.role !== "system")
+        .map((message) => ({
+          role: message.role as "assistant" | "user",
+          content: message.content,
+        })),
+      reasoning: {
+        effort: "low",
+        // Browser persistence replays visible messages, not encrypted reasoning items.
+        context: "current_turn",
+      },
+      text: { verbosity: "low" },
+      store: false,
+      stream: true,
+    },
+    { signal },
+  );

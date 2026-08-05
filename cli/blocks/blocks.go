@@ -21,18 +21,18 @@ type IBlockContent struct {
 }
 
 type IBlockConstructor struct {
-	Name         string
-	Description  string
-	Content      IBlockContent
-	When_intents []string
+	Name        string
+	Description string
+	Content     IBlockContent
+	Aliases     []string
 }
 
 type IBlock struct {
-	Id           string        `json:"id"`
-	Name         string        `json:"name"`
-	Description  string        `json:"description"`
-	Content      IBlockContent `json:"content"`
-	When_intents []string      `json:"when_intents"`
+	Id          string        `json:"id"`
+	Name        string        `json:"name"`
+	Description string        `json:"description"`
+	Content     IBlockContent `json:"content"`
+	Aliases     []string      `json:"aliases,omitempty"`
 }
 
 func getBlockLocation() (string, error) {
@@ -58,11 +58,11 @@ func AddBlock(block *IBlockConstructor) (IBlock, error) {
 	}
 
 	newBlock := IBlock{
-		Id:           id,
-		Name:         block.Name,
-		Description:  block.Description,
-		Content:      block.Content,
-		When_intents: block.When_intents,
+		Id:          id,
+		Name:        block.Name,
+		Description: block.Description,
+		Content:     block.Content,
+		Aliases:     block.Aliases,
 	}
 	jsonBlock, err := json.Marshal(newBlock)
 	if err != nil {

@@ -25,3 +25,7 @@ metadata/
 
 # cache
 .cache/
+
+# generated local knowledge index
+app/data/*.sqlite
+app/data/*.sqlite-*

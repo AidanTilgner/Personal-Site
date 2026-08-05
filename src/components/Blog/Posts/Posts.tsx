@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import type { BlogPost } from "../../../types/main";
 import styles from "./Posts.module.scss";
 import { getAlphanumericText, getPrettyDate } from "../../../utils/formatting";
-import { X } from "@phosphor-icons/react";
+import { XIcon } from "@phosphor-icons/react";
 
 interface PostsProps {
   posts: BlogPost[];
@@ -70,18 +70,26 @@ function Posts({ posts }: PostsProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <button
-            onClick={() => {
-              setQuery("");
-              window.location.href = "/blog";
-            }}
-          >
-            <X />
-          </button>
+          {query && (
+            <button
+              type="button"
+              aria-label="Clear blog search"
+              onClick={() => {
+                setQuery("");
+                window.history.replaceState({}, "", "/blog");
+              }}
+            >
+              <XIcon />
+            </button>
+          )}
         </div>
         <div className={styles.options}>
+          <span className={styles.count}>
+            {sortedPosts.length.toString().padStart(2, "0")} entries
+          </span>
           <div className={styles.sortby}>
             <select
+              aria-label="Sort posts"
               name="sortby"
               value={sortBy}
               onChange={(e) => setSortByState(e.target.value)}
@@ -94,8 +102,8 @@ function Posts({ posts }: PostsProps) {
         </div>
       </div>
       <div className={styles.allposts}>
-        {sortedPosts.map((post) => (
-          <Post key={post.description} post={post} />
+        {sortedPosts.map((post, index) => (
+          <Post key={post.url ?? post.title} post={post} index={index} />
         ))}
         {!sortedPosts.length && (
           <p className={styles.noresults}>No results found.</p>
@@ -107,29 +115,28 @@ function Posts({ posts }: PostsProps) {
 
 export default Posts;
 
-function Post({ post }: { post: BlogPost }) {
+function Post({ post, index }: { post: BlogPost; index: number }) {
   return (
-    <button
-      className={styles.post}
-      onClick={() => {
-        if (!post.url) return;
-        window.location.href = post.url;
-      }}
-    >
-      <p className={styles.post__title}>{post.title}</p>
-      <p className={styles.post__description}>{post.description}</p>
-      <p className={styles.post__date}>{getPrettyDate(post.postdate)}</p>
+    <article className={styles.post}>
+      <span className={styles.post__index} aria-hidden="true">
+        {(index + 1).toString().padStart(2, "0")}
+      </span>
+      <a className={styles.post__content} href={post.url ?? "/blog"}>
+        <p className={styles.post__title}>{post.title}</p>
+        <p className={styles.post__description}>{post.description}</p>
+        <p className={styles.post__date}>{getPrettyDate(post.postdate)}</p>
+      </a>
       <div className={styles.post__tags}>
         {post.tags.map((tag) => (
           <a
             key={tag}
             className={styles.post__tag}
-            href={`/blog?filter="${tag}"`}
+            href={`/blog?filter=${encodeURIComponent(tag)}`}
           >
             {tag}
           </a>
         ))}
       </div>
-    </button>
+    </article>
   );
 }

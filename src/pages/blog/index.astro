@@ -1,12 +1,11 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Posts from "../../components/Blog/Posts/Posts";
+import { getCollection } from "astro:content";
 
-const posts = await Astro.glob("./posts/*.md");
-
-const mappedPosts = posts.map((post) => {
+const mappedPosts = (await getCollection("blog")).map((post) => {
   const { title, author, description, postdate, updatedate, tags, draft } =
-    post.frontmatter;
+    post.data;
   return {
     title,
     author,
@@ -14,17 +13,25 @@ const mappedPosts = posts.map((post) => {
     postdate,
     updatedate,
     tags,
-    url: post.url,
+    url: `/blog/posts/${post.id}`,
     draft,
   };
 });
+const publishedCount = mappedPosts.filter((post) => !post.draft).length;
 ---
 
 <Layout title="Blog">
   <main>
-    <section class="top">
-      <h1>Blog</h1>
-    </section>
+    <header class="page-intro">
+      <p class="eyebrow">
+        Writing / {publishedCount.toString().padStart(2, "0")}
+      </p>
+      <h1>My writing.</h1>
+      <p class="lede">
+        Essays, field notes, and unfinished musings about software, language,
+        systems, and the web.
+      </p>
+    </header>
     <section class="posts">
       <Posts posts={mappedPosts} client:load />
     </section>
@@ -33,15 +40,44 @@ const mappedPosts = posts.map((post) => {
 
 <style lang="scss">
   main {
-    padding: 2.4rem;
-    min-height: 100vh;
+    width: min(100%, 144rem);
+    min-height: calc(100vh - var(--home-nav-height));
+    margin: 0 auto;
+    padding: clamp(4rem, 8vw, 10rem) clamp(2.4rem, 6vw, 8rem) 8rem;
   }
 
-  .top {
-    h1 {
-      font-size: 4.8rem;
-      font-weight: 700;
-      margin-bottom: 2.4rem;
-    }
+  .page-intro {
+    max-width: 92rem;
+    margin-bottom: clamp(5rem, 8vw, 9rem);
+  }
+
+  .eyebrow {
+    margin: 0 0 2.4rem;
+    color: rgb(var(--accent-color));
+    font-family: var(--code-font-family);
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(5.2rem, 9vw, 11rem);
+    font-weight: 620;
+    letter-spacing: -0.065em;
+    line-height: 0.92;
+  }
+
+  .lede {
+    max-width: 68rem;
+    margin: 3rem 0 0;
+    color: rgba(var(--text-color), 0.55);
+    font-size: clamp(1.7rem, 2.2vw, 2.3rem);
+    line-height: 1.55;
+  }
+
+  .posts {
+    border-top: 1px solid rgba(var(--text-color), 0.14);
+    padding-top: 2.4rem;
   }
 </style>

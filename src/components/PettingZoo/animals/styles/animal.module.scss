@@ -21,6 +21,10 @@
   bottom: 0;
   cursor: grab;
   z-index: 4;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
 
   pre {
     font-weight: 600;

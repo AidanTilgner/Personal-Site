@@ -1,6 +1,8 @@
 module.exports = [
   {
     name: "Personal Site",
-    script: "npm run start",
+    script: "bun",
+    args: "run start",
+    interpreter: "none",
   },
 ];

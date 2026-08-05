@@ -8,5 +8,5 @@ export interface Block {
     type: ContentTypes;
     data: string;
   };
-  when_intents: string[];
+  aliases?: string[];
 }

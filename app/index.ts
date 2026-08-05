@@ -1,43 +1,17 @@
-import Express from "express";
-import { config } from "dotenv";
-import cors from "cors";
-import contentRouter from "./routes/content";
-import path from "path";
-import { fileURLToPath } from "url";
-import { Server } from "socket.io";
-import { createServer } from "http";
-import { initSocketIOListeners } from "./routes/socket-io";
+import { createApp } from "./app";
+import { getServerPort } from "./config/env";
 
-const __filename = fileURLToPath(import.meta.url);
+const port = getServerPort();
+const app = await createApp();
 
-const __dirname = path.dirname(__filename);
+app.listen(port);
 
-config();
+console.info(`Elysia server listening on http://localhost:${port}`);
 
-const PORT = process.env.SERVER_PORT || 8080;
+const shutdown = () => {
+  app.stop();
+  process.exit(0);
+};
 
-const app = Express();
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: "*",
-  },
-});
-
-initSocketIOListeners(io);
-
-app.use(cors());
-
-app.use(Express.json());
-app.use(Express.urlencoded({ extended: true }));
-
-app.use("/content", contentRouter);
-app.use(Express.static(path.join(__dirname, "./public")));
-
-if (process.env.NODE_ENV) {
-  app.use("/app", Express.static(path.join(__dirname, "./ui")));
-}
-
-httpServer.listen(PORT, () => {
-  console.info(`Server listening on port ${PORT}`);
-});
+process.on("SIGINT", shutdown);
+process.on("SIGTERM", shutdown);

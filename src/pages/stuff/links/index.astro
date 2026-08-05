@@ -1,12 +1,12 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeftIcon } from "@phosphor-icons/react";
 ---
 
 <Layout title="Links">
   <main>
     <section>
-      <a class="back-button" href="/stuff"><ArrowLeft /> All Stuff</a>
+      <a class="back-button" href="/stuff"><ArrowLeftIcon /> All Stuff</a>
     </section>
     <section class="friends">
       <h1>Friend's Sites</h1>
@@ -21,10 +21,12 @@ import { ArrowLeft } from "@phosphor-icons/react";
       </ul>
     </section>
     <section>
-        <h1>Blogs</h1>
-        <ul>
-           <li><a href="https://judithcurry.com/">Climate Etc. | Dr. Judith Curry</a></li>
-        </ul>
+      <h1>Blogs</h1>
+      <ul>
+        <li>
+          <a href="https://judithcurry.com/">Climate Etc. | Dr. Judith Curry</a>
+        </li>
+      </ul>
     </section>
   </main>
 </Layout>

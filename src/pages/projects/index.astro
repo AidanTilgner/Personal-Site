@@ -1,15 +1,355 @@
 ---
+import { getCollection, type CollectionEntry } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+
+const statusLabels: Record<
+  CollectionEntry<"projects">["data"]["status"],
+  string
+> = {
+  active: "Active",
+  maintained: "Maintained",
+  completed: "Completed",
+  paused: "Paused",
+  archived: "Archived",
+  concept: "Concept",
+};
+
+const byPriority = (
+  a: CollectionEntry<"projects">,
+  b: CollectionEntry<"projects">,
+) => {
+  if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+  if (a.data.order !== b.data.order) return b.data.order - a.data.order;
+  return (b.data.started ?? "").localeCompare(a.data.started ?? "");
+};
+
+const projects = (await getCollection("projects"))
+  .filter(({ data }) => !data.draft)
+  .sort(byPriority);
+const currentProjects = projects.filter(({ data }) =>
+  ["active", "maintained", "paused", "concept"].includes(data.status),
+);
+const archiveProjects = projects.filter(({ data }) =>
+  ["completed", "archived"].includes(data.status),
+);
 ---
 
-<Layout title="Projects">
+<Layout
+  title="Projects"
+  description="Selected projects, product decisions, technical work, and lessons from Aidan Tilgner."
+>
   <main>
-    <span class="wip">*Work in Progress</span>
-    <section class="active-projects">
-      <h1>Active Projects</h1>
+    <header class="page-intro">
+      <p class="eyebrow">
+        Selected work / {projects.length.toString().padStart(2, "0")}
+      </p>
+      <h1>Projects, decisions, and things shipped.</h1>
+      <p class="lede">
+        Case studies and working notes about products, systems, experiments, and
+        what they taught me.
+      </p>
+    </header>
+
+    <section class="project-section" aria-labelledby="current-projects">
+      <div class="section-heading">
+        <p>01 / Current</p>
+        <h2 id="current-projects">Active projects</h2>
+      </div>
+      <div class="project-list">
+        {
+          currentProjects.map((project, index) => (
+            <article class="project-card">
+              <a href={`/projects/${project.id}`}>
+                <div class="project-number" aria-hidden="true">
+                  {(index + 1).toString().padStart(2, "0")}
+                </div>
+                <div class="project-copy">
+                  <div class="project-status">
+                    <span>{statusLabels[project.data.status]}</span>
+                    {project.data.started && (
+                      <span>{project.data.started.slice(0, 4)}</span>
+                    )}
+                  </div>
+                  <h3>{project.data.title}</h3>
+                  <p>{project.data.description}</p>
+                  <div class="project-tags">
+                    {project.data.tags.map((tag) => (
+                      <span>{tag}</span>
+                    ))}
+                  </div>
+                </div>
+                <span class="project-arrow" aria-hidden="true">
+                  ↗
+                </span>
+              </a>
+            </article>
+          ))
+        }
+        {
+          currentProjects.length === 0 && (
+            <div class="empty-state">
+              <span>Indexing in progress</span>
+              <p>
+                Current work will appear as public details and supporting
+                artifacts are added.
+              </p>
+            </div>
+          )
+        }
+      </div>
     </section>
-    <section class="project-graveyard">
-      <h1>Project Graveyard</h1>
+
+    <section class="project-section" aria-labelledby="project-archive">
+      <div class="section-heading">
+        <p>02 / Archive</p>
+        <h2 id="project-archive">Past work</h2>
+      </div>
+      <div class="project-list">
+        {
+          archiveProjects.map((project, index) => (
+            <article class="project-card archived">
+              <a href={`/projects/${project.id}`}>
+                <div class="project-number" aria-hidden="true">
+                  {(index + 1).toString().padStart(2, "0")}
+                </div>
+                <div class="project-copy">
+                  <div class="project-status">
+                    <span>{statusLabels[project.data.status]}</span>
+                    {project.data.completed && (
+                      <span>{project.data.completed.slice(0, 4)}</span>
+                    )}
+                  </div>
+                  <h3>{project.data.title}</h3>
+                  <p>{project.data.description}</p>
+                  <div class="project-tags">
+                    {project.data.tags.map((tag) => (
+                      <span>{tag}</span>
+                    ))}
+                  </div>
+                </div>
+                <span class="project-arrow" aria-hidden="true">
+                  ↗
+                </span>
+              </a>
+            </article>
+          ))
+        }
+        {
+          archiveProjects.length === 0 && (
+            <div class="empty-state muted">
+              <span>Excavation pending</span>
+              <p>
+                Older work will live here without being polished into false
+                success stories.
+              </p>
+            </div>
+          )
+        }
+      </div>
     </section>
   </main>
 </Layout>
+
+<style lang="scss">
+  main {
+    width: min(100%, 144rem);
+    min-height: calc(100vh - var(--home-nav-height));
+    margin: 0 auto;
+    padding: clamp(4rem, 8vw, 10rem) clamp(2.4rem, 6vw, 8rem) 8rem;
+  }
+
+  .page-intro {
+    max-width: 104rem;
+    margin-bottom: clamp(6rem, 10vw, 12rem);
+  }
+
+  .eyebrow,
+  .section-heading p,
+  .project-status,
+  .project-number,
+  .project-tags,
+  .empty-state span {
+    font-family: var(--code-font-family);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow {
+    margin: 0 0 2.4rem;
+    color: rgb(var(--accent-color));
+    font-size: 1.1rem;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(5.2rem, 9vw, 11rem);
+    font-weight: 620;
+    letter-spacing: -0.065em;
+    line-height: 0.92;
+  }
+
+  .lede {
+    max-width: 66rem;
+    margin: 3rem 0 0;
+    color: rgba(var(--text-color), 0.55);
+    font-size: clamp(1.7rem, 2.2vw, 2.3rem);
+    line-height: 1.55;
+  }
+
+  .project-section {
+    display: grid;
+    grid-template-columns: minmax(18rem, 0.4fr) minmax(0, 1fr);
+    gap: clamp(3rem, 7vw, 10rem);
+    padding: clamp(3rem, 5vw, 6rem) 0;
+    border-top: 1px solid rgba(var(--text-color), 0.14);
+  }
+
+  .section-heading p {
+    margin: 0 0 1.6rem;
+    color: rgba(var(--text-color), 0.3);
+    font-size: 1rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: clamp(2.6rem, 4vw, 4.4rem);
+    font-weight: 520;
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+
+  .project-list {
+    display: grid;
+    gap: 1px;
+    background: rgba(var(--text-color), 0.12);
+    border: 1px solid rgba(var(--text-color), 0.12);
+  }
+
+  .project-card a {
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr) auto;
+    gap: clamp(1.6rem, 3vw, 3.2rem);
+    min-height: 22rem;
+    padding: clamp(2.4rem, 4vw, 4rem);
+    background: rgb(var(--surface-color));
+    color: rgb(var(--text-color));
+    transition: background-color 160ms ease;
+
+    &:hover {
+      background: rgb(var(--surface-raised));
+      text-decoration: none;
+
+      .project-arrow {
+        color: rgb(var(--accent-color));
+        transform: translate(0.3rem, -0.3rem);
+      }
+    }
+  }
+
+  .project-number {
+    color: rgba(var(--text-color), 0.25);
+    font-size: 1rem;
+  }
+
+  .project-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.6rem;
+    color: rgb(var(--accent-color));
+    font-size: 1rem;
+
+    span + span {
+      color: rgba(var(--text-color), 0.35);
+    }
+  }
+
+  h3 {
+    margin: 2.4rem 0 1.4rem;
+    font-size: clamp(2.8rem, 4vw, 4.4rem);
+    font-weight: 560;
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+
+  .project-copy > p {
+    max-width: 66rem;
+    margin: 0;
+    color: rgba(var(--text-color), 0.55);
+    font-size: clamp(1.55rem, 2vw, 1.9rem);
+    line-height: 1.55;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 2.8rem;
+    color: rgba(var(--text-color), 0.35);
+    font-size: 0.9rem;
+  }
+
+  .project-arrow {
+    color: rgba(var(--text-color), 0.35);
+    font-size: 2rem;
+    transition:
+      color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .archived a {
+    min-height: 18rem;
+  }
+
+  .empty-state {
+    position: relative;
+    min-height: 18rem;
+    padding: clamp(2.4rem, 4vw, 4rem);
+    background: rgb(var(--surface-color));
+
+    &::before {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0.3rem;
+      background: rgb(var(--accent-color));
+      content: "";
+    }
+
+    span {
+      color: rgba(var(--accent-color), 0.8);
+      font-size: 1rem;
+    }
+
+    p {
+      max-width: 58rem;
+      margin: 4rem 0 0;
+      color: rgba(var(--text-color), 0.55);
+      font-size: clamp(1.7rem, 2vw, 2.1rem);
+      line-height: 1.5;
+    }
+  }
+
+  .muted::before {
+    background: rgba(var(--text-color), 0.2);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-card a,
+    .project-arrow {
+      transition: none;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .project-section {
+      grid-template-columns: 1fr;
+    }
+
+    .project-card a {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .project-number {
+      display: none;
+    }
+  }
+</style>

@@ -4,67 +4,82 @@
     "name": "test",
     "description": "Just a test block, used for testing",
     "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
-    "when_intents": ["testing"]
+    "aliases": ["test", "testing", "test test"]
   },
   {
     "id": "8bb9e25bdeb8088f",
     "name": "welcome",
     "description": "A welcome message",
     "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
-    "when_intents": ["greetings", "art"]
+    "aliases": ["hello", "hi", "hey", "yo", "sup", "welcome", "greeting", "art"]
   },
   {
     "id": "ab093d0387729d11",
     "name": "donut",
     "description": "A cool spinning ascii donut",
     "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
-    "when_intents": ["donut", "art"]
+    "aliases": [
+      "donut",
+      "doughnut",
+      "donuts",
+      "doughnuts",
+      "ascii donut",
+      "art"
+    ]
   },
   {
     "id": "28ac297a58076f7a",
     "name": "purpose",
     "description": "A block that explains the purpose of this website and the bot",
     "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
-    "when_intents": ["inquire_purpose"]
+    "aliases": [
+      "what is this",
+      "what are you",
+      "your purpose",
+      "what do you do",
+      "what can you do"
+    ]
   },
   {
     "id": "adf0a95abd7db02d",
     "name": "projects",
     "description": "a block that directs the user towards the projects page",
     "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
-    "when_intents": ["inquire_projects", "inquire_expertise"]
+    "aliases": ["projects", "Aidan's projects", "expertise", "past projects"]
   },
   {
     "id": "736c5e30101dd202",
     "name": "skills",
     "description": "a block which directs the user to view my skills",
     "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
-    "when_intents": ["inquire_skills", "inquire_expertise"]
+    "aliases": ["skills", "Aidan's skills", "expertise", "technologies"]
   },
   {
     "id": "05497fd66fa21ac1",
     "name": "me",
     "description": "a block describing me, Aidan",
     "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
-    "when_intents": ["inquire_me"]
+    "aliases": ["Aidan", "Aidan Tilgner", "who is Aidan", "about Aidan"]
   },
   {
     "id": "b1a4f3665f4a9cd7",
     "name": "socials",
     "description": "my social media and important links",
     "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
-    "when_intents": ["inquire_me"]
+    "aliases": ["Aidan", "Aidan Tilgner", "socials", "social media", "links"]
   },
   {
     "id": "8208ae3c9f95814d",
     "name": "resume",
     "description": "a block that contains my resume",
     "content": { "type": "url", "data": "[SELF_BLOCK_FILE]" },
-    "when_intents": [
-      "inquire_expertise",
-      "inquire_projects",
-      "inquire_skills",
-      "inquire_resume"
+    "aliases": [
+      "resume",
+      "cv",
+      "curriculum vitae",
+      "projects",
+      "skills",
+      "expertise"
     ]
   }
 ]

@@ -1,59 +1,70 @@
-import React from "react";
+import { useState } from "react";
 import styles from "./TextBox.module.scss";
-import { ArrowCircleRight } from "@phosphor-icons/react";
 
-function TextBox({
-  onSubmit,
-  suggestions,
-}: {
+interface TextBoxProps {
   onSubmit: (text: string) => void;
   suggestions: string[];
-}) {
-  const [text, setText] = React.useState("");
+  disabled?: boolean;
+}
 
-  const handleSubmit = (text: string) => {
+function TextBox({ onSubmit, suggestions, disabled = false }: TextBoxProps) {
+  const [text, setText] = useState("");
+
+  const handleSubmit = (value: string) => {
+    const query = value.trim();
+    if (!query || disabled) return;
     setText("");
-    onSubmit(text);
+    onSubmit(query);
   };
 
   return (
     <div className={styles.textbox}>
-      <div className={styles.suggestions}>
-        {suggestions.map((suggestion) => {
-          return (
-            <button
-              className={styles.suggestion}
-              onClick={() => {
-                handleSubmit(suggestion);
-              }}
-              key={suggestion}
-            >
-              {suggestion}
-            </button>
-          );
-        })}
+      <div className={styles.suggestions} aria-label="Suggested questions">
+        {suggestions.map((suggestion) => (
+          <button
+            type="button"
+            className={styles.suggestion}
+            onClick={() => handleSubmit(suggestion)}
+            key={suggestion}
+            disabled={disabled}
+          >
+            {suggestion}
+          </button>
+        ))}
       </div>
-      <div className={styles.textboxcontainer}>
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => {
-            setText(e.target.value);
-          }}
-          placeholder="Ask me anything..."
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              handleSubmit(text);
-            }
-          }}
-        />
-        <button
-          className={styles.sendmessage}
-          onClick={() => handleSubmit(text)}
-        >
-          <ArrowCircleRight />
-        </button>
-      </div>
+      <form
+        className={styles.textboxcontainer}
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleSubmit(text);
+        }}
+      >
+        <label className={styles.visuallyHidden} htmlFor="site-query">
+          Ask about Aidan
+        </label>
+        <div>
+          <span className={styles.promptMark} aria-hidden="true">
+            &gt;
+          </span>
+          <input
+            id="site-query"
+            type="text"
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+            placeholder="Type a question..."
+            autoComplete="off"
+            disabled={disabled}
+          />
+          <button
+            className={styles.sendmessage}
+            type="submit"
+            disabled={disabled || !text.trim()}
+            aria-label="Send question"
+          >
+            <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
