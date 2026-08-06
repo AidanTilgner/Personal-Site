@@ -7,7 +7,7 @@ export const MessageSchema = t.Object({
 
 export const ConversationSchema = t.Array(MessageSchema, {
   minItems: 1,
-  maxItems: 50,
+  maxItems: 20,
 });
 
 export const ChatRequestSchema = t.Object(
@@ -70,6 +70,7 @@ export const ChatServerMessageSchema = t.Union([
       t.Literal("INVALID_REQUEST"),
       t.Literal("RATE_LIMITED"),
       t.Literal("SERVER_BUSY"),
+      t.Literal("MONTHLY_BUDGET_REACHED"),
       t.Literal("RESPONSE_GENERATION_FAILED"),
     ]),
     message: t.String(),

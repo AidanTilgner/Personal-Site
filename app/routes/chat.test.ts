@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import type { Block } from "../../types/blocks";
 import type { ChatRequest, ChatServerMessage } from "../../types/chat";
+import { AIBudgetExceededError } from "../utils/ai-budget";
 import { processChatRequest } from "./chat";
 
 const block: Block = {
@@ -173,6 +174,32 @@ describe("chat protocol", () => {
       type: "assistant.suggestions",
       requestId: "request-1",
       suggestions: [],
+    });
+  });
+
+  test("returns a typed error when the monthly budget is exhausted", async () => {
+    const messages: ChatServerMessage[] = [];
+
+    await processChatRequest(
+      request,
+      (message) => messages.push(message),
+      undefined,
+      {
+        retrieveContext: async () => [],
+        selectBlocks: async () => [block],
+        streamResponse: async () => {
+          throw new AIBudgetExceededError();
+        },
+        reportError: () => undefined,
+      },
+    );
+
+    expect(messages.at(-1)).toEqual({
+      type: "error",
+      requestId: "request-1",
+      code: "MONTHLY_BUDGET_REACHED",
+      message:
+        "Cosmo has reached this month's conversation budget. Please try again next month.",
     });
   });
 });

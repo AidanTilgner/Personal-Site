@@ -38,6 +38,33 @@ bun run dev
 The local retrieval and pre-authored blocks work without external credentials.
 Set `OPENAI_API_KEY` in `.env` to enable generated assistant responses.
 
+The two process ports can be configured independently in `.env`:
+
+```dotenv
+ASTRO_PORT=4321
+SERVER_PORT=8080
+PUBLIC_BACKEND_URL=http://localhost:8080
+CORS_ORIGINS=http://localhost:4321,http://127.0.0.1:4321
+```
+
+`ASTRO_PORT` defaults to `4321` for `bun run dev` and `3004` for `bun run
+start`. `SERVER_PORT` defaults to `8080` in both modes. When changing a port,
+keep `PUBLIC_BACKEND_URL` aligned with `SERVER_PORT` and include the Astro
+origin in `CORS_ORIGINS`.
+
+For production, `AI_MONTHLY_BUDGET_USD` enables a persistent application-side
+monthly spending guard. The backend conservatively reserves the maximum input
+and output cost before every model or embedding request and stops AI calls when
+the next reservation would cross the configured amount. The ledger resets each
+UTC month and defaults to `app/data/ai-budget.sqlite`, which must live on
+persistent storage alongside the knowledge index.
+
+The default pricing assumptions match `gpt-5.6-luna` and
+`text-embedding-3-small`. If either model changes, configure the corresponding
+per-million-token prices shown in `.env.example`. This guard covers API calls
+made by this application; keep provider-side billing alerts enabled for other
+projects or API-key consumers.
+
 ## Content
 
 - `knowledge/` contains the indexed professional source material.

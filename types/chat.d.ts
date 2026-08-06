@@ -36,6 +36,7 @@ export type ChatServerMessage =
         | "INVALID_REQUEST"
         | "RATE_LIMITED"
         | "SERVER_BUSY"
+        | "MONTHLY_BUDGET_REACHED"
         | "RESPONSE_GENERATION_FAILED";
       message: string;
     };

@@ -1,7 +1,11 @@
 import OpenAI from "openai";
 import type { Message } from "../../types/conversation";
+import { reserveAIResponseBudget } from "./ai-budget";
 
 const MODEL = process.env.OPENAI_CHAT_MODEL ?? "gpt-5.6-luna";
+const ASSISTANT_MAX_OUTPUT_TOKENS = 1_200;
+const PREVIEW_MAX_OUTPUT_TOKENS = 800;
+const FOLLOW_UP_MAX_OUTPUT_TOKENS = 300;
 let client: OpenAI | undefined;
 
 const getClient = () => {
@@ -20,28 +24,38 @@ export const createAssistantResponseStream = async ({
   instructions: string;
   conversation: Message[];
   signal?: AbortSignal;
-}) =>
-  getClient().responses.create(
+}) => {
+  const client = getClient();
+  const input = conversation
+    .filter((message) => message.role !== "system")
+    .map((message) => ({
+      role: message.role as "assistant" | "user",
+      content: message.content,
+    }));
+  reserveAIResponseBudget({
+    model: MODEL,
+    input: [instructions, JSON.stringify(input)],
+    maxOutputTokens: ASSISTANT_MAX_OUTPUT_TOKENS,
+  });
+  return client.responses.create(
     {
       model: MODEL,
       instructions,
-      input: conversation
-        .filter((message) => message.role !== "system")
-        .map((message) => ({
-          role: message.role as "assistant" | "user",
-          content: message.content,
-        })),
+      input,
       reasoning: {
         effort: "low",
         // Browser persistence replays visible messages, not encrypted reasoning items.
         context: "current_turn",
       },
       text: { verbosity: "low" },
+      max_output_tokens: ASSISTANT_MAX_OUTPUT_TOKENS,
+      service_tier: "default",
       store: false,
       stream: true,
     },
     { signal },
   );
+};
 
 export const createPreviewTuningResponse = async ({
   instructions,
@@ -53,14 +67,21 @@ export const createPreviewTuningResponse = async ({
   input: string;
   documentIds: string[];
   signal?: AbortSignal;
-}) =>
-  getClient().responses.create(
+}) => {
+  const client = getClient();
+  reserveAIResponseBudget({
+    model: MODEL,
+    input: [instructions, input],
+    maxOutputTokens: PREVIEW_MAX_OUTPUT_TOKENS,
+  });
+  return client.responses.create(
     {
       model: MODEL,
       instructions,
       input,
       reasoning: { effort: "low" },
-      max_output_tokens: 800,
+      max_output_tokens: PREVIEW_MAX_OUTPUT_TOKENS,
+      service_tier: "default",
       store: false,
       text: {
         verbosity: "low",
@@ -95,6 +116,7 @@ export const createPreviewTuningResponse = async ({
     },
     { signal },
   );
+};
 
 export const createFollowUpSuggestionResponse = async ({
   instructions,
@@ -104,14 +126,21 @@ export const createFollowUpSuggestionResponse = async ({
   instructions: string;
   input: string;
   signal?: AbortSignal;
-}) =>
-  getClient().responses.create(
+}) => {
+  const client = getClient();
+  reserveAIResponseBudget({
+    model: MODEL,
+    input: [instructions, input],
+    maxOutputTokens: FOLLOW_UP_MAX_OUTPUT_TOKENS,
+  });
+  return client.responses.create(
     {
       model: MODEL,
       instructions,
       input,
       reasoning: { effort: "low" },
-      max_output_tokens: 300,
+      max_output_tokens: FOLLOW_UP_MAX_OUTPUT_TOKENS,
+      service_tier: "default",
       store: false,
       text: {
         verbosity: "low",
@@ -137,3 +166,4 @@ export const createFollowUpSuggestionResponse = async ({
     },
     { signal },
   );
+};

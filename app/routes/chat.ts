@@ -8,6 +8,7 @@ import {
 import { retrieveKnowledge } from "../knowledge";
 import { getChatLimits } from "../config/env";
 import { createFixedWindowRateLimiter } from "../utils/rate-limit";
+import { isAIBudgetExceeded } from "../utils/ai-budget";
 import type { ChatRequest, ChatServerMessage } from "../../types/chat";
 import { ChatRequestSchema, ChatServerMessageSchema } from "./schemas";
 
@@ -48,13 +49,20 @@ export const processChatRequest = async (
     ((error) =>
       console.warn("Follow-up generation failed; using defaults.", error));
   const query = request.conversation.at(-1)?.content;
+  const conversationCharacters = request.conversation.reduce(
+    (total, message) => total + message.content.length,
+    0,
+  );
 
-  if (!query) {
+  if (!query || conversationCharacters > 16_000) {
     send({
       type: "error",
       requestId: request.requestId,
       code: "INVALID_REQUEST",
-      message: "Conversation must contain a message.",
+      message:
+        conversationCharacters > 16_000
+          ? "Conversation history is too large. Clear the conversation and try again."
+          : "Conversation must contain a message.",
     });
     return;
   }
@@ -134,8 +142,12 @@ export const processChatRequest = async (
       send({
         type: "error",
         requestId: request.requestId,
-        code: "RESPONSE_GENERATION_FAILED",
-        message: "Something went wrong.",
+        code: isAIBudgetExceeded(error)
+          ? "MONTHLY_BUDGET_REACHED"
+          : "RESPONSE_GENERATION_FAILED",
+        message: isAIBudgetExceeded(error)
+          ? "Cosmo has reached this month's conversation budget. Please try again next month."
+          : "Something went wrong.",
       });
     }
   }

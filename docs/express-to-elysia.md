@@ -39,8 +39,11 @@ knowledge readiness, disconnect cancellation, and Bun contract tests.
 | `GET /v1/blocks/:id/content` | Versioned parsed block HTML route used by the frontend                       |
 | `WS /v1/chat`                | Selects blocks and streams assistant events on one request-correlated socket |
 | `SERVER_PORT`                | Defaults to `8080`                                                           |
+| `ASTRO_PORT`                 | Defaults to `4321` in development and `3004` in production                   |
 | `PUBLIC_BACKEND_URL`         | Build-time frontend backend URL                                              |
 | `CORS_ORIGINS`               | Comma-separated HTTP and WebSocket origin allowlist                          |
+| `AI_MONTHLY_BUDGET_USD`      | Optional persistent UTC-month AI spending ceiling                           |
+| `AI_BUDGET_DB_PATH`          | Budget reservation ledger; defaults to `app/data/ai-budget.sqlite`           |
 
 ## Current architecture
 
@@ -48,8 +51,8 @@ Keep two processes initially:
 
 ```text
 Browser
-  ├─ HTTP → Astro (4321 dev / 3004 production)
-  └─ WebSocket + block HTTP → Elysia (8080)
+  ├─ HTTP → Astro (ASTRO_PORT; 4321 dev / 3004 production by default)
+  └─ WebSocket + block HTTP → Elysia (SERVER_PORT; 8080 by default)
 ```
 
 The Elysia application is created separately from the listening process:
@@ -112,6 +115,10 @@ Failures use one envelope:
   "message": "Something went wrong."
 }
 ```
+
+When the local monthly AI ceiling is exhausted, the same envelope uses
+`MONTHLY_BUDGET_REACHED`. This is a deliberate availability state, not a model
+failure, and the frontend should show the server-provided explanation.
 
 Sending block selection and assistant deltas over the same connection removes
 the current global connection registry, `x-socket-id` header, and timing race
@@ -187,6 +194,14 @@ phases are complete; production-hardening items remain useful follow-up work.
 
 - Enforce origin, payload-size, rate-limit, concurrency, and idle-timeout
   policies.
+- Bound conversations to 20 messages and 16,000 total characters before
+  retrieval or model calls.
+- Optionally enforce `AI_MONTHLY_BUDGET_USD` through a persistent SQLite
+  reservation ledger. Each API call reserves against UTF-8 input bytes (a
+  conservative token upper bound), configured per-million-token prices,
+  maximum output tokens, long-context multipliers, and a 1.25 safety factor.
+  Reservations are intentionally not refunded, so provider errors cannot make
+  the local accounting optimistic.
 - Sanitize trusted block HTML, replace embedded scripts with registered widget
   behaviors, and render assistant Markdown without raw HTML.
 - Bound persisted conversations and validate server events in the browser.
@@ -222,6 +237,9 @@ cd cli && go test ./...
   cutover must ship together.
 - The generated SQLite database must live on persistent storage in production or
   embeddings will be rebuilt after ephemeral restarts.
+- The AI budget database must also be persistent. A local SQLite ledger is
+  appropriate for one backend instance; horizontally scaled backends need a
+  shared transactional budget store.
 - Changes to the embedding model, dimensions, or chunker require a compatible
   index refresh; these values are recorded in the database.
 

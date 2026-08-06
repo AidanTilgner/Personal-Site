@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { reserveAIEmbeddingBudget } from "../utils/ai-budget";
 
 export const EMBEDDING_MODEL =
   process.env.OPENAI_EMBEDDING_MODEL ?? "text-embedding-3-small";
@@ -20,6 +21,7 @@ export const embedTexts = async (texts: string[]) => {
   if (!texts.length) return [];
   const openai = getClient();
   if (!openai) return undefined;
+  reserveAIEmbeddingBudget({ model: EMBEDDING_MODEL, input: texts });
   const response = await openai.embeddings.create({
     model: EMBEDDING_MODEL,
     dimensions: EMBEDDING_DIMENSIONS,
