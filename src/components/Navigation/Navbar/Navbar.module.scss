@@ -8,7 +8,10 @@
   justify-content: space-between;
   padding: 2rem clamp(2.4rem, 5vw, 7.2rem);
   border-bottom: 1px solid transparent;
-  background: rgba(var(--background-color), 0.96);
+  background: rgba(
+    var(--navbar-background-color, var(--background-color)),
+    0.96
+  );
   backdrop-filter: blur(18px);
   transition:
     padding 180ms ease,
@@ -143,7 +146,12 @@
   flex-direction: column;
   padding: 1rem 2.4rem 2.4rem;
   border-bottom: 1px solid rgba(var(--text-color), 0.12);
-  background: rgb(var(--background-color));
+  background: rgba(
+    var(--navbar-background-color, var(--background-color)),
+    0.82
+  );
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
   a {
     padding: 1.4rem 0;

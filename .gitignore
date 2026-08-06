@@ -29,3 +29,7 @@ metadata/
 # generated local knowledge index
 app/data/*.sqlite
 app/data/*.sqlite-*
+
+# optional local inbox for unreviewed project source material
+.project-intake/*
+!.project-intake/README.md

@@ -24,13 +24,16 @@ const byPriority = (
 };
 
 const projects = (await getCollection("projects"))
-  .filter(({ data }) => !data.draft)
+  .filter(
+    ({ id, data }) =>
+      id !== "_template" && (!data.draft || import.meta.env.DEV),
+  )
   .sort(byPriority);
 const currentProjects = projects.filter(({ data }) =>
-  ["active", "maintained", "paused", "concept"].includes(data.status),
+  ["active", "maintained"].includes(data.status),
 );
 const archiveProjects = projects.filter(({ data }) =>
-  ["completed", "archived"].includes(data.status),
+  ["completed", "archived", "paused", "concept"].includes(data.status),
 );
 ---
 
@@ -52,8 +55,8 @@ const archiveProjects = projects.filter(({ data }) =>
 
     <section class="project-section" aria-labelledby="current-projects">
       <div class="section-heading">
-        <p>01 / Current</p>
-        <h2 id="current-projects">Active projects</h2>
+        <p>01</p>
+        <h2 id="current-projects">Active</h2>
       </div>
       <div class="project-list">
         {
@@ -65,6 +68,9 @@ const archiveProjects = projects.filter(({ data }) =>
                 </div>
                 <div class="project-copy">
                   <div class="project-status">
+                    {project.data.draft && (
+                      <span class="draft-label">Draft preview</span>
+                    )}
                     <span>{statusLabels[project.data.status]}</span>
                     {project.data.started && (
                       <span>{project.data.started.slice(0, 4)}</span>
@@ -101,19 +107,22 @@ const archiveProjects = projects.filter(({ data }) =>
 
     <section class="project-section" aria-labelledby="project-archive">
       <div class="section-heading">
-        <p>02 / Archive</p>
-        <h2 id="project-archive">Past work</h2>
+        <p>02</p>
+        <h2 id="project-archive">Project graveyard</h2>
       </div>
       <div class="project-list">
         {
-          archiveProjects.map((project, index) => (
+          archiveProjects.map((project) => (
             <article class="project-card archived">
               <a href={`/projects/${project.id}`}>
-                <div class="project-number" aria-hidden="true">
-                  {(index + 1).toString().padStart(2, "0")}
+                <div class="tombstone-icon" aria-hidden="true">
+                  <span>RIP</span>
                 </div>
                 <div class="project-copy">
                   <div class="project-status">
+                    {project.data.draft && (
+                      <span class="draft-label">Draft preview</span>
+                    )}
                     <span>{statusLabels[project.data.status]}</span>
                     {project.data.completed && (
                       <span>{project.data.completed.slice(0, 4)}</span>
@@ -139,8 +148,8 @@ const archiveProjects = projects.filter(({ data }) =>
             <div class="empty-state muted">
               <span>Excavation pending</span>
               <p>
-                Older work will live here without being polished into false
-                success stories.
+                Projects that died—and the useful lessons they left behind—will
+                live here without being polished into false success stories.
               </p>
             </div>
           )
@@ -168,6 +177,7 @@ const archiveProjects = projects.filter(({ data }) =>
   .project-status,
   .project-number,
   .project-tags,
+  .tombstone-icon,
   .empty-state span {
     font-family: var(--code-font-family);
     letter-spacing: 0.1em;
@@ -182,17 +192,17 @@ const archiveProjects = projects.filter(({ data }) =>
 
   h1 {
     margin: 0;
-    font-size: clamp(5.2rem, 9vw, 11rem);
-    font-weight: 620;
-    letter-spacing: -0.065em;
-    line-height: 0.92;
+    font-size: clamp(3.8rem, 6vw, 5.6rem);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1;
   }
 
   .lede {
     max-width: 66rem;
     margin: 3rem 0 0;
-    color: rgba(var(--text-color), 0.55);
-    font-size: clamp(1.7rem, 2.2vw, 2.3rem);
+    color: rgb(var(--muted-color));
+    font-size: clamp(1.5rem, 1.6vw, 1.6rem);
     line-height: 1.55;
   }
 
@@ -212,9 +222,9 @@ const archiveProjects = projects.filter(({ data }) =>
 
   h2 {
     margin: 0;
-    font-size: clamp(2.6rem, 4vw, 4.4rem);
-    font-weight: 520;
-    letter-spacing: -0.045em;
+    font-size: clamp(2.4rem, 3vw, 2.8rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
     line-height: 1;
   }
 
@@ -251,6 +261,35 @@ const archiveProjects = projects.filter(({ data }) =>
     font-size: 1rem;
   }
 
+  .tombstone-icon {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 2.8rem;
+    height: 3.4rem;
+    margin-top: 0.1rem;
+    border: 1px solid rgba(var(--text-color), 0.28);
+    border-radius: 0;
+    color: rgba(var(--text-color), 0.4);
+
+    &::after {
+      position: absolute;
+      right: -0.5rem;
+      bottom: -0.5rem;
+      left: -0.5rem;
+      height: 0.4rem;
+      border-top: 1px solid rgba(var(--text-color), 0.22);
+      border-radius: 0;
+      content: "";
+    }
+
+    span {
+      padding-top: 0.6rem;
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+    }
+  }
+
   .project-status {
     display: flex;
     flex-wrap: wrap;
@@ -261,21 +300,25 @@ const archiveProjects = projects.filter(({ data }) =>
     span + span {
       color: rgba(var(--text-color), 0.35);
     }
+
+    .draft-label {
+      color: rgb(var(--warning-color));
+    }
   }
 
   h3 {
     margin: 2.4rem 0 1.4rem;
-    font-size: clamp(2.8rem, 4vw, 4.4rem);
-    font-weight: 560;
-    letter-spacing: -0.045em;
+    font-size: clamp(2.4rem, 3vw, 2.8rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
     line-height: 1;
   }
 
   .project-copy > p {
     max-width: 66rem;
     margin: 0;
-    color: rgba(var(--text-color), 0.55);
-    font-size: clamp(1.55rem, 2vw, 1.9rem);
+    color: rgb(var(--muted-color));
+    font-size: clamp(1.5rem, 1.6vw, 1.6rem);
     line-height: 1.55;
   }
 
@@ -322,8 +365,8 @@ const archiveProjects = projects.filter(({ data }) =>
     p {
       max-width: 58rem;
       margin: 4rem 0 0;
-      color: rgba(var(--text-color), 0.55);
-      font-size: clamp(1.7rem, 2vw, 2.1rem);
+      color: rgb(var(--muted-color));
+      font-size: clamp(1.5rem, 1.6vw, 1.6rem);
       line-height: 1.5;
     }
   }
@@ -346,6 +389,10 @@ const archiveProjects = projects.filter(({ data }) =>
 
     .project-card a {
       grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .project-card.archived a {
+      grid-template-columns: 3.2rem minmax(0, 1fr) auto;
     }
 
     .project-number {

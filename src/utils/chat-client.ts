@@ -12,7 +12,7 @@ const errorCodes = new Set([
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null;
 
-const isBlock = (value: unknown): value is Block =>
+export const isBlock = (value: unknown): value is Block =>
   isRecord(value) &&
   typeof value.id === "string" &&
   typeof value.name === "string" &&

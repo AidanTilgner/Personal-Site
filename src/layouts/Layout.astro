@@ -1,11 +1,16 @@
 ---
 import Navbar from "../components/Navigation/Navbar/Navbar";
+import FloatingAssistant from "../components/Assistant/FloatingAssistant";
 export interface Props {
   title: string;
   description?: string;
 }
 
 const { title, description } = Astro.props;
+const assistantRoutes = ["/projects", "/blog", "/stuff"];
+const showFloatingAssistant = assistantRoutes.some((route) =>
+  Astro.url.pathname.startsWith(route),
+);
 ---
 
 <!doctype html>
@@ -22,7 +27,7 @@ const { title, description } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <title>{title} | Aidan's Site</title>
@@ -30,18 +35,26 @@ const { title, description } = Astro.props;
   <body>
     <Navbar client:load />
     <slot />
+    {
+      showFloatingAssistant && (
+        <FloatingAssistant pagePath={Astro.url.pathname} client:load />
+      )
+    }
     <style lang="scss" is:global>
       html {
         --background-color: 9, 11, 12;
         --surface-color: 13, 16, 18;
         --surface-raised: 17, 20, 23;
-        --text-color: 239, 240, 232;
+        --heading-color: 243, 244, 246;
+        --text-color: 209, 213, 219;
+        --muted-color: 156, 163, 175;
         --accent-color: 147, 51, 234;
-        --accent-ink: 255, 255, 255;
+        --accent-ink: 243, 244, 246;
         --camel-color: 231, 176, 111;
         --warning-color: 231, 176, 111;
-        --font-family: "Geist", sans-serif;
-        --code-font-family: "Geist Mono", monospace;
+        --heading-font-family: "JetBrains Mono", monospace;
+        --font-family: "IBM Plex Mono", monospace;
+        --code-font-family: "IBM Plex Mono", monospace;
         --home-nav-height: 5.9rem;
         color-scheme: dark;
         font-size: 10px;
@@ -66,8 +79,22 @@ const { title, description } = Astro.props;
         min-width: 32rem;
         min-height: 100vh;
         background-color: rgb(var(--background-color));
+        background-image:
+          linear-gradient(
+            rgba(var(--heading-color), 0.018) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            90deg,
+            rgba(var(--heading-color), 0.018) 1px,
+            transparent 1px
+          );
+        background-size: 4.8rem 4.8rem;
         color: rgb(var(--text-color));
         font-family: var(--font-family);
+        font-size: 1.6rem;
+        letter-spacing: 0.005em;
+        line-height: 1.6;
         margin: 0;
         padding: 0;
         text-rendering: optimizeLegibility;
@@ -76,6 +103,20 @@ const { title, description } = Astro.props;
 
       * {
         box-sizing: border-box;
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: rgb(var(--heading-color));
+        font-family: var(--heading-font-family);
+        font-weight: 600;
+        letter-spacing: -0.035em;
+        text-transform: none;
+      }
+
+      p {
+        max-width: 65ch;
       }
 
       a {
@@ -91,6 +132,7 @@ const { title, description } = Astro.props;
       input,
       select,
       textarea {
+        border-radius: 0;
         font: inherit;
       }
 

@@ -50,7 +50,7 @@ const {
     display: inline-flex;
     align-items: center;
     gap: 0.8rem;
-    color: rgba(var(--text-color), 0.5);
+    color: rgb(var(--muted-color));
     font-family: var(--code-font-family);
     font-size: 1.1rem;
 
@@ -77,10 +77,10 @@ const {
   .article-header h1 {
     max-width: 105rem;
     margin: 0;
-    font-size: clamp(4.6rem, 8vw, 9.6rem);
-    font-weight: 620;
-    letter-spacing: -0.06em;
-    line-height: 0.96;
+    font-size: clamp(3.8rem, 6vw, 5.6rem);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1;
     text-wrap: balance;
   }
 
@@ -88,7 +88,7 @@ const {
     max-width: 72rem;
     margin: 3rem 0 0;
     color: rgba(var(--text-color), 0.5);
-    font-size: clamp(1.7rem, 2.2vw, 2.3rem);
+    font-size: clamp(1.5rem, 1.6vw, 1.6rem);
     line-height: 1.55;
   }
 
@@ -113,7 +113,7 @@ const {
     a {
       padding: 0.45rem 0.75rem;
       border: 1px solid rgba(var(--text-color), 0.12);
-      border-radius: 10rem;
+      border-radius: 0;
       color: rgba(var(--text-color), 0.45);
 
       &:hover {
@@ -125,9 +125,9 @@ const {
   }
 
   .article-body {
-    max-width: 74rem;
+    max-width: 65ch;
     color: rgba(var(--text-color), 0.76);
-    font-size: clamp(1.75rem, 2vw, 2.05rem);
+    font-size: clamp(1.5rem, 1.6vw, 1.6rem);
     line-height: 1.78;
 
     h2,
@@ -140,12 +140,12 @@ const {
 
     h2 {
       margin: 6rem 0 2rem;
-      font-size: clamp(3rem, 4vw, 4.4rem);
+      font-size: clamp(2.4rem, 3vw, 2.8rem);
     }
 
     h3 {
       margin: 4.5rem 0 1.6rem;
-      font-size: clamp(2.3rem, 3vw, 3.2rem);
+      font-size: clamp(2rem, 2.5vw, 2.4rem);
     }
 
     p,
@@ -165,7 +165,7 @@ const {
     blockquote {
       padding-left: 2rem;
       border-left: 2px solid rgb(var(--accent-color));
-      color: rgba(var(--text-color), 0.58);
+      color: rgb(var(--muted-color));
     }
 
     code,

@@ -32,9 +32,9 @@
 .response {
   max-height: 24rem;
   overflow: hidden;
-  color: rgba(var(--text-color), 0.74);
-  font-size: clamp(1.45rem, 1.2vw, 1.65rem);
-  line-height: 1.65;
+  color: rgb(var(--text-color));
+  font-size: clamp(1.7rem, 1.35vw, 1.85rem);
+  line-height: 1.68;
 
   p {
     margin: 0 0 1em;
@@ -78,9 +78,9 @@
     display: -webkit-box;
     overflow: hidden;
     margin: 0;
-    color: rgba(var(--text-color), 0.7);
-    font-size: 1.25rem;
-    line-height: 1.4;
+    color: rgb(var(--text-color));
+    font-size: 1.5rem;
+    line-height: 1.45;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
   }
@@ -101,6 +101,51 @@
   vertical-align: -0.15rem;
 }
 
+.compact {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0;
+  overflow: visible;
+
+  .character {
+    width: 8rem;
+    height: 5.8rem;
+    margin-bottom: 1.6rem;
+
+    pre {
+      font-size: 0.6rem;
+    }
+  }
+
+  .response {
+    max-height: none;
+    overflow: visible;
+    font-size: 1.5rem;
+    line-height: 1.6;
+  }
+}
+
+.hasConversation:not(.compact) {
+  justify-content: flex-start;
+  overflow: hidden;
+
+  .response {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .exchange {
+    width: 100%;
+    min-height: 0;
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 1rem;
+    scrollbar-color: rgba(var(--accent-color), 0.42) transparent;
+    scrollbar-width: thin;
+  }
+}
+
 @media (max-width: 899px) {
   .messageDisplay {
     flex-direction: row;
@@ -119,8 +164,8 @@
   }
 
   .response {
-    font-size: 1.3rem;
-    line-height: 1.5;
+    font-size: 1.5rem;
+    line-height: 1.58;
   }
 
   .exchange {
@@ -129,7 +174,16 @@
 
   .latestQuestion {
     p {
-      font-size: 1.1rem;
+      font-size: 1.3rem;
+    }
+  }
+
+  .compact {
+    align-items: flex-start;
+
+    .character {
+      flex-basis: 7rem;
+      margin-right: 1.2rem;
     }
   }
 }

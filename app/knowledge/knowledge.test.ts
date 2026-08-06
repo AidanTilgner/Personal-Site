@@ -53,7 +53,7 @@ describe("knowledge sources", () => {
     await withTemporaryDirectory(async (directory) => {
       writeFileSync(
         path.join(directory, "tiny-project.mdx"),
-        "---\ntitle: Tiny Project\ndescription: A small useful thing.\nstatus: active\nrole: Builder\ntags: [tools]\naliases: [tiny]\ntechnologies: [Astro]\nhighlights: [Shipped carefully]\n---\n\n## Why it exists\n\nA factual project detail.",
+        "---\ntitle: Tiny Project\ndescription: A small useful thing.\nstatus: active\nrole: Builder\nstarted: 2026-01-15\ntags: [tools]\naliases: [tiny]\ntechnologies: [Astro]\nhighlights: [Shipped carefully]\nlinks: [{ label: Source, href: https://example.com/source }]\ngallery: [{ src: /projects/tiny/detail.webp, alt: A detailed interface, caption: The result screen }]\n---\n\n## Why it exists\n\nA factual project detail.",
       );
 
       const [document] = await loadProjectDocuments(directory);
@@ -66,6 +66,8 @@ describe("knowledge sources", () => {
       });
       expect(document.content).toContain("Summary: A small useful thing.");
       expect(document.content).toContain("Technologies: Astro");
+      expect(document.content).toContain("Source: https://example.com/source");
+      expect(document.content).toContain("The result screen");
       expect(document.content).toContain("A factual project detail.");
     });
   });

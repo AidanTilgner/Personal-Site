@@ -6,6 +6,7 @@ interface MessageDisplayProps {
   message: string;
   is_streaming: boolean;
   latestQuestion: string | null;
+  compact?: boolean;
 }
 
 const camelStates = [
@@ -44,6 +45,7 @@ function MessageDisplay({
   message,
   is_streaming,
   latestQuestion,
+  compact = false,
 }: MessageDisplayProps) {
   const [hovered, setHovered] = useState(false);
   const [currentState, setCurrentState] = useState(0);
@@ -65,7 +67,9 @@ function MessageDisplay({
   }, [message]);
 
   return (
-    <div className={styles.messageDisplay}>
+    <div
+      className={`${styles.messageDisplay} ${latestQuestion ? styles.hasConversation : ""} ${compact ? styles.compact : ""}`}
+    >
       <a
         className={styles.character}
         title="Visit Cosmo in the petting zoo"

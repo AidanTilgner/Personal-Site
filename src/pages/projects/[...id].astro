@@ -6,7 +6,12 @@ export const prerender = true;
 
 export async function getStaticPaths() {
   return (await getCollection("projects"))
-    .filter(({ data }) => !data.draft && data.page === "default")
+    .filter(
+      ({ id, data }) =>
+        id !== "_template" &&
+        (!data.draft || import.meta.env.DEV) &&
+        data.page === "default",
+    )
     .map((entry) => ({
       params: { id: entry.id },
       props: { entry },

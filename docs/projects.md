@@ -5,6 +5,10 @@ case-study routes, and the chat knowledge index. Put every public project in
 `src/content/projects/`, including projects whose visible page is implemented
 as a custom Astro route.
 
+For a loose folder of notes, images, exports, or PDFs, start with
+`docs/project-intake.md`. It defines the evidence-review, asset-publishing, and
+browser-preview process an agent should complete before this authoring guide.
+
 Do not invent outcomes, metrics, roles, collaborators, or implementation
 details. If the supplied source material does not support a claim, omit it or
 ask for clarification.
@@ -26,7 +30,9 @@ The entry's relative filename is its URL. For example,
 
 ## Default project template
 
-Create `src/content/projects/<slug>.md` or `.mdx`:
+Copy `src/content/projects/_template.mdx` to
+`src/content/projects/<slug>.md` or `.mdx`, then replace its placeholders. The
+template itself stays hidden and excluded from retrieval:
 
 ```md
 ---
@@ -42,6 +48,13 @@ highlights:
 links:
   - label: "Live site"
     href: "https://example.com"
+image:
+  src: "/projects/project-name/hero.webp"
+  alt: "Accurate description of the project interface"
+gallery:
+  - src: "/projects/project-name/detail.webp"
+    alt: "Accurate description of this project artifact"
+    caption: "Optional factual context for the artifact."
 featured: true
 order: 10
 draft: false
@@ -83,6 +96,7 @@ Optional fields:
 | `highlights`   | Short, supported proof points shown by the default layout.              |
 | `links`        | Labeled internal or external project links.                             |
 | `image`        | `{ src, alt }` hero image; `alt` may be empty for decorative art.       |
+| `gallery`      | Ordered project images with `src`, `alt`, and optional `caption`.       |
 | `featured`     | Sorts the project ahead of non-featured entries.                        |
 | `order`        | Higher numbers sort first within the same featured group.               |
 | `draft`        | Hides the route and index card and excludes it from retrieval.          |
@@ -108,6 +122,9 @@ import ProjectLayout from "../../layouts/ProjectLayout.astro";
 
 const entry = await getEntry("projects", "cosmo");
 if (!entry) throw new Error("Missing projects/cosmo collection entry");
+if (entry.data.draft && import.meta.env.PROD) {
+  return new Response("Not found", { status: 404 });
+}
 ---
 
 <ProjectLayout project={entry.data}>
@@ -117,7 +134,9 @@ if (!entry) throw new Error("Missing projects/cosmo collection entry");
 
 The catch-all default route deliberately skips custom entries, preventing a
 route collision. A custom page may use `ProjectLayout` for shared framing or
-use the base `Layout` and take full control.
+use the base `Layout` and take full control. Keep the production draft guard in
+custom routes; unlike the catch-all route, Astro cannot infer that an exact
+custom route belongs to a draft collection entry.
 
 ## Retrieval and workspace blocks
 

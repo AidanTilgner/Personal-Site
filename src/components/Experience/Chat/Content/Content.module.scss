@@ -7,7 +7,7 @@
   isolation: isolate;
   display: flex;
   min-height: 100%;
-  max-width: 92rem;
+  max-width: 74rem;
   flex-direction: column;
   justify-content: center;
   padding: 2rem 0;
@@ -39,23 +39,24 @@
 
   h1 {
     margin: 0;
-    color: rgb(var(--text-color));
-    font-size: clamp(5.2rem, 8vw, 11rem);
-    font-weight: 620;
-    letter-spacing: -0.065em;
-    line-height: 0.9;
+    color: rgb(var(--heading-color));
+    font-family: var(--heading-font-family);
+    font-size: clamp(3.8rem, 5vw, 5.6rem);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1;
     text-wrap: balance;
   }
 }
 
 .tagline {
-  max-width: 90rem;
+  max-width: 65ch;
   margin: 2.2rem 0 0;
-  color: rgba(var(--text-color), 0.48);
-  font-size: clamp(2.5rem, 4vw, 5.4rem);
-  font-weight: 430;
-  letter-spacing: -0.045em;
-  line-height: 1.04;
+  color: rgb(var(--text-color));
+  font-size: clamp(1.8rem, 2.2vw, 2.4rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.45;
 
   span {
     color: rgba(var(--accent-color), 0.9);
@@ -65,8 +66,8 @@
 .description {
   max-width: 62rem;
   margin: clamp(2.4rem, 4vh, 4.4rem) 0 0;
-  color: rgba(var(--text-color), 0.62);
-  font-size: clamp(1.55rem, 1.6vw, 2rem);
+  color: rgb(var(--muted-color));
+  font-size: clamp(1.5rem, 1.4vw, 1.6rem);
   line-height: 1.6;
 }
 
@@ -91,7 +92,7 @@
     justify-content: center;
     padding: 1.3rem 1.8rem;
     border: 1px solid rgba(var(--text-color), 0.18);
-    border-radius: 0.4rem;
+    border-radius: 0;
     background: transparent;
     color: rgba(var(--text-color), 0.72);
     cursor: pointer;
@@ -103,8 +104,9 @@
       background-color 150ms ease;
 
     &:hover {
-      border-color: rgba(var(--text-color), 0.42);
-      color: rgb(var(--text-color));
+      border-color: rgb(var(--heading-color));
+      background: rgb(var(--heading-color));
+      color: rgb(var(--background-color));
       text-decoration: none;
     }
   }
@@ -115,9 +117,9 @@
     color: rgb(var(--accent-ink));
 
     &:hover {
-      border-color: rgb(var(--accent-color));
-      background: rgba(var(--accent-color), 0.86);
-      color: rgb(var(--accent-ink));
+      border-color: rgb(var(--heading-color));
+      background: rgb(var(--heading-color));
+      color: rgb(var(--background-color));
     }
   }
 }

@@ -116,25 +116,73 @@ Conventional URLs remain important even when the agent can retrieve the same
 material. They provide predictable browsing, stable sharing, graceful failure,
 accessibility, and indexing.
 
-## Visual language
+## Visual language: Mid-Century Terminal
 
-The intended mood is an elegant terminal-like workstation, not a literal shell
-emulator.
+The intended mood is premium vintage hardware documentation: an early IBM
+mainframe manual translated into a precise, contemporary workstation. It is not
+a literal shell emulator. The system should communicate intentional utility,
+mechanical construction, and editorial confidence.
 
-- Near-black background with restrained tonal separation between surfaces.
-- Warm off-white primary text and quieter cool-gray secondary text.
-- A vibrant but controlled purple accent; a small warm accent may identify
-  Cosmo.
-- Editorial sans-serif typography for content.
-- Monospace typography for prompts, metadata, system state, and ASCII art.
-- Geist Sans and Geist Mono are the current working type pairing.
-- Thin rules, disciplined alignment, generous negative space, and compact
-  controls.
-- Minimal ornament. Content blocks provide most of the visual variety.
-- Motion is used for streaming state, block arrival, and spatial reordering.
+### Core principles
+
+- Use generous, deliberate whitespace to establish hierarchy. Do not substitute
+  oversized display type for composition.
+- Keep surfaces sharp, crisp, and grid-bound. Controls and content frames use
+  square corners, with a maximum radius of 2px only when technically necessary.
+- Preserve the near-black grid background and use restrained tonal separation
+  between surfaces.
+- Use thin, low-opacity structural rules. The conversation panel divider should
+  match the grid rather than read as an accent flourish.
+- Keep ornament minimal. Authored content, ASCII work, and interaction state
+  provide the visual character.
+- Use motion only for streaming state, block arrival, and meaningful spatial
+  reordering.
+
+### Typography
+
+- JetBrains Mono is the heading face for H1–H3. Headings use sentence case or
+  lowercase, 600 weight, and tight tracking between `-0.02em` and `-0.04em`.
+- IBM Plex Mono is the body, interface, chat, prompt, metadata, and ASCII face.
+  It uses neutral to slightly relaxed tracking between `0` and `0.01em`.
+- The home identity has a hard ceiling of `3.5rem` / `56px`.
+- Section headings top out at `1.75rem` / `28px`.
+- Body copy remains between `0.95rem` / `15px` and `1rem` / `16px`.
+- Conversational responses may increase to `1.15rem` / `18.5px` in the full
+  station so generated answers remain comfortably readable; the compact
+  assistant uses `0.95rem` / `15px`.
+- UI and metadata default to `0.8rem` / `13px` or smaller when the label is
+  genuinely secondary.
+- Prose paragraphs use a maximum measure of `65ch`.
+
+### Color and interaction
+
+- The background remains near-black with the existing subtle grid.
+- Primary headings use `#F3F4F6`; body text uses `#D1D5DB`; secondary UI uses
+  `#9CA3AF` with careful opacity rather than pure white.
+- The darker vibrant purple remains the primary syntax and interaction accent.
+  A small warm accent may identify Cosmo.
+- Buttons use square corners and explicit state swaps. Hover should invert the
+  surface or exchange a sharp neutral and accent border, not merely fade.
+- Focus states remain visible, high contrast, and keyboard accessible.
 
 The navigation is a minimal sticky bar. It uses slightly more vertical and
 horizontal space at the top of a page, then condenses once the page scrolls.
+
+## Site-wide assistant direction
+
+The homepage keeps the full embedded conversation station and adaptive
+workspace. Conventional routes may expose Cosmo through a compact floating
+assistant that stays secondary to the page until opened. Retrieved blocks are
+represented there as concise evidence summaries, with an explicit handoff to
+the full homepage workspace.
+
+The assistant should remain anchored and predictable rather than wandering
+around the viewport. Conversation and selected context persist during navigation
+within the current browser tab. The first release covers Work, Writing, Lab, and
+their detail pages; the Petting Zoo is excluded until its separate redesign.
+
+The complete product and implementation specification lives in
+`docs/sitewide-cosmo.md`.
 
 ## Content principles
 
@@ -148,7 +196,9 @@ horizontal space at the top of a page, then condenses once the page scrolls.
 ## Current implementation phase
 
 The current visual pass establishes the consolidated, viewport-height
-workstation, minimal adaptive navigation, workspace default state, prompt
-controls, responsive behavior, and quiet connection states. Detailed case
-studies, current positioning, richer semantic block renderers, and generated
-widgets are subsequent content/product phases.
+workstation, the Mid-Century Terminal token system, minimal adaptive navigation,
+workspace default state, prompt controls, responsive behavior, quiet connection
+states, and the site-wide Cosmo assistant on eligible conventional routes.
+Detailed case studies, current positioning, richer semantic block renderers,
+page-context retrieval, and generated widgets are subsequent content/product
+phases.

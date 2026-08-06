@@ -48,7 +48,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid rgba(var(--accent-color), 0.12);
+  border-left: 1px solid rgba(var(--heading-color), 0.1);
   background: rgb(var(--surface-raised));
 
   @media (max-width: 899px) {
@@ -73,6 +73,30 @@
     height: 0.7rem;
     border-radius: 50%;
     background: rgba(var(--text-color), 0.3);
+  }
+}
+
+.clearConversation {
+  position: absolute;
+  z-index: 2;
+  top: 1.8rem;
+  right: clamp(5.6rem, 6vw, 7.2rem);
+  min-height: 2.4rem;
+  padding: 0 0.6rem;
+  border: 0;
+  border-bottom: 1px solid rgba(var(--text-color), 0.24);
+  background: transparent;
+  color: rgb(var(--muted-color));
+  cursor: pointer;
+  font-family: var(--code-font-family);
+  font-size: 1.1rem;
+  transition:
+    border-color 140ms ease,
+    color 140ms ease;
+
+  &:hover {
+    border-color: rgb(var(--accent-color));
+    color: rgb(var(--heading-color));
   }
 }
 
@@ -102,5 +126,16 @@
 
   .guideBody {
     padding: 1.8rem 2.4rem 2.2rem;
+  }
+
+  .clearConversation {
+    top: 1.2rem;
+    right: 5.6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clearConversation {
+    transition: none;
   }
 }

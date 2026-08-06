@@ -4,7 +4,6 @@ import styles from "./Navbar.module.scss";
 const navigation = [
   { href: "/projects", label: "Work" },
   { href: "/blog", label: "Writing" },
-  { href: "/stuff", label: "Lab" },
   { href: "/petting-zoo", label: "Petting zoo" },
 ];
 

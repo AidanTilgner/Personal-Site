@@ -21,6 +21,7 @@ const timeline = [
 
     <header class="project-header">
       <div class="project-kicker">
+        {project.draft && <span class="project-draft">Draft preview</span>}
         <span>{status}</span>
         {timeline.length > 0 && <span>{timeline.join(" — ")}</span>}
       </div>
@@ -63,6 +64,9 @@ const timeline = [
       project.image && (
         <figure class="project-image">
           <img src={project.image.src} alt={project.image.alt} />
+          {project.image.caption && (
+            <figcaption>{project.image.caption}</figcaption>
+          )}
         </figure>
       )
     }
@@ -86,6 +90,28 @@ const timeline = [
     <article class="project-body">
       <slot />
     </article>
+
+    {
+      project.gallery.length > 0 && (
+        <section
+          class="project-gallery"
+          aria-labelledby="project-gallery-title"
+        >
+          <div class="project-gallery-heading">
+            <p>Project artifacts</p>
+            <h2 id="project-gallery-title">Gallery</h2>
+          </div>
+          <div class="project-gallery-grid">
+            {project.gallery.map((image) => (
+              <figure>
+                <img src={image.src} alt={image.alt} loading="lazy" />
+                {image.caption && <figcaption>{image.caption}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        </section>
+      )
+    }
   </main>
 </Layout>
 
@@ -128,23 +154,27 @@ const timeline = [
     span + span {
       color: rgba(var(--text-color), 0.35);
     }
+
+    .project-draft {
+      color: rgb(var(--warning-color));
+    }
   }
 
   .project-header h1 {
     max-width: 108rem;
     margin: 0;
-    font-size: clamp(5rem, 9vw, 11rem);
-    font-weight: 620;
-    letter-spacing: -0.065em;
-    line-height: 0.92;
+    font-size: clamp(3.8rem, 6vw, 5.6rem);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1;
     text-wrap: balance;
   }
 
   .project-description {
     max-width: 76rem;
     margin: 3rem 0 0;
-    color: rgba(var(--text-color), 0.58);
-    font-size: clamp(1.8rem, 2.5vw, 2.5rem);
+    color: rgb(var(--muted-color));
+    font-size: clamp(1.5rem, 1.6vw, 1.6rem);
     line-height: 1.5;
   }
 
@@ -193,6 +223,15 @@ const timeline = [
       width: 100%;
       height: auto;
     }
+
+    figcaption {
+      margin: 0;
+      padding: 1.2rem 1.6rem;
+      color: rgba(var(--text-color), 0.45);
+      font-family: var(--code-font-family);
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
   }
 
   .project-highlights {
@@ -220,15 +259,15 @@ const timeline = [
       margin: 0;
       padding-left: 2rem;
       color: rgba(var(--text-color), 0.72);
-      font-size: clamp(1.55rem, 2vw, 1.85rem);
+      font-size: clamp(1.5rem, 1.6vw, 1.6rem);
       line-height: 1.55;
     }
   }
 
   .project-body {
-    max-width: 78rem;
+    max-width: 65ch;
     color: rgba(var(--text-color), 0.76);
-    font-size: clamp(1.75rem, 2vw, 2.05rem);
+    font-size: clamp(1.5rem, 1.6vw, 1.6rem);
     line-height: 1.78;
 
     h2,
@@ -241,12 +280,12 @@ const timeline = [
 
     h2 {
       margin: 6rem 0 2rem;
-      font-size: clamp(3rem, 4vw, 4.4rem);
+      font-size: clamp(2.4rem, 3vw, 2.8rem);
     }
 
     h3 {
       margin: 4.5rem 0 1.6rem;
-      font-size: clamp(2.3rem, 3vw, 3.2rem);
+      font-size: clamp(2rem, 2.5vw, 2.4rem);
     }
 
     p,
@@ -267,7 +306,7 @@ const timeline = [
     blockquote {
       padding-left: 2rem;
       border-left: 2px solid rgb(var(--accent-color));
-      color: rgba(var(--text-color), 0.58);
+      color: rgb(var(--muted-color));
     }
 
     code,
@@ -290,9 +329,69 @@ const timeline = [
     }
   }
 
+  .project-gallery {
+    display: grid;
+    grid-template-columns: minmax(16rem, 0.32fr) minmax(0, 1fr);
+    gap: clamp(3rem, 7vw, 9rem);
+    margin-top: clamp(7rem, 12vw, 14rem);
+    padding-top: clamp(3rem, 5vw, 5rem);
+    border-top: 1px solid rgba(var(--text-color), 0.14);
+  }
+
+  .project-gallery-heading {
+    p {
+      margin: 0 0 1.4rem;
+      color: rgb(var(--accent-color));
+      font-family: var(--code-font-family);
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(2.4rem, 3vw, 2.8rem);
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+  }
+
+  .project-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.6rem, 3vw, 3rem);
+    align-items: start;
+
+    figure {
+      margin: 0;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid rgba(var(--text-color), 0.12);
+      background: rgb(var(--surface-color));
+    }
+
+    figcaption {
+      margin-top: 1rem;
+      color: rgba(var(--text-color), 0.45);
+      font-family: var(--code-font-family);
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+  }
+
   @media (max-width: 720px) {
     .project-details,
-    .project-highlights {
+    .project-highlights,
+    .project-gallery {
+      grid-template-columns: 1fr;
+    }
+
+    .project-gallery-grid {
       grid-template-columns: 1fr;
     }
   }

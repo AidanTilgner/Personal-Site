@@ -62,14 +62,22 @@ const getDisplayBlockId = (metadata: MarkdownMetadata) => {
   return undefined;
 };
 
-const walkMarkdown = async (directory: string): Promise<string[]> => {
+const walkMarkdown = async (
+  directory: string,
+  includeMdx = false,
+): Promise<string[]> => {
   try {
     const entries = await readdir(directory, { withFileTypes: true });
     const nested = await Promise.all(
       entries.map(async (entry) => {
         const entryPath = path.join(directory, entry.name);
-        if (entry.isDirectory()) return walkMarkdown(entryPath);
-        if (entry.isFile() && /\.(?:md|mdx|markdown)$/i.test(entry.name)) {
+        if (entry.isDirectory()) return walkMarkdown(entryPath, includeMdx);
+        const extension = path.extname(entry.name).toLowerCase();
+        if (
+          entry.isFile() &&
+          ([".md", ".markdown"].includes(extension) ||
+            (includeMdx && extension === ".mdx"))
+        ) {
           return [entryPath];
         }
         return [];
@@ -83,6 +91,33 @@ const walkMarkdown = async (directory: string): Promise<string[]> => {
 };
 
 const projectContext = (metadata: MarkdownMetadata, content: string) => {
+  const links = Array.isArray(metadata.links)
+    ? metadata.links
+        .map((link) => {
+          if (!link || typeof link !== "object") return undefined;
+          const value = link as Record<string, unknown>;
+          if (
+            typeof value.label !== "string" ||
+            typeof value.href !== "string"
+          ) {
+            return undefined;
+          }
+          return `${value.label}: ${value.href}`;
+        })
+        .filter((link): link is string => Boolean(link))
+    : [];
+  const media = [
+    metadata.image,
+    ...(Array.isArray(metadata.gallery) ? metadata.gallery : []),
+  ]
+    .map((image) => {
+      if (!image || typeof image !== "object") return undefined;
+      const value = image as Record<string, unknown>;
+      if (typeof value.caption === "string") return value.caption;
+      if (typeof value.alt === "string" && value.alt) return value.alt;
+      return undefined;
+    })
+    .filter((description): description is string => Boolean(description));
   const lines = [
     typeof metadata.description === "string"
       ? `Summary: ${metadata.description}`
@@ -91,6 +126,15 @@ const projectContext = (metadata: MarkdownMetadata, content: string) => {
       ? `Status: ${metadata.status}`
       : undefined,
     typeof metadata.role === "string" ? `Role: ${metadata.role}` : undefined,
+    typeof metadata.started === "string"
+      ? `Started: ${metadata.started}`
+      : undefined,
+    typeof metadata.completed === "string"
+      ? `Completed: ${metadata.completed}`
+      : undefined,
+    strings(metadata.tags).length
+      ? `Topics: ${strings(metadata.tags).join(", ")}`
+      : undefined,
     strings(metadata.technologies).length
       ? `Technologies: ${strings(metadata.technologies).join(", ")}`
       : undefined,
@@ -98,6 +142,12 @@ const projectContext = (metadata: MarkdownMetadata, content: string) => {
       ? `Highlights:\n${strings(metadata.highlights)
           .map((highlight) => `- ${highlight}`)
           .join("\n")}`
+      : undefined,
+    links.length
+      ? `Links:\n${links.map((link) => `- ${link}`).join("\n")}`
+      : undefined,
+    media.length
+      ? `Visual artifacts:\n${media.map((description) => `- ${description}`).join("\n")}`
       : undefined,
   ].filter((line): line is string => Boolean(line));
 
@@ -107,7 +157,7 @@ const projectContext = (metadata: MarkdownMetadata, content: string) => {
 export const loadProjectDocuments = async (
   directory = process.env.PROJECTS_DIRECTORY ?? defaultProjectsDirectory,
 ): Promise<KnowledgeDocument[]> => {
-  const files = await walkMarkdown(directory);
+  const files = await walkMarkdown(directory, true);
   const documents = await Promise.all(
     files.map(async (filename): Promise<KnowledgeDocument | undefined> => {
       const source = await readFile(filename, "utf8");

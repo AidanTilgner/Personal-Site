@@ -23,6 +23,12 @@ const projectLink = z.object({
   href: z.string().min(1),
 });
 
+const projectImage = z.object({
+  src: z.string().min(1),
+  alt: z.string(),
+  caption: z.string().min(1).optional(),
+});
+
 const projects = defineCollection({
   loader: glob({ base: "./src/content/projects", pattern: "**/*.{md,mdx}" }),
   schema: z.object({
@@ -43,12 +49,8 @@ const projects = defineCollection({
     technologies: z.array(z.string().min(1)).default([]),
     highlights: z.array(z.string().min(1)).default([]),
     links: z.array(projectLink).default([]),
-    image: z
-      .object({
-        src: z.string().min(1),
-        alt: z.string(),
-      })
-      .optional(),
+    image: projectImage.optional(),
+    gallery: z.array(projectImage).default([]),
     featured: z.boolean().default(false),
     order: z.number().int().default(0),
     draft: z.boolean().default(false),

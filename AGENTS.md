@@ -5,6 +5,10 @@ Read `DESIGN.md` before changing the product surface. Read
 Read `docs/knowledge-base.md` before adding or updating retrievable knowledge,
 widgets, block aliases, or other adaptive-workspace content.
 Read `docs/projects.md` before adding or updating a project or project page.
+When a project begins as a folder of loose notes or assets, also follow
+`docs/project-intake.md` from inventory through browser preview.
+Read `docs/sitewide-cosmo.md` before changing the assistant outside the home
+workspace or changing cross-route conversation persistence.
 
 ## Product intent
 
@@ -32,14 +36,15 @@ the content describes.
 
 ## Visual guardrails
 
-- Aim for an elegant, modern workstation: dark, quiet, precise, and
-  content-forward.
-- Use Geist Sans for interface and editorial typography, paired with Geist Mono
-  for prompts, system details, and terminal-like accents.
-- Use hierarchy, spacing, typography, and subtle surface changes to guide the
-  eye.
-- Reserve monospace typography for system language, metadata, prompts, and
-  authored ASCII work.
+- Aim for a Mid-Century Terminal: dark, quiet, precise, content-forward, and
+  reminiscent of premium vintage hardware documentation.
+- Use JetBrains Mono for sentence-case or lowercase headings and IBM Plex Mono
+  for body copy, interface text, prompts, metadata, chat, and ASCII work.
+- Establish hierarchy with generous whitespace and restrained type scale. Cap
+  the home identity at 56px, section headings at 28px, and body copy at 16px.
+- Keep construction sharp and grid-bound. Avoid pill controls and large radii;
+  interactive corners should be square or no more than 2px.
+- Limit prose to 65ch and use thin, low-opacity structural rules.
 - Use vibrant purple as the primary accent against the black, white, and gray
   palette.
 - Avoid generic SaaS dashboards, glassmorphism, excessive gradients, neon
