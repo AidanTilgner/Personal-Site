@@ -43,6 +43,9 @@ export const createApp = async () => {
       }),
     )
     .onError(({ code, error, status }) => {
+      if (code === "NOT_FOUND") {
+        return status(404, { message: "Not found." });
+      }
       if (code === "VALIDATION") {
         return status(400, {
           message: "Invalid request.",

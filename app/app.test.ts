@@ -17,6 +17,13 @@ afterAll(() => {
 });
 
 describe("Elysia HTTP contracts", () => {
+  test("returns a quiet 404 for unmatched API paths", async () => {
+    const response = await app.handle(new Request("http://localhost/"));
+
+    expect(response.status).toBe(404);
+    expect(await response.json()).toEqual({ message: "Not found." });
+  });
+
   test("reports knowledge readiness", async () => {
     const response = await app.handle(new Request("http://localhost/health"));
     expect(response.status).toBe(200);
