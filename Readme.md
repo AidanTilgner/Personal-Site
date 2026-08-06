@@ -48,9 +48,10 @@ CORS_ORIGINS=http://localhost:4321,http://127.0.0.1:4321
 ```
 
 `ASTRO_PORT` defaults to `4321` for `bun run dev` and `3004` for `bun run
-start`. `SERVER_PORT` defaults to `8080` in both modes. When changing a port,
-keep `PUBLIC_BACKEND_URL` aligned with `SERVER_PORT` and include the Astro
-origin in `CORS_ORIGINS`.
+start`. The production launcher maps `ASTRO_PORT` to Astro's required `PORT`
+inside Bun so it works consistently from `.env`. `SERVER_PORT` defaults to
+`8080` in both modes. When changing a port, keep `PUBLIC_BACKEND_URL` aligned
+with `SERVER_PORT` and include the Astro origin in `CORS_ORIGINS`.
 
 For production, `AI_MONTHLY_BUDGET_USD` enables a persistent application-side
 monthly spending guard. The backend conservatively reserves the maximum input

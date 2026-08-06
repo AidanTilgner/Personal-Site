@@ -19,7 +19,7 @@
     "test": "bun test",
     "dev:server": "bun --watch ./app/index.ts",
     "start:server": "bun ./app/index.ts",
-    "start:astro": "PORT=${ASTRO_PORT:-3004} bun ./dist/server/entry.mjs",
+    "start:astro": "bun ./scripts/start-astro.ts",
     "format": "prettier --write .",
     "start": "concurrently --kill-others-on-fail \"bun run start:astro\" \"bun run start:server\"",
     "dev": "concurrently --kill-others-on-fail \"bun run dev:astro\" \"bun run dev:server\""
