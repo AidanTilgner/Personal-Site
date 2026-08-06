@@ -23,7 +23,10 @@
 .animal_itself {
   position: absolute;
   left: 0;
-  bottom: 0;
+  // Keep the visible sprite glyphs on the scenery baseline. The foreground
+  // uses a larger type size than the scenery, so the line-box bottoms alone
+  // leave a small optical gap between feet and ground.
+  bottom: -0.22rem;
   cursor: grab;
   z-index: 4;
   padding: 0;

@@ -56,12 +56,33 @@ The identity content is the workspace's default state, not a separate hero
 above the experience. When a query resolves, retrieved evidence replaces that
 default state in the same surface.
 
+On arrival, the identity workspace spans the full available width. The query
+composer is centered near the bottom edge as the screen's primary call to
+action, with suggested prompts immediately adjacent; separate oversized hero
+buttons are unnecessary. Submitting the first question moves the composer into
+the right-hand conversation rail while the identity state yields to retrieved
+evidence. This spatial transition should make the relationship between asking
+and assembling context legible, and it must collapse without motion when the
+visitor prefers reduced motion.
+
+On wider viewports, the default identity state includes a restrained,
+sharp-edged portrait plate beside the introductory copy. The portrait is part
+of the arrival state rather than permanent chrome: it yields to retrieved
+evidence after a query and may be omitted on compact viewports to preserve the
+above-the-fold conversation layout.
+
 ### Conversation station
 
 The prompt is a primary control, not a floating support widget. Suggested
 prompts should be audience-aware and phrased around intent rather than database
 categories. Examples include asking about AI work, selected projects,
-capabilities, or ways to work together.
+capabilities, or ways to work together. Authored, route-aware prompts provide a
+dependable starting state. After each completed answer, Cosmo proposes three
+concise follow-up questions based on the visitor's recent questions, the latest
+answer, and the retrieved authored sources. These questions should advance
+likely investor, employer, or client curiosity without inventing evidence or
+repeating the visitor; static prompts remain the fallback when generation is
+unavailable.
 
 Cosmo is the site guide, response narrator, and streaming-status indicator. The
 character should add warmth without making the professional surface feel like a
@@ -72,12 +93,18 @@ a floating card or explained with labels, panel numbers, instructional copy, or
 dashboard chrome. Connection state may be communicated through a restrained
 status affordance with a tooltip.
 
+Cosmo's responses render safe Markdown, including lists, emphasis, and links.
+Supported URLs should use descriptive link text when possible; bare URLs are
+also autolinked and must wrap within the conversation column. External links
+open in a new tab with appropriate isolation, while internal links preserve the
+site navigation context.
+
 ### Content workspace
 
 The workspace is the visual center of gravity. It starts with Aidan's identity,
-positioning, short description, and primary actions, then becomes an ordered
-collection of relevant blocks. The system should favor evidence over
-self-description.
+positioning, and short description, with the centered query composer serving as
+the primary action. It then becomes an ordered collection of relevant blocks.
+The system should favor evidence over self-description.
 
 On the home route, the combined workspace and conversation station fills the
 viewport beneath the navigation. The document does not scroll; only the dynamic
@@ -96,6 +123,14 @@ Longer term, blocks should use semantic presentation types such as:
 - interactive experiment.
 
 The existing trusted HTML block format remains supported during the transition.
+Retrieved project and writing entries receive deterministic preview blocks made
+from their authored metadata and stable conventional routes. A purpose-built
+widget explicitly linked by `blockId` takes precedence over an automatic
+preview. After retrieval, an optional constrained model pass may tailor a
+preview's relevance line and summary to the visitor's prompt. It cannot change
+the selected entries, canonical title, metadata, route, tags, order, or widget
+code, and the authored preview remains the fallback when tuning is unavailable.
+Model output never creates or selects a block.
 
 ## Information architecture
 
@@ -159,7 +194,7 @@ mechanical construction, and editorial confidence.
 - The background remains near-black with the existing subtle grid.
 - Primary headings use `#F3F4F6`; body text uses `#D1D5DB`; secondary UI uses
   `#9CA3AF` with careful opacity rather than pure white.
-- The darker vibrant purple remains the primary syntax and interaction accent.
+- A dark, saturated blue remains the primary syntax and interaction accent.
   A small warm accent may identify Cosmo.
 - Buttons use square corners and explicit state swaps. Hover should invert the
   surface or exchange a sharp neutral and accent border, not merely fade.

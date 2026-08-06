@@ -16,6 +16,83 @@ const __dirname = path.dirname(__filename);
 
 const blocks = blocksJSON as Block[];
 
+const escapeHTML = (value: string) =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+
+const metadataString = (metadata: Record<string, unknown>, key: string) =>
+  typeof metadata[key] === "string" ? metadata[key] : undefined;
+
+const metadataStrings = (metadata: Record<string, unknown>, key: string) =>
+  Array.isArray(metadata[key])
+    ? metadata[key].filter(
+        (value): value is string => typeof value === "string",
+      )
+    : [];
+
+export type PreviewFraming = {
+  relevance?: string;
+  summary?: string;
+};
+
+export const createPreviewBlock = (
+  match: KnowledgeMatch,
+  framing: PreviewFraming = {},
+): Block | undefined => {
+  const { document } = match;
+  if (document.sourceType !== "project" && document.sourceType !== "blog") {
+    return;
+  }
+
+  const isProject = document.sourceType === "project";
+  const slug =
+    metadataString(document.metadata, "slug") ??
+    document.id.slice(document.id.indexOf(":") + 1);
+  const href = isProject ? `/projects/${slug}` : `/blog/posts/${slug}`;
+  const authoredDescription =
+    metadataString(document.metadata, "description") ??
+    document.content.replace(/\s+/g, " ").slice(0, 220);
+  const description = framing.summary ?? authoredDescription;
+  const tags = metadataStrings(document.metadata, "tags").slice(0, 5);
+  const status = isProject
+    ? metadataString(document.metadata, "status")
+    : metadataString(document.metadata, "postdate");
+  const label = isProject ? "Project" : "Writing";
+  const tagMarkup = tags.length
+    ? `<ul class="retrieval-preview__tags" aria-label="Topics">${tags
+        .map((tag) => `<li>${escapeHTML(tag)}</li>`)
+        .join("")}</ul>`
+    : "";
+  const statusMarkup = status ? `<span>${escapeHTML(status)}</span>` : "";
+  const relevanceMarkup = framing.relevance
+    ? `<p class="retrieval-preview__relevance">${escapeHTML(framing.relevance)}</p>`
+    : "";
+
+  return {
+    id: `preview:${document.id}`,
+    name: document.title,
+    description,
+    kind: isProject ? "project-preview" : "blog-preview",
+    href,
+    aliases: document.aliases,
+    content: {
+      type: "raw",
+      data: `<article class="retrieval-preview">
+  <div class="retrieval-preview__meta"><span>${label}</span>${statusMarkup}</div>
+  <h2><a href="${escapeHTML(href)}">${escapeHTML(document.title)}</a></h2>
+  ${relevanceMarkup}
+  <p>${escapeHTML(description)}</p>
+  ${tagMarkup}
+  <a class="retrieval-preview__action" href="${escapeHTML(href)}">Open ${isProject ? "case study" : "article"}<span aria-hidden="true">↗</span></a>
+</article>`,
+    },
+  };
+};
+
 export const initializeBlocks = async () => {
   await initializeKnowledge();
 };
@@ -65,12 +142,20 @@ export const getQueriedBlocks = async (
 ) => {
   const parsedBlocks = await getParsedBlocks(blocks);
   const retrieval = matches ?? (await retrieveKnowledge(query));
+  const previewBlocks = retrieval
+    .filter((match) => !match.document.blockId)
+    .map((match) => createPreviewBlock(match))
+    .filter((block): block is Block => !!block);
   const blockIds = retrieval
     .map((match) => match.document.blockId)
     .filter((blockId): blockId is string => !!blockId);
-  return [...new Set(blockIds)]
+  const explicitBlocks = [...new Set(blockIds)]
     .map((blockId) => parsedBlocks.find((block) => block.id === blockId))
     .filter((block): block is Block => !!block);
+  return [...previewBlocks, ...explicitBlocks].filter(
+    (block, index, selected) =>
+      selected.findIndex((candidate) => candidate.id === block.id) === index,
+  );
 };
 
 export const parseBlockContent = async (content: string, block: Block) => {

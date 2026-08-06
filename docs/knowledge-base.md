@@ -8,14 +8,15 @@ serving requests.
 
 Use this decision guide before changing content:
 
-| Goal                                                              | Source to change                                                    |
-| ----------------------------------------------------------------- | ------------------------------------------------------------------- |
-| Give the assistant factual context without changing the workspace | Add or edit `knowledge/**/*.md`                                     |
-| Add a visible workspace widget                                    | Add an entry to `app/blocks/blocks.json` and its presentation       |
-| Make retrieved knowledge display a widget                         | Set the Markdown document's `block` field to the widget's stable ID |
-| Update Aidan's general description, skills, or links              | Edit `app/config/gpt-config.json`                                   |
-| Make important content directly browsable and shareable           | Add or update its conventional Astro route as well                  |
-| Add a project page and make it retrievable                        | Add an entry under `src/content/projects/`                          |
+| Goal                                                              | Source to change                                                                           |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Give the assistant factual context without changing the workspace | Add or edit `knowledge/**/*.md`                                                            |
+| Add a visible workspace widget                                    | Add an entry to `app/blocks/blocks.json` and its presentation                              |
+| Make retrieved knowledge display a widget                         | Set the Markdown document's `block` field to the widget's stable ID                        |
+| Update Aidan's general description, skills, or links              | Edit `app/config/gpt-config.json`                                                          |
+| Make important content directly browsable and shareable           | Add or update its conventional Astro route as well                                         |
+| Add a project page and make it retrievable                        | Add an entry under `src/content/projects/`                                                 |
+| Add a writing page and make it retrievable                        | Add a published entry under `src/content/blog/` or publish to the configured Substack feed |
 
 The most common complete change is:
 
@@ -31,10 +32,12 @@ facts rather than becoming the only copy of them.
 
 ## Sources
 
-Four adapters currently contribute searchable documents:
+Six adapters currently contribute searchable documents:
 
 - `knowledge/**/*.md` for low-overhead authored facts and long-form context.
 - `src/content/projects/**/*.{md,mdx}` for project pages and project context.
+- `src/content/blog/**/*.{md,mdx}` for published writing and article context.
+- The Software and Synapses RSS feed for automatically published Substack writing.
 - `app/blocks/blocks.json` plus `app/public/blocks/*.html` for existing widgets.
 - `app/config/gpt-config.json` for the owner profile and skills.
 
@@ -63,6 +66,17 @@ Project entries use the stricter schema documented in `docs/projects.md`. They
 are indexed as `project:<collection-id>` documents so the same authored source
 drives the public project page and assistant context. Draft projects and
 projects with `index: false` are excluded.
+
+Published blog entries are indexed as `blog:<collection-id>` documents using
+their title, description, author, publication date, tags, and body. Draft posts
+and entries with `index: false` are excluded. Their conventional route is
+`/blog/posts/<collection-id>`.
+
+Substack entries are fetched from `SUBSTACK_FEED_URL`, sanitized, and indexed
+with their complete article text as `blog:substack:<post-slug>` documents. Their
+preview metadata points to the native `/blog/posts/<post-slug>` route, while the
+canonical Substack URL remains available for attribution. If the remote feed is
+temporarily unavailable, local knowledge synchronization continues without it.
 
 ### Add knowledge
 
@@ -210,10 +224,13 @@ The default generated database is `app/data/knowledge.sqlite` and is ignored by
 Git. Persist this path in production to avoid rebuilding embeddings on every
 restart.
 
-Synchronization is memoized for the life of the backend process. Restart the
-backend after changing Markdown, widget definitions, widget HTML, or the owner
-profile. The development watcher may restart for imported TypeScript or JSON,
-but do not rely on it noticing an arbitrary Markdown or HTML edit.
+Synchronization runs at backend startup and refreshes lazily when retrieval is
+requested after `KNOWLEDGE_REFRESH_INTERVAL_MS`. Content hashes keep unchanged
+chunks from being re-embedded. Restart the backend when immediate visibility is
+needed after changing Markdown, widget definitions, widget HTML, or the owner
+profile; otherwise the next refresh picks them up. Remote Substack entries use
+the same refresh path and retain their last successful in-process snapshot
+during a temporary feed outage.
 
 ## Retrieval and widgets
 
@@ -229,9 +246,18 @@ constraints. The storage boundary can adopt `sqlite-vec` later without changing
 the source adapters or chat contracts if corpus size makes approximate or
 extension-backed search worthwhile.
 
-Every result may contribute agent context. A result with a `blockId` also
-contributes a visible widget. The application, not the language model, selects
-and renders trusted blocks.
+Every result may contribute agent context. A result with a `blockId` contributes
+its explicitly authored widget. Retrieved project and blog documents without a
+`blockId` deterministically produce a safe preview block using their authored
+metadata, tags, summary, and conventional route. Explicit widgets take
+precedence over automatic previews. In the chat flow only, a structured model
+pass may rewrite the preview's short relevance line and summary around the
+visitor's current prompt. The model receives only the retrieved source data and
+cannot alter the preview's identity, title, route, status/date, tags, order, or
+HTML structure. Invalid output or provider failure silently preserves the
+authored preview. The deterministic `POST /v1/blocks/query` endpoint never runs
+this presentation pass. The application, not the language model, selects and
+renders all blocks.
 
 If embeddings are unavailable, startup records the content without vectors and
 reports degraded status while lexical retrieval remains functional. If an
@@ -240,18 +266,24 @@ preserved.
 
 ## Configuration
 
-| Variable                      | Default                     | Purpose                   |
-| ----------------------------- | --------------------------- | ------------------------- |
-| `KNOWLEDGE_DIRECTORY`         | `knowledge`                 | Markdown source directory |
-| `PROJECTS_DIRECTORY`          | `src/content/projects`      | Project source directory  |
-| `KNOWLEDGE_DB_PATH`           | `app/data/knowledge.sqlite` | Generated SQLite index    |
-| `OPENAI_EMBEDDING_MODEL`      | `text-embedding-3-small`    | Embedding model           |
-| `OPENAI_EMBEDDING_DIMENSIONS` | `1536`                      | Stored vector dimensions  |
-| `OPENAI_CHAT_MODEL`           | `gpt-5.6-luna`              | Responses API model       |
+| Variable                        | Default                     | Purpose                     |
+| ------------------------------- | --------------------------- | --------------------------- |
+| `KNOWLEDGE_DIRECTORY`           | `knowledge`                 | Markdown source directory   |
+| `PROJECTS_DIRECTORY`            | `src/content/projects`      | Project source directory    |
+| `BLOG_DIRECTORY`                | `src/content/blog`          | Published writing source    |
+| `SUBSTACK_FEED_URL`             | Software and Synapses feed  | Remote writing source       |
+| `SUBSTACK_CACHE_TTL_MS`         | `900000`                    | Remote feed cache lifetime  |
+| `KNOWLEDGE_REFRESH_INTERVAL_MS` | `900000`                    | Lazy index refresh interval |
+| `KNOWLEDGE_DB_PATH`             | `app/data/knowledge.sqlite` | Generated SQLite index      |
+| `OPENAI_EMBEDDING_MODEL`        | `text-embedding-3-small`    | Embedding model             |
+| `OPENAI_EMBEDDING_DIMENSIONS`   | `1536`                      | Stored vector dimensions    |
+| `OPENAI_CHAT_MODEL`             | `gpt-5.6-luna`              | Responses API model         |
 
 The generation route uses the official OpenAI SDK, the Responses API, explicit
 low reasoning effort, and typed streaming events forwarded over the existing
-application WebSocket protocol.
+application WebSocket protocol. Preview tuning uses the same configured chat
+model with strict structured output and degrades independently from the
+conversational response.
 
 ## Verification checklist
 
@@ -261,9 +293,11 @@ After authoring content:
    `knowledge.ready` is true; degraded mode means lexical retrieval remains
    available but embeddings may not be current.
 2. Query an exact alias through the UI or `POST /v1/blocks/query` and confirm the
-   expected widget ID is returned.
+   expected widget or project/writing preview is returned.
 3. Ask a natural-language question and confirm the assistant answer is grounded
-   in the Markdown and the expected widget appears.
+   in the Markdown and the expected widget appears. For a project or writing
+   preview, confirm the relevance line addresses the question without changing
+   canonical facts; repeat without provider access to confirm authored fallback.
 4. Open `GET /v1/blocks/<id>/content` for a local widget and inspect its rendered
    state in the workspace, including narrow screens and keyboard focus.
 5. Confirm important material also works on its conventional route and remains

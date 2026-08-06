@@ -5,9 +5,17 @@ interface TextBoxProps {
   onSubmit: (text: string) => void;
   suggestions: string[];
   disabled?: boolean;
+  showSuggestions?: boolean;
+  prominent?: boolean;
 }
 
-function TextBox({ onSubmit, suggestions, disabled = false }: TextBoxProps) {
+function TextBox({
+  onSubmit,
+  suggestions,
+  disabled = false,
+  showSuggestions = true,
+  prominent = false,
+}: TextBoxProps) {
   const [text, setText] = useState("");
 
   const handleSubmit = (value: string) => {
@@ -18,20 +26,24 @@ function TextBox({ onSubmit, suggestions, disabled = false }: TextBoxProps) {
   };
 
   return (
-    <div className={styles.textbox}>
-      <div className={styles.suggestions} aria-label="Suggested questions">
-        {suggestions.map((suggestion) => (
-          <button
-            type="button"
-            className={styles.suggestion}
-            onClick={() => handleSubmit(suggestion)}
-            key={suggestion}
-            disabled={disabled}
-          >
-            {suggestion}
-          </button>
-        ))}
-      </div>
+    <div
+      className={`${styles.textbox} ${prominent ? styles.prominent : ""}`}
+    >
+      {showSuggestions && (
+        <div className={styles.suggestions} aria-label="Suggested questions">
+          {suggestions.map((suggestion) => (
+            <button
+              type="button"
+              className={styles.suggestion}
+              onClick={() => handleSubmit(suggestion)}
+              key={suggestion}
+              disabled={disabled}
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
+      )}
       <form
         className={styles.textboxcontainer}
         onSubmit={(event) => {

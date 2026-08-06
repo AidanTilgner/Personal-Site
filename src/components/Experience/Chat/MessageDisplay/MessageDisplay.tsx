@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "./MessageDisplay.module.scss";
 import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface MessageDisplayProps {
   message: string;
   is_streaming: boolean;
   latestQuestion: string | null;
   compact?: boolean;
+  onSuggestionSelect?: (suggestion: string) => void;
+  suggestions?: string[];
+  suggestionsDisabled?: boolean;
 }
 
 const camelStates = [
@@ -46,10 +50,13 @@ function MessageDisplay({
   is_streaming,
   latestQuestion,
   compact = false,
+  onSuggestionSelect,
+  suggestions = [],
+  suggestionsDisabled = false,
 }: MessageDisplayProps) {
   const [hovered, setHovered] = useState(false);
   const [currentState, setCurrentState] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const exchangeRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!is_streaming) {
@@ -63,8 +70,8 @@ function MessageDisplay({
   }, [is_streaming]);
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, [message]);
+    if (latestQuestion) exchangeRef.current?.scrollTo({ top: 0 });
+  }, [latestQuestion]);
 
   return (
     <div
@@ -82,7 +89,7 @@ function MessageDisplay({
           {hovered ? camelWink : camelStates[currentState]}
         </pre>
       </a>
-      <div className={styles.exchange}>
+      <div className={styles.exchange} ref={exchangeRef}>
         {latestQuestion && (
           <div
             className={styles.latestQuestion}
@@ -96,10 +103,12 @@ function MessageDisplay({
           className={styles.response}
           aria-live="polite"
           aria-busy={is_streaming}
+          data-streaming={is_streaming || undefined}
         >
           {message ? (
             <Markdown
               skipHtml
+              remarkPlugins={[remarkGfm]}
               components={{
                 a: ({ href, children }) => {
                   const external = href?.startsWith("http");
@@ -120,11 +129,22 @@ function MessageDisplay({
           ) : (
             <p className={styles.thinking}>Looking through the index…</p>
           )}
-          {is_streaming && (
-            <span className={styles.cursor} aria-hidden="true" />
-          )}
-          <div ref={scrollRef} />
         </div>
+        {latestQuestion && message && !is_streaming && suggestions.length > 0 && (
+          <div className={styles.followUps} aria-label="Suggested questions">
+            <p>You might ask next</p>
+            {suggestions.map((suggestion) => (
+              <button
+                type="button"
+                key={suggestion}
+                onClick={() => onSuggestionSelect?.(suggestion)}
+                disabled={suggestionsDisabled}
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

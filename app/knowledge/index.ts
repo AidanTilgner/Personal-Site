@@ -4,6 +4,8 @@ import type { KnowledgeMatch, KnowledgeStatus } from "./types";
 
 let store: KnowledgeStore | undefined;
 let initialization: Promise<KnowledgeStatus> | undefined;
+let initializedAt = 0;
+const DEFAULT_REFRESH_INTERVAL_MS = 15 * 60 * 1000;
 let currentStatus: KnowledgeStatus = {
   ready: false,
   degraded: false,
@@ -14,8 +16,20 @@ let currentStatus: KnowledgeStatus = {
 
 const getStore = () => (store ??= new KnowledgeStore());
 
+const refreshInterval = () => {
+  const configured = Number(process.env.KNOWLEDGE_REFRESH_INTERVAL_MS);
+  return Number.isFinite(configured) && configured >= 0
+    ? configured
+    : DEFAULT_REFRESH_INTERVAL_MS;
+};
+
 export const initializeKnowledge = async () => {
-  initialization ??= (async () => {
+  if (currentStatus.ready && Date.now() - initializedAt < refreshInterval()) {
+    return currentStatus;
+  }
+  if (initialization) return initialization;
+
+  const run = async () => {
     try {
       currentStatus = await getStore().synchronize(
         await loadKnowledgeDocuments(),
@@ -33,12 +47,15 @@ export const initializeKnowledge = async () => {
       if (!previous.ready) throw error;
       console.warn(currentStatus.message);
     }
+    initializedAt = Date.now();
     return currentStatus;
-  })().catch((error) => {
+  };
+  initialization = run();
+  try {
+    return await initialization;
+  } finally {
     initialization = undefined;
-    throw error;
-  });
-  return initialization;
+  }
 };
 
 export const getKnowledgeStatus = () => currentStatus;

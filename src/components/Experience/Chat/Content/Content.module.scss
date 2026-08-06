@@ -5,17 +5,20 @@
 .defaultState {
   position: relative;
   isolation: isolate;
-  display: flex;
+  display: grid;
   min-height: 100%;
-  max-width: 74rem;
-  flex-direction: column;
-  justify-content: center;
-  padding: 2rem 0;
+  width: 100%;
+  max-width: 124rem;
+  margin: 0 auto;
+  grid-template-columns: minmax(0, 1fr) clamp(22rem, 24vw, 32rem);
+  align-items: center;
+  gap: clamp(3rem, 4vw, 5.6rem);
+  padding: 2rem 0 clamp(12rem, 18vh, 17rem);
 
   &::before {
     position: absolute;
     z-index: -1;
-    inset: -8rem -10rem;
+    inset: 0;
     background-image:
       linear-gradient(rgba(var(--text-color), 0.025) 1px, transparent 1px),
       linear-gradient(
@@ -49,6 +52,71 @@
   }
 }
 
+.identityCopy {
+  min-width: 0;
+}
+
+.queryPending {
+  display: grid;
+  min-height: 100%;
+  place-items: center;
+
+  p {
+    margin: 0;
+    padding-left: 1.4rem;
+    border-left: 2px solid rgb(var(--accent-color));
+    color: rgb(var(--muted-color));
+    font-family: var(--code-font-family);
+    font-size: 1.2rem;
+  }
+}
+
+.portrait {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  border: 1px solid rgba(var(--heading-color), 0.16);
+  background: rgb(var(--surface-raised));
+
+  &::after {
+    position: absolute;
+    right: -1px;
+    bottom: -1px;
+    width: 3.2rem;
+    height: 2px;
+    background: rgb(var(--accent-color));
+    content: "";
+  }
+
+  figcaption {
+    display: flex;
+    min-height: 3.4rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid rgba(var(--heading-color), 0.12);
+    color: rgb(var(--muted-color));
+    font-family: var(--code-font-family);
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  figcaption span:last-child {
+    color: rgba(var(--muted-color), 0.58);
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    object-position: 50% 38%;
+    filter: saturate(0.76) contrast(1.03);
+  }
+}
+
 .tagline {
   max-width: 65ch;
   margin: 2.2rem 0 0;
@@ -76,52 +144,6 @@
   color: rgb(var(--warning-color));
   font-family: var(--code-font-family);
   font-size: 1.1rem;
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: clamp(2.4rem, 4vh, 4rem);
-
-  a,
-  button {
-    display: inline-flex;
-    min-height: 4.8rem;
-    align-items: center;
-    justify-content: center;
-    padding: 1.3rem 1.8rem;
-    border: 1px solid rgba(var(--text-color), 0.18);
-    border-radius: 0;
-    background: transparent;
-    color: rgba(var(--text-color), 0.72);
-    cursor: pointer;
-    font-family: var(--code-font-family);
-    font-size: 1.2rem;
-    transition:
-      border-color 150ms ease,
-      color 150ms ease,
-      background-color 150ms ease;
-
-    &:hover {
-      border-color: rgb(var(--heading-color));
-      background: rgb(var(--heading-color));
-      color: rgb(var(--background-color));
-      text-decoration: none;
-    }
-  }
-
-  a {
-    border-color: rgb(var(--accent-color));
-    background: rgb(var(--accent-color));
-    color: rgb(var(--accent-ink));
-
-    &:hover {
-      border-color: rgb(var(--heading-color));
-      background: rgb(var(--heading-color));
-      color: rgb(var(--background-color));
-    }
-  }
 }
 
 .blocks {
@@ -164,6 +186,135 @@
   }
 }
 
+.previewBlock {
+  overflow: hidden;
+
+  > div {
+    padding: 0;
+  }
+
+  :global(.retrieval-preview) {
+    position: relative;
+    display: grid;
+    gap: 1.6rem;
+    padding: clamp(2.4rem, 4vw, 4rem);
+
+    &::before {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 2px;
+      background: rgb(var(--accent-color));
+      content: "";
+    }
+  }
+
+  :global(.retrieval-preview__meta) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: rgb(var(--muted-color));
+    font-family: var(--code-font-family);
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    span:last-child {
+      color: rgba(var(--muted-color), 0.58);
+    }
+  }
+
+  :global(.retrieval-preview__relevance) {
+    max-width: 65ch;
+    margin: -0.4rem 0 0;
+    color: rgb(var(--accent-color));
+    font-family: var(--code-font-family);
+    font-size: 1.1rem;
+    letter-spacing: 0.03em;
+    line-height: 1.5;
+  }
+
+  :global(h2) {
+    max-width: 24ch;
+    margin: 0;
+    font-size: clamp(2.2rem, 3vw, 2.8rem);
+    line-height: 1.12;
+
+    a {
+      color: rgb(var(--heading-color));
+
+      &:hover {
+        color: rgb(var(--accent-color));
+        text-decoration: none;
+      }
+    }
+  }
+
+  :global(.retrieval-preview > p:not(.retrieval-preview__relevance)) {
+    max-width: 65ch;
+    margin: 0;
+    color: rgb(var(--muted-color));
+    font-size: 1.5rem;
+    line-height: 1.65;
+  }
+
+  :global(.retrieval-preview__tags) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      padding: 0.45rem 0.7rem;
+      border: 1px solid rgba(var(--text-color), 0.14);
+      color: rgba(var(--text-color), 0.62);
+      font-family: var(--code-font-family);
+      font-size: 0.9rem;
+    }
+  }
+
+  :global(.retrieval-preview__action) {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 0.4rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(var(--accent-color), 0.55);
+    color: rgb(var(--accent-color));
+    font-family: var(--code-font-family);
+    font-size: 1.1rem;
+
+    &:hover {
+      border-color: rgb(var(--heading-color));
+      color: rgb(var(--heading-color));
+      text-decoration: none;
+    }
+  }
+}
+
+@media (max-width: 720px) {
+  .defaultState {
+    display: flex;
+    max-width: 74rem;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 15rem;
+  }
+
+  .portrait {
+    display: none;
+  }
+}
+
+@media (min-width: 721px) {
+  .defaultState {
+    transform: translateY(-4.5rem);
+  }
+}
+
 @keyframes blockIn {
   from {
     opacity: 0;
@@ -172,11 +323,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .actions a,
-  .actions button {
-    transition: none;
-  }
-
   .block {
     animation: none;
   }

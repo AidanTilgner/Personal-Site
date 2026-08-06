@@ -28,6 +28,10 @@ const BlockSchema = t.Object({
   id: t.String(),
   name: t.String(),
   description: t.String(),
+  kind: t.Optional(
+    t.Union([t.Literal("project-preview"), t.Literal("blog-preview")]),
+  ),
+  href: t.Optional(t.String()),
   content: t.Object({
     type: t.Union([t.Literal("raw"), t.Literal("url")]),
     data: t.String(),
@@ -51,6 +55,13 @@ export const ChatServerMessageSchema = t.Union([
     type: t.Literal("assistant.done"),
     requestId: t.String(),
     message: t.String(),
+  }),
+  t.Object({
+    type: t.Literal("assistant.suggestions"),
+    requestId: t.String(),
+    suggestions: t.Array(t.String({ minLength: 1, maxLength: 120 }), {
+      maxItems: 4,
+    }),
   }),
   t.Object({
     type: t.Literal("error"),

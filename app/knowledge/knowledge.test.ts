@@ -3,7 +3,12 @@ import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { chunkDocument } from "./chunker";
-import { loadMarkdownDocuments, loadProjectDocuments } from "./sources";
+import {
+  loadBlogDocuments,
+  loadMarkdownDocuments,
+  loadProjectDocuments,
+  loadSubstackDocuments,
+} from "./sources";
 import { KnowledgeStore } from "./store";
 import type { KnowledgeDocument } from "./types";
 
@@ -85,6 +90,66 @@ describe("knowledge sources", () => {
 
       expect(await loadProjectDocuments(directory)).toEqual([]);
     });
+  });
+
+  test("indexes published blog posts and excludes drafts", async () => {
+    await withTemporaryDirectory(async (directory) => {
+      writeFileSync(
+        path.join(directory, "published.md"),
+        "---\ntitle: Published note\ndescription: A useful published note.\nauthor: Aidan\npostdate: 2026-08-05\ntags: [agents, interfaces]\n---\n\n## Detail\n\nUseful article context.",
+      );
+      writeFileSync(
+        path.join(directory, "draft.md"),
+        "---\ntitle: Draft note\ndescription: Not ready.\nauthor: Aidan\npostdate: 2026-08-05\ntags: []\ndraft: true\n---\n\nPrivate draft.",
+      );
+
+      const documents = await loadBlogDocuments(directory);
+
+      expect(documents).toHaveLength(1);
+      expect(documents[0]).toMatchObject({
+        id: "blog:published",
+        sourceType: "blog",
+        title: "Published note",
+        aliases: ["agents", "interfaces"],
+        metadata: { slug: "published" },
+      });
+      expect(documents[0].content).toContain(
+        "Summary: A useful published note.",
+      );
+      expect(documents[0].content).toContain("Useful article context.");
+    });
+  });
+
+  test("indexes full Substack posts with their native article route", async () => {
+    const documents = await loadSubstackDocuments([
+      {
+        title: "A useful remote essay",
+        author: "Aidan Tilgner",
+        description: "A concise summary.",
+        postdate: "2026-08-06",
+        tags: ["agents"],
+        slug: "a-useful-remote-essay",
+        canonicalUrl:
+          "https://softwareandsynapses.substack.com/p/a-useful-remote-essay",
+        html: "<p>The complete authored argument.</p>",
+        contentText: "The complete authored argument.",
+        thumbnailUrl: "https://images.example.com/essay.png",
+      },
+    ]);
+
+    expect(documents).toEqual([
+      expect.objectContaining({
+        id: "blog:substack:a-useful-remote-essay",
+        sourceType: "blog",
+        title: "A useful remote essay",
+        aliases: ["A useful remote essay", "agents"],
+        metadata: expect.objectContaining({
+          slug: "a-useful-remote-essay",
+          sourceLabel: "Software and Synapses",
+        }),
+      }),
+    ]);
+    expect(documents[0].content).toContain("The complete authored argument.");
   });
 });
 

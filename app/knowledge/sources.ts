@@ -5,13 +5,20 @@ import { parse as parseYaml } from "yaml";
 import blocksJSON from "../blocks/blocks.json";
 import profileJSON from "../config/gpt-config.json";
 import type { Block } from "../../types/blocks";
+import {
+  getSubstackPosts,
+  SUBSTACK_PUBLICATION_NAME,
+  type SubstackPost,
+} from "../../src/utils/substack";
 import type { KnowledgeDocument } from "./types";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "../..");
 const defaultKnowledgeDirectory = path.join(projectRoot, "knowledge");
 const defaultProjectsDirectory = path.join(projectRoot, "src/content/projects");
+const defaultBlogDirectory = path.join(projectRoot, "src/content/blog");
 const blocksDirectory = path.join(projectRoot, "app/public/blocks");
+let cachedSubstackDocuments: KnowledgeDocument[] | undefined;
 
 type MarkdownMetadata = {
   id?: unknown;
@@ -192,6 +199,109 @@ export const loadProjectDocuments = async (
   );
 };
 
+const blogContext = (metadata: MarkdownMetadata, content: string) => {
+  const lines = [
+    typeof metadata.description === "string"
+      ? `Summary: ${metadata.description}`
+      : undefined,
+    typeof metadata.author === "string"
+      ? `Author: ${metadata.author}`
+      : undefined,
+    typeof metadata.postdate === "string"
+      ? `Published: ${metadata.postdate}`
+      : undefined,
+    typeof metadata.updatedate === "string"
+      ? `Updated: ${metadata.updatedate}`
+      : undefined,
+    strings(metadata.tags).length
+      ? `Topics: ${strings(metadata.tags).join(", ")}`
+      : undefined,
+  ].filter((line): line is string => Boolean(line));
+
+  return [...lines, content.trim()].filter(Boolean).join("\n\n");
+};
+
+export const loadBlogDocuments = async (
+  directory = process.env.BLOG_DIRECTORY ?? defaultBlogDirectory,
+): Promise<KnowledgeDocument[]> => {
+  const files = await walkMarkdown(directory, true);
+  const documents = await Promise.all(
+    files.map(async (filename): Promise<KnowledgeDocument | undefined> => {
+      const source = await readFile(filename, "utf8");
+      const { metadata, content } = parseFrontmatter(source);
+      if (metadata.index === false || metadata.draft === true) return undefined;
+
+      const relativePath = path.relative(directory, filename);
+      const idPath = relativePath
+        .replaceAll(path.sep, "/")
+        .replace(/\.(?:md|mdx|markdown)$/i, "");
+      const title =
+        typeof metadata.title === "string"
+          ? metadata.title
+          : (firstHeading(content) ??
+            path.basename(filename, path.extname(filename)));
+
+      return {
+        id: `blog:${idPath}`,
+        sourceType: "blog" as const,
+        path: `src/content/blog/${relativePath.replaceAll(path.sep, "/")}`,
+        title,
+        content: blogContext(metadata, content),
+        aliases: strings(metadata.tags),
+        blockId: getDisplayBlockId(metadata),
+        metadata: { ...metadata, slug: idPath },
+      };
+    }),
+  );
+
+  return documents.filter(
+    (document): document is KnowledgeDocument => document !== undefined,
+  );
+};
+
+export const loadSubstackDocuments = async (
+  suppliedPosts?: SubstackPost[],
+): Promise<KnowledgeDocument[]> => {
+  if (!suppliedPosts && process.env.NODE_ENV === "test") return [];
+
+  let posts = suppliedPosts;
+  if (!posts) {
+    try {
+      posts = await getSubstackPosts();
+    } catch {
+      // Remote publishing should enrich the index without making local
+      // knowledge unavailable during a Substack outage.
+      return cachedSubstackDocuments ?? [];
+    }
+  }
+
+  const documents = posts.map((post) => {
+    const metadata = {
+      title: post.title,
+      description: post.description,
+      author: post.author,
+      postdate: post.postdate,
+      tags: post.tags,
+      slug: post.slug,
+      canonicalUrl: post.canonicalUrl,
+      sourceLabel: SUBSTACK_PUBLICATION_NAME,
+      thumbnailUrl: post.thumbnailUrl,
+    };
+
+    return {
+      id: `blog:substack:${post.slug}`,
+      sourceType: "blog" as const,
+      path: post.canonicalUrl,
+      title: post.title,
+      content: blogContext(metadata, post.contentText),
+      aliases: [post.title, ...post.tags],
+      metadata,
+    };
+  });
+  cachedSubstackDocuments = documents;
+  return documents;
+};
+
 export const loadMarkdownDocuments = async (
   directory = process.env.KNOWLEDGE_DIRECTORY ?? defaultKnowledgeDirectory,
 ): Promise<KnowledgeDocument[]> => {
@@ -315,4 +425,6 @@ export const loadKnowledgeDocuments = async () => [
   ...(await loadBlockDocuments()),
   ...(await loadMarkdownDocuments()),
   ...(await loadProjectDocuments()),
+  ...(await loadBlogDocuments()),
+  ...(await loadSubstackDocuments()),
 ];

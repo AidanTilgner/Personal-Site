@@ -1,6 +1,10 @@
 import { Elysia } from "elysia";
 import { getBlocks } from "../blocks";
-import { streamBlockResponse } from "../gpt";
+import {
+  generateFollowUpSuggestions,
+  streamBlockResponse,
+  tunePreviewBlocks,
+} from "../gpt";
 import { retrieveKnowledge } from "../knowledge";
 import { getChatLimits } from "../config/env";
 import { createFixedWindowRateLimiter } from "../utils/rate-limit";
@@ -13,7 +17,11 @@ export type ChatDependencies = {
   selectBlocks?: typeof getBlocks;
   retrieveContext?: typeof retrieveKnowledge;
   streamResponse?: typeof streamBlockResponse;
+  tuneBlocks?: typeof tunePreviewBlocks;
+  generateSuggestions?: typeof generateFollowUpSuggestions;
   reportError?: (error: unknown) => void;
+  reportPreviewError?: (error: unknown) => void;
+  reportSuggestionError?: (error: unknown) => void;
 };
 
 export const processChatRequest = async (
@@ -25,9 +33,20 @@ export const processChatRequest = async (
   const selectBlocks = dependencies.selectBlocks ?? getBlocks;
   const retrieveContext = dependencies.retrieveContext ?? retrieveKnowledge;
   const streamResponse = dependencies.streamResponse ?? streamBlockResponse;
+  const tuneBlocks = dependencies.tuneBlocks ?? tunePreviewBlocks;
+  const generateSuggestions =
+    dependencies.generateSuggestions ?? generateFollowUpSuggestions;
   const reportError =
     dependencies.reportError ??
     ((error) => console.error("Chat response failed.", error));
+  const reportPreviewError =
+    dependencies.reportPreviewError ??
+    ((error) =>
+      console.warn("Preview tuning failed; using authored copy.", error));
+  const reportSuggestionError =
+    dependencies.reportSuggestionError ??
+    ((error) =>
+      console.warn("Follow-up generation failed; using defaults.", error));
   const query = request.conversation.at(-1)?.content;
 
   if (!query) {
@@ -43,7 +62,14 @@ export const processChatRequest = async (
   try {
     const knowledge = await retrieveContext(query);
     if (signal?.aborted) return;
-    const blocks = await selectBlocks(query, knowledge);
+    let blocks = await selectBlocks(query, knowledge);
+    if (signal?.aborted) return;
+
+    try {
+      blocks = await tuneBlocks(query, blocks, knowledge, signal);
+    } catch (error) {
+      reportPreviewError(error);
+    }
     if (signal?.aborted) return;
 
     send({
@@ -53,6 +79,7 @@ export const processChatRequest = async (
     });
     if (signal?.aborted) return;
 
+    let completedMessage = "";
     await streamResponse(
       blocks,
       request.conversation,
@@ -70,6 +97,7 @@ export const processChatRequest = async (
         },
         onDone: (message) => {
           if (!signal?.aborted) {
+            completedMessage = message;
             send({
               type: "assistant.done",
               requestId: request.requestId,
@@ -80,6 +108,26 @@ export const processChatRequest = async (
       },
       knowledge,
     );
+    if (signal?.aborted || !completedMessage) return;
+
+    let suggestions: string[] = [];
+    try {
+      suggestions = await generateSuggestions(
+        request.conversation,
+        completedMessage,
+        knowledge,
+        signal,
+      );
+    } catch (error) {
+      reportSuggestionError(error);
+    }
+    if (!signal?.aborted) {
+      send({
+        type: "assistant.suggestions",
+        requestId: request.requestId,
+        suggestions,
+      });
+    }
   } catch (error) {
     reportError(error);
     if (!signal?.aborted) {

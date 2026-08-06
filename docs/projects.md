@@ -144,11 +144,15 @@ At backend startup, every non-draft project with `index: true` becomes a
 `project:<collection-id>` knowledge document. The index includes its summary,
 status, role, technologies, highlights, tags, aliases, and authored body.
 
-Use aliases for real phrases a visitor may type. If the project has a workspace
-widget, set `block` to the widget's exact stable ID from
-`app/blocks/blocks.json`; otherwise the project can inform answers without
-selecting a visual widget. Follow `docs/knowledge-base.md` when creating or
-changing a widget.
+Use aliases for real phrases a visitor may type. Every retrieved project gets a
+deterministic preview block from its authored title, description, status, tags,
+and conventional route. If the project has a purpose-built workspace widget,
+set `block` to the widget's exact stable ID from `app/blocks/blocks.json`; that
+explicit widget replaces the automatic preview. Follow `docs/knowledge-base.md`
+when creating or changing a widget. During a chat request, the model may tailor
+only the preview's relevance line and short summary to the visitor's question.
+The project entry remains the factual source and all canonical preview fields
+stay fixed; tuning failure falls back to the authored description.
 
 Restart the Elysia backend after project content changes so the disposable
 SQLite index synchronizes. Verify both an exact alias and a natural-language
@@ -167,5 +171,7 @@ bun test
 3. Ensure the entry appears in the correct current or past-work index section.
 4. Confirm `/projects/<slug>` renders and works on a narrow viewport.
 5. Confirm the project is indexed unless `draft: true` or `index: false` is intentional.
-6. If `block` is set, verify the ID exists and retrieval selects that widget.
+6. Confirm retrieval selects the automatic project preview, or the explicit
+   widget when `block` is set. In chat, confirm any tuned framing remains
+   supported by the project source.
 7. Run the required checks and report any missing source information.

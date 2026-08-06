@@ -5,16 +5,20 @@ import type { Block } from "../../../../../types/blocks";
 
 interface ContentProps {
   blocks: Block[];
-  onStartConversation: () => void;
+  isLoading: boolean;
 }
 
-interface LoadedBlock {
-  id: string;
-  name: string;
+interface LoadedBlock extends Pick<Block, "id" | "name" | "kind"> {
   html: string;
 }
 
 type BlockCleanup = () => void;
+
+const blockLabel = (block: Pick<Block, "name" | "kind">) => {
+  if (block.kind === "project-preview") return "Project preview";
+  if (block.kind === "blog-preview") return "Writing preview";
+  return block.name.replaceAll("-", " ");
+};
 
 const sanitizeBlockHTML = (html: string) =>
   DOMPurify.sanitize(html, {
@@ -131,7 +135,7 @@ const loadBlock = async (block: Block, signal: AbortSignal) => {
   return sanitizeBlockHTML(await response.text());
 };
 
-function Content({ blocks, onStartConversation }: ContentProps) {
+function Content({ blocks, isLoading }: ContentProps) {
   const [loadedBlocks, setLoadedBlocks] = useState<LoadedBlock[]>([]);
   const [loadError, setLoadError] = useState(false);
   const blockElements = useRef(new Map<string, HTMLDivElement>());
@@ -140,12 +144,12 @@ function Content({ blocks, onStartConversation }: ContentProps) {
   useEffect(() => {
     const controller = new AbortController();
     setLoadError(false);
-    setLoadedBlocks([]);
 
     Promise.all(
       blocks.map(async (block) => ({
         id: block.id,
         name: block.name,
+        kind: block.kind,
         html: await loadBlock(block, controller.signal),
       })),
     )
@@ -153,7 +157,6 @@ function Content({ blocks, onStartConversation }: ContentProps) {
       .catch((error: unknown) => {
         if (error instanceof DOMException && error.name === "AbortError")
           return;
-        setLoadedBlocks([]);
         setLoadError(true);
       });
 
@@ -182,9 +185,12 @@ function Content({ blocks, onStartConversation }: ContentProps) {
       {loadedBlocks.length > 0 ? (
         <div className={styles.blocks}>
           {loadedBlocks.map((block) => (
-            <article className={styles.block} key={block.id}>
+            <article
+              className={`${styles.block} ${block.kind ? styles.previewBlock : ""}`}
+              key={block.id}
+            >
               <header>
-                <p>{block.name.replaceAll("-", " ")}</p>
+                <p>{blockLabel(block)}</p>
               </header>
               <div
                 id={`block-${block.id}`}
@@ -197,26 +203,40 @@ function Content({ blocks, onStartConversation }: ContentProps) {
             </article>
           ))}
         </div>
+      ) : isLoading ? (
+        <div className={styles.queryPending} aria-live="polite" aria-busy="true">
+          <p>Assembling relevant context…</p>
+        </div>
       ) : (
         <div className={styles.defaultState}>
-          <h1>Aidan Tilgner</h1>
-          <p className={styles.tagline}>
-            Software engineer, <span>AI engineer</span>, and experience
-            designer.
-          </p>
-          <p className={styles.description}>
-            Explore selected work directly, or ask the site to assemble the most
-            relevant context for you.
-          </p>
-          {loadError && (
-            <p className={styles.error}>That context could not be loaded.</p>
-          )}
-          <div className={styles.actions}>
-            <a href="/projects">View selected work</a>
-            <button type="button" onClick={onStartConversation}>
-              Start a conversation
-            </button>
+          <div className={styles.identityCopy}>
+            <h1>Aidan Tilgner</h1>
+            <p className={styles.tagline}>
+              Software engineer, <span>AI engineer</span>, and experience
+              designer.
+            </p>
+            <p className={styles.description}>
+              Ask about a role, problem, or project. The site will assemble the
+              most relevant evidence for you.
+            </p>
+            {loadError && (
+              <p className={styles.error}>That context could not be loaded.</p>
+            )}
           </div>
+          <figure className={styles.portrait}>
+            <figcaption>
+              <span>Identity / 01</span>
+              <span>Portrait</span>
+            </figcaption>
+            <img
+              src="/images/aidan-tilgner-headshot.jpg"
+              alt="Aidan Tilgner smiling outdoors"
+              width="924"
+              height="1200"
+              loading="eager"
+              fetchPriority="high"
+            />
+          </figure>
         </div>
       )}
     </div>

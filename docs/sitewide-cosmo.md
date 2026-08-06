@@ -141,6 +141,11 @@ visitor's question.
 First release:
 
 - Use route-specific suggested prompts supplied by the frontend.
+- After a completed response, replace the starter prompts with three generated
+  follow-up questions grounded in the recent conversation, completed answer,
+  and retrieved authored sources.
+- Reject repeated, duplicate, malformed, or overlong generated questions and
+  fall back to the authored prompts when the optional generation pass fails.
 - Examples on a project page may ask about decisions, outcomes, or related
   capabilities.
 - Examples on a post may ask for the connection between the article and
@@ -179,6 +184,7 @@ interface AssistantSessionV1 {
   conversation: Message[];
   latestQuestion: string | null;
   assistantMessage: string;
+  suggestions: string[];
   blocks: Block[];
   panelOpen: boolean;
   updatedAt: number;
@@ -283,7 +289,8 @@ behavior belongs in the extracted hook/controller and durable session snapshot.
 ### Phase 2: floating assistant
 
 1. Add the launcher and responsive panel to eligible layouts.
-2. Add latest-question display, streaming answer, starter prompts, and composer.
+2. Add latest-question display, streaming answer, starter or contextual
+   follow-up prompts, and composer.
 3. Add the condensed context shelf and homepage handoff.
 4. Verify collisions with sticky navigation, page footers, and mobile safe
    areas.

@@ -8,4 +8,9 @@ export interface BlogPost {
   url?: string;
   image?: string;
   draft?: boolean;
+  source?: "local" | "substack";
+  sourceLabel?: string;
+  canonicalUrl?: string;
+  audioUrl?: string;
+  thumbnailUrl?: string;
 }

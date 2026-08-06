@@ -4,9 +4,10 @@ import FloatingAssistant from "../components/Assistant/FloatingAssistant";
 export interface Props {
   title: string;
   description?: string;
+  canonicalUrl?: string;
 }
 
-const { title, description } = Astro.props;
+const { title, description, canonicalUrl } = Astro.props;
 const assistantRoutes = ["/projects", "/blog", "/stuff"];
 const showFloatingAssistant = assistantRoutes.some((route) =>
   Astro.url.pathname.startsWith(route),
@@ -24,6 +25,7 @@ const showFloatingAssistant = assistantRoutes.some((route) =>
       name="description"
       content={description || "Aidan's corner of the interweb."}
     />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -48,7 +50,7 @@ const showFloatingAssistant = assistantRoutes.some((route) =>
         --heading-color: 243, 244, 246;
         --text-color: 209, 213, 219;
         --muted-color: 156, 163, 175;
-        --accent-color: 147, 51, 234;
+        --accent-color: 29, 78, 216;
         --accent-ink: 243, 244, 246;
         --camel-color: 231, 176, 111;
         --warning-color: 231, 176, 111;

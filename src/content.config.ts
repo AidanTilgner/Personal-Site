@@ -29,6 +29,12 @@ const projectImage = z.object({
   caption: z.string().min(1).optional(),
 });
 
+const projectVideo = z.object({
+  src: z.url(),
+  title: z.string().min(1),
+  caption: z.string().min(1).optional(),
+});
+
 const projects = defineCollection({
   loader: glob({ base: "./src/content/projects", pattern: "**/*.{md,mdx}" }),
   schema: z.object({
@@ -50,6 +56,7 @@ const projects = defineCollection({
     highlights: z.array(z.string().min(1)).default([]),
     links: z.array(projectLink).default([]),
     image: projectImage.optional(),
+    video: projectVideo.optional(),
     gallery: z.array(projectImage).default([]),
     featured: z.boolean().default(false),
     order: z.number().int().default(0),

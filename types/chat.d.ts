@@ -25,6 +25,11 @@ export type ChatServerMessage =
       message: string;
     }
   | {
+      type: "assistant.suggestions";
+      requestId: string;
+      suggestions: string[];
+    }
+  | {
       type: "error";
       requestId: string;
       code:

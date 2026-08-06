@@ -3,6 +3,53 @@
   padding-top: 1.2rem;
 }
 
+.prominent {
+  border-top: 0;
+  padding-top: 0;
+
+  .suggestions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 2.4rem;
+    margin-bottom: 1.2rem;
+    border-top: 1px solid rgba(var(--text-color), 0.12);
+  }
+
+  .suggestion {
+    min-height: 3.8rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+    color: rgba(var(--text-color), 0.68);
+  }
+
+  .textboxcontainer > div {
+    min-height: 6.4rem;
+    border-color: rgba(var(--accent-color), 0.72);
+    background: rgba(var(--surface-raised), 0.96);
+    box-shadow:
+      0 1.6rem 5rem rgba(0, 0, 0, 0.24),
+      inset 2px 0 0 rgb(var(--accent-color));
+  }
+
+  .textboxcontainer input {
+    padding-left: 4.4rem;
+    font-size: 1.55rem;
+
+    &::placeholder {
+      color: rgba(var(--text-color), 0.58);
+    }
+  }
+
+  .promptMark {
+    left: 1.8rem;
+    font-size: 1.55rem;
+  }
+
+  .sendmessage {
+    width: 5rem;
+    height: 5rem;
+  }
+}
+
 .suggestions {
   display: grid;
   margin-bottom: 1.8rem;
@@ -150,6 +197,25 @@
   .sendmessage {
     width: 3.8rem;
     height: 3.8rem;
+  }
+
+  .prominent {
+    .suggestions {
+      gap: 0 1.2rem;
+    }
+
+    .suggestion {
+      font-size: 1rem;
+    }
+
+    .textboxcontainer > div {
+      min-height: 5.6rem;
+    }
+
+    .sendmessage {
+      width: 4.4rem;
+      height: 4.4rem;
+    }
   }
 }
 

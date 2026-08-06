@@ -35,6 +35,9 @@ export const useChatSession = () => {
   const [displayMessage, setDisplayMessage] = useState(assistantWelcomeMessage);
   const [latestQuestion, setLatestQuestion] = useState<string | null>(null);
   const [messageLoading, setMessageLoading] = useState(false);
+  const [suggestedQuestions, setSuggestedQuestions] = useState<string[]>(
+    defaultAssistantPrompts,
+  );
   const [connection, setConnection] = useState<ConnectionState>("connecting");
   const [panelOpen, setPanelOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -60,8 +63,8 @@ export const useChatSession = () => {
       conversation.current = nextConversation;
       const requestId = createRequestId();
       activeRequestId.current = requestId;
-      setBlocks([]);
       setDisplayMessage("");
+      setSuggestedQuestions([]);
       setMessageLoading(true);
 
       const request: ChatRequest = {
@@ -82,6 +85,7 @@ export const useChatSession = () => {
     setBlocks([]);
     setDisplayMessage(assistantWelcomeMessage);
     setLatestQuestion(null);
+    setSuggestedQuestions(defaultAssistantPrompts);
     setMessageLoading(false);
   }, []);
 
@@ -94,6 +98,11 @@ export const useChatSession = () => {
       setBlocks(stored.blocks);
       setDisplayMessage(stored.assistantMessage || assistantWelcomeMessage);
       setLatestQuestion(stored.latestQuestion);
+      setSuggestedQuestions(
+        stored.suggestions.length
+          ? stored.suggestions
+          : defaultAssistantPrompts,
+      );
       setPanelOpen(stored.panelOpen);
     } else {
       conversation.current = trimConversation(
@@ -144,6 +153,13 @@ export const useChatSession = () => {
               ...conversation.current,
               { role: "assistant", content: message.message },
             ]);
+            break;
+          case "assistant.suggestions":
+            setSuggestedQuestions(
+              message.suggestions.length
+                ? message.suggestions
+                : defaultAssistantPrompts,
+            );
             activeRequestId.current = null;
             break;
           case "error":
@@ -187,6 +203,7 @@ export const useChatSession = () => {
       conversation: conversation.current,
       latestQuestion,
       assistantMessage: displayMessage,
+      suggestions: suggestedQuestions,
       blocks,
       panelOpen,
     });
@@ -195,7 +212,14 @@ export const useChatSession = () => {
       "conversation",
       JSON.stringify(conversation.current),
     );
-  }, [blocks, displayMessage, hydrated, latestQuestion, panelOpen]);
+  }, [
+    blocks,
+    displayMessage,
+    hydrated,
+    latestQuestion,
+    panelOpen,
+    suggestedQuestions,
+  ]);
 
   const connectionLabel = {
     connecting: "Connecting",
@@ -213,6 +237,7 @@ export const useChatSession = () => {
     messageLoading,
     panelOpen,
     setPanelOpen,
+    suggestedQuestions,
     submitMessage,
   };
 };

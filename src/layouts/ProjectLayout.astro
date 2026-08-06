@@ -61,13 +61,31 @@ const timeline = [
     </header>
 
     {
-      project.image && (
+      project.video ? (
+        <figure class="project-video">
+          <div class="project-video-frame">
+            <iframe
+              src={project.video.src}
+              title={project.video.title}
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            />
+          </div>
+          {project.video.caption && (
+            <figcaption>{project.video.caption}</figcaption>
+          )}
+        </figure>
+      ) : (
+        project.image && (
         <figure class="project-image">
           <img src={project.image.src} alt={project.image.alt} />
           {project.image.caption && (
             <figcaption>{project.image.caption}</figcaption>
           )}
         </figure>
+        )
       )
     }
 
@@ -137,7 +155,7 @@ const timeline = [
   }
 
   .project-header {
-    margin: clamp(5rem, 9vw, 11rem) 0 clamp(5rem, 8vw, 9rem);
+    margin: clamp(4rem, 7vw, 8rem) 0 clamp(3rem, 5vw, 6rem);
   }
 
   .project-kicker {
@@ -214,6 +232,7 @@ const timeline = [
   }
 
   .project-image {
+    max-width: 104rem;
     margin: 0 0 clamp(5rem, 9vw, 10rem);
     border: 1px solid rgba(var(--text-color), 0.12);
     background: rgb(var(--surface-color));
@@ -222,6 +241,34 @@ const timeline = [
       display: block;
       width: 100%;
       height: auto;
+    }
+
+    figcaption {
+      margin: 0;
+      padding: 1.2rem 1.6rem;
+      color: rgba(var(--text-color), 0.45);
+      font-family: var(--code-font-family);
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+  }
+
+  .project-video {
+    max-width: 104rem;
+    margin: 0 0 clamp(5rem, 9vw, 10rem);
+    border: 1px solid rgba(var(--text-color), 0.12);
+    background: rgb(var(--surface-color));
+
+    .project-video-frame {
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
     }
 
     figcaption {

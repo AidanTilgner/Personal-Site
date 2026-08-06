@@ -24,6 +24,20 @@ describe("chat client validation", () => {
     });
   });
 
+  test("accepts bounded follow-up suggestions", () => {
+    expect(
+      parseChatServerMessage({
+        type: "assistant.suggestions",
+        requestId: "request-1",
+        suggestions: ["What should I explore next?"],
+      }),
+    ).toEqual({
+      type: "assistant.suggestions",
+      requestId: "request-1",
+      suggestions: ["What should I explore next?"],
+    });
+  });
+
   test("rejects malformed and unknown events", () => {
     expect(parseChatServerMessage("not json")).toBeUndefined();
     expect(

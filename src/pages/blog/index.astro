@@ -2,8 +2,14 @@
 import Layout from "../../layouts/Layout.astro";
 import Posts from "../../components/Blog/Posts/Posts";
 import { getCollection } from "astro:content";
+import type { BlogPost } from "../../types/main";
+import {
+  getSubstackPosts,
+  SUBSTACK_PUBLICATION_NAME,
+  SUBSTACK_PUBLICATION_URL,
+} from "../../utils/substack";
 
-const mappedPosts = (await getCollection("blog")).map((post) => {
+const localPosts = (await getCollection("blog")).map((post) => {
   const { title, author, description, postdate, updatedate, tags, draft } =
     post.data;
   return {
@@ -15,8 +21,34 @@ const mappedPosts = (await getCollection("blog")).map((post) => {
     tags,
     url: `/blog/posts/${post.id}`,
     draft,
+    source: "local" as const,
   };
 });
+
+let substackPosts: Array<BlogPost & { url: string }> = [];
+try {
+  substackPosts = (await getSubstackPosts()).map((post) => ({
+    title: post.title,
+    author: post.author,
+    description: post.description,
+    postdate: post.postdate,
+    tags: post.tags,
+    url: `/blog/posts/${post.slug}`,
+    draft: false,
+    source: "substack" as const,
+    sourceLabel: SUBSTACK_PUBLICATION_NAME,
+    canonicalUrl: post.canonicalUrl,
+    thumbnailUrl: post.thumbnailUrl,
+  }));
+} catch {
+  // The authored local archive remains available when the remote feed is down.
+}
+
+const localUrls = new Set(localPosts.map((post) => post.url));
+const mappedPosts = [
+  ...localPosts,
+  ...substackPosts.filter((post) => !localUrls.has(post.url)),
+];
 const publishedCount = mappedPosts.filter((post) => !post.draft).length;
 ---
 
@@ -31,6 +63,15 @@ const publishedCount = mappedPosts.filter((post) => !post.draft).length;
         Essays, field notes, and unfinished musings about software, language,
         systems, and the web.
       </p>
+      <a
+        class="publication"
+        href={SUBSTACK_PUBLICATION_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {SUBSTACK_PUBLICATION_NAME}
+        <span aria-hidden="true">↗</span>
+      </a>
     </header>
     <section class="posts">
       <Posts posts={mappedPosts} client:load />
@@ -74,6 +115,23 @@ const publishedCount = mappedPosts.filter((post) => !post.draft).length;
     color: rgb(var(--muted-color));
     font-size: clamp(1.5rem, 1.6vw, 1.6rem);
     line-height: 1.55;
+  }
+
+  .publication {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 2rem;
+    color: rgba(var(--text-color), 0.52);
+    font-family: var(--code-font-family);
+    font-size: 1.05rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+
+    &:hover {
+      color: rgb(var(--accent-color));
+      text-decoration: none;
+    }
   }
 
   .posts {

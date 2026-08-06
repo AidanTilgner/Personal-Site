@@ -14,6 +14,7 @@ export interface AssistantSessionV1 {
   conversation: Message[];
   latestQuestion: string | null;
   assistantMessage: string;
+  suggestions: string[];
   blocks: Block[];
   panelOpen: boolean;
   updatedAt: number;
@@ -37,6 +38,15 @@ export const parseAssistantSession = (
       now - parsed.updatedAt > ASSISTANT_SESSION_MAX_AGE ||
       now < parsed.updatedAt ||
       typeof parsed.assistantMessage !== "string" ||
+      (parsed.suggestions !== undefined &&
+        (!Array.isArray(parsed.suggestions) ||
+          parsed.suggestions.length > 4 ||
+          !parsed.suggestions.every(
+            (suggestion) =>
+              typeof suggestion === "string" &&
+              suggestion.length > 0 &&
+              suggestion.length <= 120,
+          ))) ||
       (parsed.latestQuestion !== null &&
         typeof parsed.latestQuestion !== "string") ||
       typeof parsed.panelOpen !== "boolean" ||
@@ -56,6 +66,7 @@ export const parseAssistantSession = (
       conversation,
       latestQuestion: parsed.latestQuestion,
       assistantMessage: parsed.assistantMessage,
+      suggestions: parsed.suggestions ?? [],
       blocks: parsed.blocks,
       panelOpen: parsed.panelOpen,
       updatedAt: parsed.updatedAt,

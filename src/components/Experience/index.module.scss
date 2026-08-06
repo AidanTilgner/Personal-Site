@@ -1,18 +1,11 @@
 .experience {
-  display: grid;
+  --guide-width: clamp(32rem, 28vw, 46rem);
+  position: relative;
   width: 100%;
   height: 100%;
   min-height: 0;
   overflow: hidden;
   background: rgb(var(--background-color));
-
-  @media (max-width: 899px) {
-    grid-template-rows: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  }
-
-  @media (min-width: 900px) {
-    grid-template-columns: minmax(0, 1.8fr) minmax(32rem, 0.72fr);
-  }
 }
 
 .workspace,
@@ -22,16 +15,27 @@
 }
 
 .workspace {
+  position: absolute;
+  inset: 0 var(--guide-width) 0 0;
   overflow: hidden;
   border: 1px solid rgba(var(--text-color), 0.12);
   border-left: 0;
   background: rgb(var(--surface-color));
   box-shadow: inset -1.6rem 0 4rem rgba(0, 0, 0, 0.08);
+  transition: right 520ms cubic-bezier(0.22, 1, 0.36, 1);
 
   @media (min-width: 900px) {
     border-top: 0;
     border-bottom: 0;
   }
+}
+
+.arrival .workspace {
+  right: 0;
+}
+
+.arrival .workspaceBody {
+  overflow-y: hidden;
 }
 
 .workspaceBody {
@@ -45,16 +49,40 @@
 }
 
 .guide {
-  position: relative;
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
+  width: var(--guide-width);
   flex-direction: column;
   border-left: 1px solid rgba(var(--heading-color), 0.1);
   background: rgb(var(--surface-raised));
+  transform: translateX(0);
+  transition:
+    top 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    right 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    bottom 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 520ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 320ms ease,
+    background-color 320ms ease,
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
 
   @media (max-width: 899px) {
     border-top: 1px solid rgba(var(--text-color), 0.12);
     border-bottom: 1px solid rgba(var(--text-color), 0.12);
   }
+}
+
+.arrival .guide {
+  top: calc(100% - clamp(19rem, 24vh, 22rem));
+  right: 50%;
+  bottom: clamp(2rem, 4vh, 4rem);
+  width: min(76rem, calc(100% - 4.8rem));
+  border-color: transparent;
+  background: transparent;
+  transform: translateX(50%);
 }
 
 .connection {
@@ -117,9 +145,44 @@
   grid-template-rows: minmax(0, 1fr) auto;
   padding: clamp(2.8rem, 4vw, 5.6rem) clamp(2.2rem, 3vw, 4rem)
     clamp(2.2rem, 3vw, 4rem);
+  transition: padding 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.arrival .guideBody {
+  display: block;
+  height: auto;
+  padding: 0;
+}
+
+.arrival .connection {
+  display: none;
 }
 
 @media (max-width: 899px) {
+  .workspace {
+    inset: 0 0 45% 0;
+    transition: bottom 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .guide {
+    top: 55%;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+  }
+
+  .arrival .workspace {
+    bottom: 0;
+  }
+
+  .arrival .guide {
+    top: calc(100% - 18rem);
+    right: 1.6rem;
+    bottom: 1.6rem;
+    width: calc(100% - 3.2rem);
+    transform: none;
+  }
+
   .workspaceBody {
     padding: 2.4rem;
   }
@@ -135,6 +198,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .workspace,
+  .guide,
+  .guideBody,
   .clearConversation {
     transition: none;
   }

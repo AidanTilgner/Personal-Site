@@ -122,9 +122,19 @@ function Post({ post, index }: { post: BlogPost; index: number }) {
         {(index + 1).toString().padStart(2, "0")}
       </span>
       <a className={styles.post__content} href={post.url ?? "/blog"}>
+        {post.thumbnailUrl && (
+          <span className={styles.post__thumbnail}>
+            <img src={post.thumbnailUrl} alt="" loading="lazy" />
+          </span>
+        )}
         <p className={styles.post__title}>{post.title}</p>
         <p className={styles.post__description}>{post.description}</p>
-        <p className={styles.post__date}>{getPrettyDate(post.postdate)}</p>
+        <div className={styles.post__meta}>
+          <p className={styles.post__date}>{getPrettyDate(post.postdate)}</p>
+          {post.sourceLabel && (
+            <span className={styles.post__source}>{post.sourceLabel}</span>
+          )}
+        </div>
       </a>
       <div className={styles.post__tags}>
         {post.tags.map((tag) => (

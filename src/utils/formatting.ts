@@ -4,11 +4,13 @@ export const getAlphanumericText = (text: string) => {
 
 export const getPrettyDate = (dtstr: string) => {
   const dt = new Date(dtstr);
-  // formatted like Monday, Jan 1, 2020
+  // Date-only values are UTC by specification; pin formatting to UTC so a
+  // publication date does not shift backward in North American time zones.
   return dt.toLocaleDateString("en-US", {
     weekday: "long",
     year: "numeric",
     month: "short",
     day: "numeric",
+    timeZone: "UTC",
   });
 };

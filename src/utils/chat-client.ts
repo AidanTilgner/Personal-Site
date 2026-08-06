@@ -17,6 +17,10 @@ export const isBlock = (value: unknown): value is Block =>
   typeof value.id === "string" &&
   typeof value.name === "string" &&
   typeof value.description === "string" &&
+  (value.kind === undefined ||
+    value.kind === "project-preview" ||
+    value.kind === "blog-preview") &&
+  (value.href === undefined || typeof value.href === "string") &&
   isRecord(value.content) &&
   (value.content.type === "raw" || value.content.type === "url") &&
   typeof value.content.data === "string" &&
@@ -61,6 +65,19 @@ export const parseChatServerMessage = (
   if (
     message.type === "assistant.done" &&
     typeof message.message === "string"
+  ) {
+    return message as unknown as ChatServerMessage;
+  }
+  if (
+    message.type === "assistant.suggestions" &&
+    Array.isArray(message.suggestions) &&
+    message.suggestions.length <= 4 &&
+    message.suggestions.every(
+      (suggestion) =>
+        typeof suggestion === "string" &&
+        suggestion.length > 0 &&
+        suggestion.length <= 120,
+    )
   ) {
     return message as unknown as ChatServerMessage;
   }

@@ -65,6 +65,60 @@ describe("Elysia HTTP contracts", () => {
     expect(body.data.blocks.map((block) => block.name)).toEqual(["donut"]);
   });
 
+  test("creates previews for indexed projects and writing", async () => {
+    const projectResponse = await app.handle(
+      new Request("http://localhost/v1/blocks/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversation: [{ role: "user", content: "Simple Vector Store" }],
+        }),
+      }),
+    );
+    const projectBody = (await projectResponse.json()) as {
+      data: {
+        blocks: {
+          name: string;
+          kind?: string;
+          href?: string;
+          content: { data: string };
+        }[];
+      };
+    };
+    expect(projectBody.data.blocks).toContainEqual(
+      expect.objectContaining({
+        name: "Simple Vector Store",
+        kind: "project-preview",
+        href: "/projects/simple-vector-store",
+      }),
+    );
+
+    const blogResponse = await app.handle(
+      new Request("http://localhost/v1/blocks/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversation: [
+            {
+              role: "user",
+              content: "principles of the linguistic engineer",
+            },
+          ],
+        }),
+      }),
+    );
+    const blogBody = (await blogResponse.json()) as {
+      data: { blocks: { name: string; kind?: string; href?: string }[] };
+    };
+    expect(blogBody.data.blocks).toContainEqual(
+      expect.objectContaining({
+        name: "principles of the linguistic engineer",
+        kind: "blog-preview",
+        href: "/blog/posts/principles-of-the-linguistic-engineer",
+      }),
+    );
+  });
+
   test("returns the fallback block for an unknown prompt", async () => {
     const response = await app.handle(
       new Request("http://localhost/v1/blocks/query", {

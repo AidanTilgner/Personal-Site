@@ -14,6 +14,7 @@ describe("assistant session storage", () => {
         conversation: [{ role: "user", content: "Show me the work" }],
         latestQuestion: "Show me the work",
         assistantMessage: "Here is the relevant work.",
+        suggestions: ["What should I look at next?"],
         blocks: [
           {
             id: "projects",
@@ -38,6 +39,7 @@ describe("assistant session storage", () => {
         conversation: [],
         latestQuestion: null,
         assistantMessage: "Hello",
+        suggestions: [],
         blocks: [],
         panelOpen: false,
       },
@@ -55,5 +57,19 @@ describe("assistant session storage", () => {
     ).toBeUndefined();
     expect(parseAssistantSession('{"version":1}', now)).toBeUndefined();
     expect(parseAssistantSession("not json", now)).toBeUndefined();
+  });
+
+  test("restores older version-one snapshots without saved suggestions", () => {
+    const stored = JSON.stringify({
+      version: 1,
+      conversation: [{ role: "user", content: "Show me the work" }],
+      latestQuestion: "Show me the work",
+      assistantMessage: "Here is the work.",
+      blocks: [],
+      panelOpen: true,
+      updatedAt: now,
+    });
+
+    expect(parseAssistantSession(stored, now)?.suggestions).toEqual([]);
   });
 });

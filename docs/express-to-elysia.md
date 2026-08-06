@@ -91,7 +91,16 @@ Server messages, in order:
 { "type": "content.blocks", "requestId": "...", "blocks": [] }
 { "type": "assistant.delta", "requestId": "...", "index": 0, "text": "..." }
 { "type": "assistant.done", "requestId": "...", "message": "..." }
+{ "type": "assistant.suggestions", "requestId": "...", "suggestions": ["..."] }
 ```
+
+`assistant.suggestions` is an optional enrichment step after the completed
+answer. The server asks the model for three grounded next questions using the
+recent visitor questions, completed answer, and retrieved knowledge excerpts.
+The payload is schema-constrained and validated before it reaches the client.
+If this secondary request fails or returns invalid questions, the server sends
+an empty list so the client can restore authored defaults; the successful
+answer must not become an error.
 
 Failures use one envelope:
 
@@ -167,6 +176,8 @@ phases are complete; production-hardening items remain useful follow-up work.
 - Index broad documents and conservative overlapping sections.
 - Combine exact aliases and lexical matching with OpenAI embedding similarity.
 - Select trusted widgets deterministically from retrieval metadata.
+- Add optional, structured, source-grounded tuning for automatic project and
+  writing preview copy without giving the model block-selection authority.
 - Remove nlp.js, its training corpus, and its generated metadata.
 - Replace `openai-edge` and the legacy `ai` adapter with the official OpenAI SDK.
 - Stream typed GPT-5.6 Luna Responses API events through the existing WebSocket.

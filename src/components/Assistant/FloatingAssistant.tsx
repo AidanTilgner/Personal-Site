@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Block } from "../../../types/blocks";
 import MessageDisplay from "../Experience/Chat/MessageDisplay/MessageDisplay";
 import TextBox from "../Experience/Chat/TextBox/TextBox";
@@ -66,8 +66,20 @@ function ContextSummaryList({ blocks }: { blocks: Block[] }) {
       <div className={styles.contextItems}>
         {visibleBlocks.map((block) => (
           <article key={block.id}>
-            <span>Evidence</span>
-            <h4>{block.name.replaceAll("-", " ")}</h4>
+            <span>
+              {block.kind === "project-preview"
+                ? "Project"
+                : block.kind === "blog-preview"
+                  ? "Writing"
+                  : "Evidence"}
+            </span>
+            <h4>
+              {block.href ? (
+                <a href={block.href}>{block.name.replaceAll("-", " ")}</a>
+              ) : (
+                block.name.replaceAll("-", " ")
+              )}
+            </h4>
             <p>{block.description}</p>
           </article>
         ))}
@@ -99,6 +111,7 @@ function FloatingAssistant({ pagePath }: FloatingAssistantProps) {
     messageLoading,
     panelOpen,
     setPanelOpen,
+    suggestedQuestions,
     submitMessage,
   } = useChatSession();
   const [unread, setUnread] = useState(false);
@@ -106,12 +119,14 @@ function FloatingAssistant({ pagePath }: FloatingAssistantProps) {
   const launcherRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLElement>(null);
   const previousLoading = useRef(messageLoading);
-  const suggestions = latestQuestion ? [] : getPagePrompts(pagePath);
+  const suggestions = latestQuestion
+    ? suggestedQuestions
+    : getPagePrompts(pagePath);
 
-  const closePanel = () => {
+  const closePanel = useCallback(() => {
     setPanelOpen(false);
     window.requestAnimationFrame(() => launcherRef.current?.focus());
-  };
+  }, [setPanelOpen]);
 
   const openPanel = () => {
     setUnread(false);
@@ -168,7 +183,7 @@ function FloatingAssistant({ pagePath }: FloatingAssistantProps) {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [isMobile, panelOpen, setPanelOpen]);
+  }, [closePanel, isMobile, panelOpen]);
 
   return (
     <div className={`${styles.root} ${panelOpen ? styles.open : ""}`}>

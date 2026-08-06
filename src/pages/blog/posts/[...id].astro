@@ -1,24 +1,66 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import BlogLayout from "../../../layouts/BlogLayout.astro";
+import type { BlogPost } from "../../../types/main";
+import {
+  getSubstackPosts,
+  SUBSTACK_PUBLICATION_NAME,
+} from "../../../utils/substack";
 
-export const prerender = true;
+export const prerender = false;
 
-export async function getStaticPaths() {
-  return (await getCollection("blog")).map((entry) => ({
-    params: { id: entry.id },
-    props: { entry },
-  }));
+const id = Astro.params.id ?? "";
+const entry = (await getCollection("blog")).find((post) => post.id === id) as
+  CollectionEntry<"blog"> | undefined;
+const Content = entry ? (await render(entry)).Content : undefined;
+let substackPost;
+
+if (!entry) {
+  try {
+    substackPost = (await getSubstackPosts()).find((post) => post.slug === id);
+  } catch {
+    // A not-found response below is preferable to breaking the whole route.
+  }
 }
 
-interface Props {
-  entry: CollectionEntry<"blog">;
-}
+if (!entry && !substackPost) Astro.response.status = 404;
 
-const { entry } = Astro.props;
-const { Content } = await render(entry);
+const frontmatter: BlogPost = entry
+  ? entry.data
+  : substackPost
+    ? {
+        title: substackPost.title,
+        author: substackPost.author,
+        description: substackPost.description,
+        postdate: substackPost.postdate,
+        tags: substackPost.tags,
+        source: "substack",
+        sourceLabel: SUBSTACK_PUBLICATION_NAME,
+        canonicalUrl: substackPost.canonicalUrl,
+        audioUrl: substackPost.audioUrl,
+      }
+    : {
+        title: "Article not found",
+        author: "Aidan Tilgner",
+        description: "This article is not available.",
+        postdate: new Date().toISOString().slice(0, 10),
+        tags: [],
+      };
 ---
 
-<BlogLayout frontmatter={entry.data}>
-  <Content />
+<BlogLayout frontmatter={frontmatter}>
+  {Content && <Content />}
+  {
+    substackPost?.audioUrl && (
+      <audio controls preload="metadata" src={substackPost.audioUrl}>
+        <a href={substackPost.audioUrl}>Download the audio edition</a>
+      </audio>
+    )
+  }
+  {substackPost && <Fragment set:html={substackPost.html} />}
+  {
+    !Content && !substackPost && (
+      <p>Return to the writing archive to find another article.</p>
+    )
+  }
 </BlogLayout>

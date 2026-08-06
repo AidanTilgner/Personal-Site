@@ -1,4 +1,5 @@
-export type KnowledgeSourceType = "markdown" | "project" | "block" | "profile";
+export type KnowledgeSourceType =
+  "markdown" | "project" | "blog" | "block" | "profile";
 
 export interface KnowledgeDocument {
   id: string;

@@ -1,0 +1,49 @@
+<svg width="120" height="139" viewBox="0 0 120 139" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <link xmlns="" type="text/css" id="dark-mode" rel="stylesheet" href="" />
+    <style xmlns="" type="text/css" id="dark-mode-custom-style" />
+    <mask id="mask0_9_595" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="3"
+        width="120" height="133">
+        <path
+            d="M68.5 8.37158L108.5 31.4656C113.76 34.5023 117 40.1145 117 46.188V92.376C117 98.4496 113.76 104.062 108.5 107.098L68.5 130.192C63.2402 133.229 56.7598 133.229 51.5 130.192L11.5 107.098C6.24019 104.062 3 98.4496 3 92.376V46.188C3 40.1145 6.24018 34.5023 11.5 31.4656L51.5 8.37158C56.7598 5.33482 63.2402 5.33482 68.5 8.37158Z"
+            fill="black" stroke="white" stroke-width="6" />
+    </mask>
+    <g mask="url(#mask0_9_595)">
+        <circle cx="44" cy="24" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="74" cy="24" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="59" cy="34" r="4" fill="white" />
+        <circle cx="69" cy="34" r="4" fill="white" fill-opacity="0.5" />
+        <circle cx="89" cy="34" r="4" fill="white" fill-opacity="0.75" />
+        <circle cx="4" cy="44" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="14" cy="44" r="4" fill="white" fill-opacity="0.75" />
+        <circle cx="24" cy="44" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="44" cy="44" r="4" fill="white" fill-opacity="0.5" />
+        <circle cx="94" cy="44" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="29" cy="54" r="4" fill="white" />
+        <circle cx="49" cy="54" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="79" cy="54" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="89" cy="54" r="4" fill="white" />
+        <circle cx="14" cy="64" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="54" cy="64" r="4" fill="white" />
+        <circle cx="104" cy="64" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="29" cy="74" r="4" fill="white" fill-opacity="0.5" />
+        <circle cx="39" cy="74" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="59" cy="74" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="89" cy="74" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="99" cy="74" r="4" fill="white" fill-opacity="0.75" />
+        <circle cx="44" cy="104" r="4" fill="white" fill-opacity="0.5" />
+        <circle cx="74" cy="104" r="4" fill="white" fill-opacity="0.75" />
+        <circle cx="49" cy="114" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="59" cy="114" r="4" fill="white" />
+        <circle cx="79" cy="114" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="34" cy="84" r="4" fill="white" fill-opacity="0.75" />
+        <circle cx="84" cy="84" r="4" fill="white" fill-opacity="0.5" />
+        <circle cx="9" cy="94" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="29" cy="94" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="69" cy="94" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="99" cy="94" r="4" fill="white" fill-opacity="0.25" />
+        <circle cx="59" cy="14" r="4" fill="white" fill-opacity="0.25" />
+        <path
+            d="M68.5 8.37158L108.5 31.4656C113.76 34.5023 117 40.1145 117 46.188V92.376C117 98.4496 113.76 104.062 108.5 107.098L68.5 130.192C63.2402 133.229 56.7598 133.229 51.5 130.192L11.5 107.098C6.24019 104.062 3 98.4496 3 92.376V46.188C3 40.1145 6.24018 34.5023 11.5 31.4656L51.5 8.37158C56.7598 5.33482 63.2402 5.33482 68.5 8.37158Z"
+            stroke="white" stroke-width="6" />
+    </g>
+</svg>

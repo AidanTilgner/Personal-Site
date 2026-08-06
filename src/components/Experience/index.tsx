@@ -13,11 +13,15 @@ function Experience() {
     displayMessage,
     latestQuestion,
     messageLoading,
+    suggestedQuestions,
     submitMessage,
   } = useChatSession();
+  const isArrival = !latestQuestion && blocks.length === 0;
 
   return (
-    <div className={styles.experience}>
+    <div
+      className={`${styles.experience} ${isArrival ? styles.arrival : styles.active}`}
+    >
       <section className={styles.workspace} aria-label="Adaptive content">
         <div
           className={styles.workspaceBody}
@@ -26,7 +30,7 @@ function Experience() {
         >
           <Content
             blocks={blocks}
-            onStartConversation={() => submitMessage("Show me something cool")}
+            isLoading={messageLoading}
           />
         </div>
       </section>
@@ -50,16 +54,25 @@ function Experience() {
         >
           <span />
         </span>
-        <div className={styles.guideBody}>
-          <MessageDisplay
-            message={displayMessage}
-            is_streaming={messageLoading}
-            latestQuestion={latestQuestion}
-          />
+        <div
+          className={`${styles.guideBody} ${latestQuestion ? styles.hasConversation : ""}`}
+        >
+          {!isArrival && (
+            <MessageDisplay
+              message={displayMessage}
+              is_streaming={messageLoading}
+              latestQuestion={latestQuestion}
+              onSuggestionSelect={submitMessage}
+              suggestions={suggestedQuestions}
+              suggestionsDisabled={connection !== "online" || messageLoading}
+            />
+          )}
           <TextBox
             onSubmit={submitMessage}
             suggestions={defaultAssistantPrompts}
             disabled={connection !== "online" || messageLoading}
+            showSuggestions={!latestQuestion}
+            prominent={isArrival}
           />
         </div>
       </aside>
